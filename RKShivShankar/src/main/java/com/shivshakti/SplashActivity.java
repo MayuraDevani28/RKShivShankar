@@ -68,7 +68,7 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
 
             setContentView(R.layout.activity_splash_screen);
             bindview();
-
+/**/
             try {
                 PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 versionName = pInfo.versionName;
