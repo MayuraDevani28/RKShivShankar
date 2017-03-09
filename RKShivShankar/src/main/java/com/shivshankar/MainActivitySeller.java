@@ -3,9 +3,8 @@ package com.shivshankar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Base64;
@@ -25,7 +24,7 @@ import org.json.JSONObject;
 
 public class MainActivitySeller extends BaseActivitySeller implements View.OnClickListener, OnResult {
 
-    LinearLayout mLl_create_brand, mLl_brand;
+    LinearLayout mLl_create_brand, mLl_add_product, mLl_brand;
     ImageView mIv_change_image, mIv_effectImg;
     TextView mTv_brand_name;
     View view_top;
@@ -39,15 +38,13 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
             mLl_create_brand = (LinearLayout) rootView.findViewById(R.id.ll_create_brand);
             mLl_create_brand.setOnClickListener(this);
             mLl_brand = (LinearLayout) rootView.findViewById(R.id.ll_brand);
+            mLl_add_product = (LinearLayout) rootView.findViewById(R.id.ll_add_product);
+            mLl_add_product.setOnClickListener(this);
             mIv_change_image = (ImageView) rootView.findViewById(R.id.iv_change_image);
             mIv_change_image.setOnClickListener(this);
             mIv_effectImg = (ImageView) rootView.findViewById(R.id.iv_effectImg);
             mTv_brand_name = (TextView) rootView.findViewById(R.id.tv_brand_name);
             view_top = rootView.findViewById(R.id.view_top);
-
-            FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab_icon);
-            fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show());
 
             try {
                 byte[] byteArray = Base64.decode(AppPreferences.getPrefs().getString("image", ""), Base64.DEFAULT);
@@ -65,17 +62,18 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 //            new ServerSMS().execute();
 
 //            APIs.GetHomeBannerwithText(this, this);
-//            try {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                    swipeRefreshLayout.setProgressViewOffset(false, 0, 200);
-//                }
-//                swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_green_dark, android.R.color.holo_green_light);
-//                swipeRefreshLayout.setOnRefreshListener(() -> {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    swipeRefreshLayout.setProgressViewOffset(false, 0, 200);
+                }
+                swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_green_dark, android.R.color.holo_green_light);
+                swipeRefreshLayout.setOnRefreshListener(() -> {
+                    swipeRefreshLayout.setRefreshing(false);
 //                    APIs.GetHomeBannerwithText(this, this);
-//                });
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,11 +107,14 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, true);
                 startActivity(intent);
-//                overridePendingTransition(R.anim.slide_up, android.R.anim.fade_out);
             } else if (view == mIv_change_image) {
                 Intent intent = new Intent(getApplicationContext(), AddBrandActivitySeller.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
+            } else if (view == mLl_add_product) {
+                Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
+                intent.putExtra(commonVariables.KEY_IS_BRAND, true);//false
+                startActivity(intent);
             }
         } catch (Exception e) {
             e.printStackTrace();

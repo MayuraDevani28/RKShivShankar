@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -80,6 +81,18 @@ public class BaseActivitySeller extends AppCompatActivity implements NavigationV
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        try {
+            super.onResume();
+            if (mTv_cart_count != null && !commonMethods.isOnline(this)) {
+                Snackbar.make(mTv_cart_count, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

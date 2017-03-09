@@ -26,7 +26,7 @@ import java.util.Collections;
 @SuppressLint("SimpleDateFormat")
 public class commonMethods {
 
-    public boolean isOnline(AppCompatActivity activity) {
+    public static boolean isOnline(AppCompatActivity activity) {
         ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/gray_transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimaryDark"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/floating_search_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:text="Create Brand"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_large" />
+
+        <TextView
+            android:id="@+id/btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_medium" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/layoutContent"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:id="@+id/ll_brand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/xml_gray_square_box"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:background="@drawable/xml_round_white_transparent"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/iv_effectImg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_change_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/camera" />
+
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/xml_white_square_box"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColorHint="@color/text_color_hint">
+
+                        <EditText
+                            android:id="@+id/edt_brand_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Name*"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapWords" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btn_add_brand"
+                        style="@style/YellowButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:orientation="horizontal">
+
+                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                        android:id="@+id/sp_top_fabrics"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Top Fabrics"
+                        android:textColorHint="#05ab9a"
+                        app:met_baseColor="@color/black"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/black"
+                        app:met_textColor="@color/black"
+                        app:met_textColorHint="@color/black"
+                        app:met_underlineColor="@color/black" />
+
+                    <View
+                        android:layout_width="18dp"
+                        android:layout_height="match_parent" />
+
+                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                        android:id="@+id/sp_bottom_fabrics"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Bottom Fabrics"
+                        android:textColorHint="#05ab9a"
+                        app:met_baseColor="@color/black"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/black"
+                        app:met_textColor="@color/black"
+                        app:met_textColorHint="@color/black"
+                        app:met_underlineColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:orientation="horizontal">
+
+                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                        android:id="@+id/sp_top_dupatta"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Dupatta"
+                        android:textColorHint="#05ab9a"
+                        app:met_baseColor="@color/black"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/black"
+                        app:met_textColor="@color/black"
+                        app:met_textColorHint="@color/black"
+                        app:met_underlineColor="@color/black" />
+
+                    <View
+                        android:layout_width="18dp"
+                        android:layout_height="match_parent" />
+
+                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                        android:id="@+id/sp_all_over"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="All Over"
+                        android:textColorHint="#05ab9a"
+                        app:met_baseColor="@color/black"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/black"
+                        app:met_textColor="@color/black"
+                        app:met_textColorHint="@color/black"
+                        app:met_underlineColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:orientation="horizontal">
+
+                    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                        android:id="@+id/sp_type"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Type"
+                        android:textColorHint="#05ab9a"
+                        app:met_baseColor="@color/black"
+                        app:met_floatingLabel="normal"
+                        app:met_primaryColor="@color/black"
+                        app:met_textColor="@color/black"
+                        app:met_textColorHint="@color/black"
+                        app:met_underlineColor="@color/black" />
+
+                    <View
+                        android:layout_width="18dp"
+                        android:layout_height="match_parent" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColorHint="@color/text_color_hint">
+
+                        <EditText
+                            android:id="@+id/edt_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Name*"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapWords" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                    android:id="@+id/sp_min_qty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:hint="Min Parcel Size"
+                    android:textColorHint="#05ab9a"
+                    app:met_baseColor="@color/black"
+                    app:met_floatingLabel="normal"
+                    app:met_primaryColor="@color/black"
+                    app:met_textColor="@color/black"
+                    app:met_textColorHint="@color/black"
+                    app:met_underlineColor="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -130,21 +130,9 @@ public class ImagePickerActivity extends Activity {
     protected void onPause() {
         super.onPause();
         if (isFinishing()) {
-            overridePendingTransition(0, R.anim.slide_bottom);
-//            overridePendingTransition(android.R.anim.fade_in, R.anim.slide_bottom);
+            overridePendingTransition(0, android.R.anim.fade_out);
         }
     }
-//    @Override
-//    public void finish() {
-//        super.finish();
-//        overridePendingTransition(android.R.anim.fade_in, R.anim.slide_bottom);
-//    }
-
-//    @Override
-//    public void finish() {
-//        super.finish();
-//        overridePendingTransition(R.anim.hold, R.anim.slide_bottom);
-//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -183,7 +171,6 @@ public class ImagePickerActivity extends Activity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case commonVariables.REQUEST_CODE_GALLERY:
-
                     try {
                         InputStream inputStream = getContentResolver().openInputStream(data.getData());
                         FileOutputStream fileOutputStream = new FileOutputStream(mFileTemp);
@@ -206,8 +193,8 @@ public class ImagePickerActivity extends Activity {
                     Bitmap bitmap1 = BitmapFactory.decodeFile(mFileTemp.getPath());
                     if (bitmap1 != null) {
 
+                        Intent intent = new Intent(ImagePickerActivity.this, AddBrandActivitySeller.class);
                         if (isBrand) {
-                            Intent intent = new Intent(ImagePickerActivity.this, AddBrandActivitySeller.class);
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             bitmap1.compress(Bitmap.CompressFormat.PNG, 100, stream);
                             byte[] byteArray = stream.toByteArray();
@@ -215,10 +202,20 @@ public class ImagePickerActivity extends Activity {
                             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                             editor.putString("image", saveThis);
                             editor.apply();
-                            startActivity(intent);
-                            finish();
-                            overridePendingTransition(0, 0);
+                        } else {
+                            intent = new Intent(ImagePickerActivity.this, AddProductActivitySeller.class);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap1.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            byte[] byteArray = stream.toByteArray();
+                            String saveThis = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                            editor.putString("image_product", saveThis);
+                            editor.apply();
                         }
+
+                        startActivity(intent);
+                        finish();
+                        overridePendingTransition(0, 0);
                     }
                     break;
             }
@@ -230,8 +227,16 @@ public class ImagePickerActivity extends Activity {
         Intent intent = new Intent(ImagePickerActivity.this, CropImageActivity.class);
         intent.putExtra("image-path", mFileTemp.getPath());
         intent.putExtra(CropImageActivity.SCALE, true);
-        intent.putExtra(CropImageActivity.ASPECT_X, 0);
-        intent.putExtra(CropImageActivity.ASPECT_Y, 0);
+        int asp_x = 0, asp_y = 0;
+        if (isBrand) {
+            asp_x = 40;
+            asp_y = 40;
+        } else {
+            asp_x = 60;
+            asp_y = 60;
+        }
+        intent.putExtra(CropImageActivity.ASPECT_X, asp_x);
+        intent.putExtra(CropImageActivity.ASPECT_Y, asp_y);
         startActivityForResult(intent, commonVariables.REQUEST_CODE_CROP_IMAGE);
     }
 
