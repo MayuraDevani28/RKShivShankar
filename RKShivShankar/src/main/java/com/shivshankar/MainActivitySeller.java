@@ -115,6 +115,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, true);//false
                 startActivity(intent);
+                /**/
             }
         } catch (Exception e) {
             e.printStackTrace();
