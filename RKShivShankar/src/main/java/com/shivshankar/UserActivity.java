@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.shivshankar.adapters.ViewPagerAdapter;
 import com.shivshankar.fragments.LoginFragment;
+import com.shivshankar.fragments.RegisterFragment;
 import com.shivshankar.utills.ExceptionHandler;
 
 import org.json.JSONArray;
@@ -38,8 +39,8 @@ public class UserActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private LoginFragment Fragment;
-    private LoginFragment Fragment1;
+    private LoginFragment loginFragment;
+    private RegisterFragment registerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +67,10 @@ public class UserActivity extends AppCompatActivity {
     private void setupViewPager() {
 
         ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        Fragment = new LoginFragment();
-        pagerAdapter.addFragment(Fragment, "LOGIN");
-        Fragment1 = new LoginFragment();
-        pagerAdapter.addFragment(Fragment1, "REGISTER");
+        loginFragment = new LoginFragment();
+        pagerAdapter.addFragment(loginFragment, "LOGIN");
+        registerFragment = new RegisterFragment();
+        pagerAdapter.addFragment(registerFragment, "REGISTER");
 
 
         viewPager.setAdapter(pagerAdapter);

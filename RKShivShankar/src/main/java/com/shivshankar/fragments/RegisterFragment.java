@@ -1,46 +1,39 @@
 package com.shivshankar.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-
-import com.shivshankar.MainActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.adapters.GalleryAdapter;
 
 import java.util.ArrayList;
 
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class RegisterFragment extends Fragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
     boolean isClick;
     ArrayList<String> listImages;
-    Intent i;
 
     private GalleryAdapter galleryListAdapter;
-    private Button btnLogin;
+    private Button btnRegister;
 
-    public LoginFragment() {
+    public RegisterFragment() {
     }
 
     @SuppressLint("ValidFragment")
-    public LoginFragment(boolean isclick) {
+    public RegisterFragment(boolean isclick) {
         isClick = isclick;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
         try {
             init(view);
         } catch (Exception e) {
@@ -48,10 +41,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         }
         return view;
     }
-
     private void init(View v) {
-        btnLogin = (Button)v.findViewById(R.id.btn_login);
-        btnLogin.setOnClickListener(this);
+        btnRegister = (Button)v.findViewById(R.id.btn_register);
+        btnRegister.setOnClickListener(this);
     }
 
     @Override
@@ -63,10 +55,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        if(v == btnLogin){
-            i = new Intent(getActivity(), MainActivitySeller.class);
-            getActivity().finish();
-            startActivity(i);
-        }
     }
 }
