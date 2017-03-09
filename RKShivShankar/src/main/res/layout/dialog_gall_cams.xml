@@ -5,6 +5,7 @@
     android:layout_gravity="bottom"
     android:background="@color/white"
     android:gravity="center"
+    android:paddingBottom="15dp"
     android:orientation="vertical">
 
     <TextView
@@ -28,7 +29,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="25dp"
             android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:background="@drawable/editor_gal"

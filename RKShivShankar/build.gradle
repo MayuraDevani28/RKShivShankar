@@ -4,7 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.material"
+        applicationId "com.shivshankar"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -37,7 +37,5 @@ dependencies {
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.airbnb.android:lottie:1.5.2'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
-
-
-apply plugin: 'com.google.gms.google-services'
