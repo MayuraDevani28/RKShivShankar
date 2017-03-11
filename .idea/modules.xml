@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/RKShivShankar.iml" filepath="$PROJECT_DIR$/RKShivShankar.iml" />
       <module fileurl="file://$PROJECT_DIR$/RKShivShankar/RKShivShankar.iml" filepath="$PROJECT_DIR$/RKShivShankar/RKShivShankar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RKShivShankar/RKShivShankar-RKShivShankar.iml" filepath="$PROJECT_DIR$/RKShivShankar/RKShivShankar-RKShivShankar.iml" />
       <module fileurl="file://$PROJECT_DIR$/ShivShankar.iml" filepath="$PROJECT_DIR$/ShivShankar.iml" />
     </modules>
   </component>

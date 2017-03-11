@@ -177,7 +177,7 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(SplashActivity.this, MainActivitySeller.class));
+                    startActivity(new Intent(SplashActivity.this, UserActivity.class));
                     finish();
                     overridePendingTransition(0, 0);
                 }
