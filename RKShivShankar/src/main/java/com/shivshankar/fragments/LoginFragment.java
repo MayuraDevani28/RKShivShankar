@@ -2,17 +2,13 @@ package com.shivshankar.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 
 import com.shivshankar.MainActivitySeller;
 import com.shivshankar.R;
@@ -50,7 +46,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private void init(View v) {
-        btnLogin = (Button)v.findViewById(R.id.btn_login);
+        btnLogin = (Button) v.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
     }
 
@@ -63,7 +59,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-        if(v == btnLogin){
+        if (v == btnLogin) {
             i = new Intent(getActivity(), MainActivitySeller.class);
             getActivity().finish();
             startActivity(i);

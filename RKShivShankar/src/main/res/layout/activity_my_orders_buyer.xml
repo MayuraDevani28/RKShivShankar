@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/gray_bg_transparent"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:minHeight="42dp">
+
+                <ImageView
+                    android:id="@+id/iv_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_close_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:text="My Ordres"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_orders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/lv_orders"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:scrollbars="none" />
+
+                <TextView
+                    android:id="@+id/tv_order_no_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="No order(s) yet !"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_medium"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

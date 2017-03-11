@@ -62,7 +62,7 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener 
         try {
             if ((strImageURL != null) && !(strImageURL.equals(""))) {
                 strImageURL = strImageURL.replace("/thumb/", "/resized/");
-                Glide.with(getActivity()).load(strImageURL).asBitmap().listener(new MyRequestListener(imageView)).error(R.drawable.ic_menu_camera).into(imageView);
+                Glide.with(getActivity()).load(strImageURL).asBitmap().listener(new MyRequestListener(imageView)).error(R.drawable.camera).into(imageView);
 //                commonVariables.imageLoader.displayImage(imageToolTipURL, imageView, commonVariables.options_3d_loader);
 //                , new SimpleImageLoadingListener() {
 //                    @Override

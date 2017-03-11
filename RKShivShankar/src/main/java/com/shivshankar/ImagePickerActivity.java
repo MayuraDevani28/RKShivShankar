@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.shivshankar.cropimage.CropImageActivity;
 import com.shivshankar.utills.AppPreferences;
@@ -45,6 +46,7 @@ import static com.shivshankar.utills.commonVariables.REQUEST_CODE_GALLERY;
 public class ImagePickerActivity extends Activity {
     public static final String TEMP_PHOTO_FILE_NAME = "temp_photo.jpg";
     File mFileTemp;
+    TextView mTv_title;
     String[] permissions = new String[]{
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA,
@@ -82,6 +84,7 @@ public class ImagePickerActivity extends Activity {
             lp.gravity = Gravity.BOTTOM;
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             getWindow().setAttributes(lp);
+            mTv_title = (TextView) findViewById(R.id.tv_title);
             Button bGallery1 = (Button) findViewById(R.id.bgallary1);
             Button bCamera1 = (Button) findViewById(R.id.bcamera1);
             bGallery1.setOnClickListener(v -> {
@@ -113,6 +116,11 @@ public class ImagePickerActivity extends Activity {
                     e.printStackTrace();
                 }
             });
+
+            if (isBrand)
+                mTv_title.setText("Upload Logo");
+            else
+                mTv_title.setText("Upload Product Image");
 
             String state = Environment.getExternalStorageState();
             if (Environment.MEDIA_MOUNTED.equals(state)) {

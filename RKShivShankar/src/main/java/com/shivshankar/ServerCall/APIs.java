@@ -30,66 +30,76 @@ public class APIs {
         callAPI(activity, onresult, "http://www.happyhomegroup.co.in/mobileapi/GetProjectDetails?projectId=48");
     }
 
-
-
-
+    static DialogRKLoadingView mView = null;
 
     public static void callAPI(AppCompatActivity activity, OnResult onresult, String url) {
-        DialogRKLoadingView mView = new DialogRKLoadingView();
-        mView.show(activity.getSupportFragmentManager(), "load");
+        try {
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                url, null,
-                response -> {
-                    Log.d("TAG", response.toString());
-                    onresult.onResult(response);
+            if (activity != null) {
+                mView = new DialogRKLoadingView();
+                mView.show(activity.getSupportFragmentManager(), "load");
+            }
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                    url, null,
+                    response -> {
+                        Log.d("TAG", response.toString());
+                        onresult.onResult(response);
+                        if (mView != null)
+                            mView.dismiss();
+                    }, error -> {
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
+                onresult.onResult(null);
+                if (mView != null)
                     mView.dismiss();
-                }, error -> {
-            VolleyLog.d("TAG", "Error: " + error.getMessage());
-            onresult.onResult(null);
-            mView.dismiss();
-        });
-        App.getInstance().addToRequestQueue(jsonObjReq);
+            });
+            App.getInstance().addToRequestQueue(jsonObjReq);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     public static void callPostAPI(AppCompatActivity activity, OnResult onresult, String url) {
 
-        ProgressDialog pDialog = new ProgressDialog(activity);
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        try {
+            ProgressDialog pDialog = new ProgressDialog(activity);
+            pDialog.setMessage("Loading...");
+            pDialog.show();
 
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                url, null,
-                response -> {
-                    Log.d("TAG", response.toString());
-                    pDialog.hide();
-                    onresult.onResult(response);
-                }, error -> {
-                    VolleyLog.d("TAG", "Error: " + error.getMessage());
-                    onresult.onResult(null);
-                    pDialog.hide();
-        }) {
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
+                    url, null,
+                    response -> {
+                        Log.d("TAG", response.toString());
+                        pDialog.hide();
+                        onresult.onResult(response);
+                    }, error -> {
+                VolleyLog.d("TAG", "Error: " + error.getMessage());
+                onresult.onResult(null);
+                pDialog.hide();
+            }) {
 
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("name", "Androidhive");
-                params.put("email", "abc@androidhive.info");
-                params.put("password", "password123");
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("name", "Androidhive");
+                    params.put("email", "abc@androidhive.info");
+                    params.put("password", "password123");
 
-                return params;
-            }
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> headers = new HashMap<String, String>();
-//                headers.put("Content-Type", "application/json");
-//                headers.put("apiKey", "xxxxxxxxxxxxxxx");
-//                return headers;
-//            }
-        };
+                    return params;
+                }
+                //            @Override
+                //            public Map<String, String> getHeaders() throws AuthFailureError {
+                //                HashMap<String, String> headers = new HashMap<String, String>();
+                //                headers.put("Content-Type", "application/json");
+                //                headers.put("apiKey", "xxxxxxxxxxxxxxx");
+                //                return headers;
+                //            }
+            };
 
-        App.getInstance().addToRequestQueue(jsonObjReq);
+            App.getInstance().addToRequestQueue(jsonObjReq);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

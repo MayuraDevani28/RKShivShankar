@@ -18,18 +18,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonMethods;
 
-public class BaseActivitySeller extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BaseActivitySeller extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     public TextView mTv_cart_count;
     protected FrameLayout frameLayout;
     Toolbar toolbar;
     SwipeRefreshLayout swipeRefreshLayout;
     DrawerLayout drawer;
+    LinearLayout mLl_close;
+    ImageView iv_close, logo;
+    TextView tv_close;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,15 @@ public class BaseActivitySeller extends AppCompatActivity implements NavigationV
             frameLayout = (FrameLayout) findViewById(R.id.container);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+            mLl_close.setOnClickListener(this);
+            tv_close = (TextView) findViewById(R.id.tv_close);
+            tv_close.setOnClickListener(this);
+            iv_close = (ImageView) findViewById(R.id.iv_close);
+            iv_close.setOnClickListener(this);
+            logo = (ImageView) findViewById(R.id.logo);
+            logo.setOnClickListener(this);
+
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setLogo(R.drawable.ic_logo);
@@ -60,11 +75,12 @@ public class BaseActivitySeller extends AppCompatActivity implements NavigationV
             drawer.addDrawerListener(toggle);
             toggle.syncState();
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
+            navigationView.setOnClickListener(this);
 
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-
+            swipeRefreshLayout.setEnabled(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -163,18 +179,36 @@ public class BaseActivitySeller extends AppCompatActivity implements NavigationV
         try {
             int id = item.getItemId();
 
-            if (id == R.id.nav_camera) {
-            } else if (id == R.id.nav_gallery) {
-            } else if (id == R.id.nav_slideshow) {
-            } else if (id == R.id.nav_manage) {
-            } else if (id == R.id.nav_share) {
-            } else if (id == R.id.nav_send) {
+            if (id == R.id.nav_my_profile) {
+                startActivity(new Intent(this, MyProfileActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (id == R.id.nav_my_products) {
+                startActivity(new Intent(this, ProductsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (id == R.id.nav_notification) {
+                startActivity(new Intent(this, NotificationsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (id == R.id.nav_change_pass) {
+                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
             }
             drawer.closeDrawer(GravityCompat.START);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        try {
+            drawer.closeDrawer(GravityCompat.START);
+            if (view == mLl_close) {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static abstract class MyMenuItemStuffListener implements View.OnClickListener, View.OnLongClickListener {

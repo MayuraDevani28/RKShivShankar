@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.shivshankar.R;
+import com.shivshankar.SplashActivity;
 import com.shivshankar.classes.Suggestion;
 
 import java.util.ArrayList;
@@ -231,5 +232,22 @@ public class commonMethods {
                     mTv_cart_count.setVisibility(View.GONE);
         }
     }
+
+    public static void logout(AppCompatActivity activity) {
+        SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+        editor.putString(commonVariables.KEY_LOGIN_ID, "");
+        editor.putBoolean(commonVariables.KEY_IS_LOG_IN, false);
+        editor.putString(commonVariables.KEY_LOGIN_USERNAME, "");
+//        editor.putString(commonVariables.KEY_ORDER_ID, "0");
+        editor.commit();
+        Intent intent = new Intent(activity, SplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
+        activity.finish();
+        activity.overridePendingTransition(0, 0);
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(10);
+    }
+
 
 }

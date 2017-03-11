@@ -9,7 +9,37 @@
     <string name="not_enough_space">Not enough space</string>
 
     <string name="action_settings">Settings</string>
-    <string name="app_id">ca-app-pub-2184617561999922~8228056893</string>
-    <string name="banner_ad_unit_id">ca-app-pub-2184617561999922/3658256491</string>
+    <!--<string name="app_id">ca-app-pub-2184617561999922~8228056893</string>
+    <string name="banner_ad_unit_id">ca-app-pub-2184617561999922/3658256491</string>-->
     <string name="no_internet">No internet connection</string>
+    <string name="add_mobile_number">Add mobile number</string>
+    <string name="add_mobile">Add mobile</string>
+    <string name="otp_verification_code">OTP verification code has been sent to your registered mobile no, please verify yourself!</string>
+    <string name="resend_verification_code"><u>Resend OTP</u></string>
+    <string name="position">position</string>
+
+
+    <item name="ran_blue" type="color">#e3f4fa</item>
+    <item name="ran_purple" type="color">#f7e9fd</item>
+    <item name="ran_green" type="color">#fafdef</item>
+    <item name="ran_orange" type="color">#fffaf1</item>
+    <item name="ran_red" type="color">#fcefef</item>
+    <item name="ran_darkblue" type="color">#f5fcfd</item>
+    <item name="ran_darkpurple" type="color">#f8ecfd</item>
+    <item name="ran_darkgreen" type="color">#f2fae1</item>
+    <item name="ran_darkorange" type="color">#f7ecdf</item>
+    <item name="ran_darkred" type="color">#fdf1f1</item>
+
+    <integer-array name="androidcolors">
+        <item>@color/ran_blue</item>
+        <item>@color/ran_purple</item>
+        <item>@color/ran_green</item>
+        <item>@color/ran_orange</item>
+        <item>@color/ran_red</item>
+        <item>@color/ran_darkblue</item>
+        <item>@color/ran_darkpurple</item>
+        <item>@color/ran_darkgreen</item>
+        <item>@color/ran_darkorange</item>
+        <item>@color/ran_darkred</item>
+    </integer-array>
 </resources>

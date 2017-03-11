@@ -82,15 +82,23 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/edt_brand_name"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:hint="Brand Name"
-                android:imeOptions="actionGo"
-                android:inputType="text"
-                android:lines="1" />
+                android:textColorHint="@color/text_color_hint">
+
+                <EditText
+                    android:id="@+id/edt_brand_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Brand Name*"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:textSize="@dimen/text_size_small" />
+
+            </android.support.design.widget.TextInputLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

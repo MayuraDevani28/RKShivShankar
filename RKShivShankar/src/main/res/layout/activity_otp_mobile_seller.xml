@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:minHeight="42dp">
+
+            <ImageView
+                android:id="@+id/iv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="5dp"
+                android:src="@drawable/ic_close_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="@color/white"
+        android:fadingEdge="none"
+        android:orientation="vertical"
+        android:requiresFadingEdge="none"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/ll_start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_toolbar"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_logo"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="28dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Ethnic Place Exports"
+                    android:textColor="@color/black"
+                    android:textSize="13dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_otp_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/otp_verification_code"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_medium" />
+
+            <EditText
+                android:id="@+id/edt_otp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/xml_black_border_square_box"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:gravity="center_vertical"
+                android:hint="OTP*"
+                android:imeOptions="actionGo"
+                android:inputType="number"
+                android:lines="1"
+                android:maxLength="13"
+                android:padding="10dp"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:id="@+id/tv_resend_verification_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="15dp"
+                android:text="@string/resend_verification_code"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_medium" />
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/xml_button_yellow_bg"
+                android:text="Submit"
+                android:textAllCaps="false"
+                android:textColor="@color/white_text_selector"
+                android:textSize="@dimen/text_size_medium" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="380dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

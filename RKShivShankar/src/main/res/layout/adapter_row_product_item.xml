@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/whole_item"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginBottom="10dp"
+    android:background="@color/white"
+    android:descendantFocusability="blocksDescendants">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/pbar_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_product_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:onClick="animateIntent"
+                android:transitionName="profile" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_product_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:lines="1"
+                android:padding="5dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_medium" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

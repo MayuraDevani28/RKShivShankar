@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splashscreen_bg">
+    android:background="@drawable/splashscreen_bg"
+    android:orientation="vertical">
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,6 +24,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:orientation="vertical">
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -35,10 +38,11 @@
                         android:drawableLeft="@drawable/ic_user"
                         android:drawablePadding="10dp"
                         android:hint="Full Name"
-                        android:singleLine="true"
-                        android:imeOptions="actionNext" />
+                        android:imeOptions="actionNext"
+                        android:lines="1" />
 
                 </android.support.design.widget.TextInputLayout>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -52,11 +56,12 @@
                         android:drawableLeft="@drawable/ic_email"
                         android:drawablePadding="10dp"
                         android:hint="Email"
-                        android:singleLine="true"
                         android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"/>
+                        android:inputType="textEmailAddress"
+                        android:lines="1" />
 
                 </android.support.design.widget.TextInputLayout>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -70,11 +75,12 @@
                         android:drawableLeft="@drawable/ic_user"
                         android:drawablePadding="10dp"
                         android:hint="Password"
-                        android:singleLine="true"
                         android:imeOptions="actionNext"
-                        android:inputType="textPassword"/>
+                        android:inputType="textPassword"
+                        android:lines="1" />
 
                 </android.support.design.widget.TextInputLayout>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -88,11 +94,12 @@
                         android:drawableLeft="@drawable/ic_mobile"
                         android:drawablePadding="10dp"
                         android:hint="Mobile No."
-                        android:singleLine="true"
                         android:imeOptions="actionNext"
-                        android:inputType="number"/>
+                        android:inputType="number"
+                        android:lines="1" />
 
                 </android.support.design.widget.TextInputLayout>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -103,11 +110,11 @@
                         android:id="@+id/edt_otp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_email"
                         android:drawableLeft="@drawable/ic_user"
                         android:drawablePadding="10dp"
+                        android:drawableRight="@drawable/ic_email"
                         android:hint="Enter OTP"
-                        android:singleLine="true"/>
+                        android:lines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -115,8 +122,8 @@
                     android:id="@+id/ll_login_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
                     android:orientation="vertical">
 
                     <Button
