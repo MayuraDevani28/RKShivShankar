@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Base64;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.shivshankar.utills.AppPreferences;
@@ -24,22 +27,127 @@ import java.io.ByteArrayOutputStream;
 
 public class AddProductActivitySeller extends BaseActivitySeller implements View.OnClickListener {
     ImageView mIv_effectImg, mIv_change_image;
-    EditText mEdt_brand_name, mEdt_price;
+    EditText mEdt_brand_name, mEdt_price, mEdt_min_qty;
     TextView mBtn_submit;
     private Button mBtn_add_brand;
-    private MaterialBetterSpinner mSp_top_fabrics, mSp_bottom_fabrics, mSp_top_dupatta, mSp_all_over, mSp_type, mSp_min_qty;
+    private MaterialBetterSpinner mSp_top_fabrics, mSp_bottom_fabrics, mSp_top_dupatta, mSp_all_over, mSp_type;
+    String strTop, strBottom, strDupatta, strAllOver, strType;
 
+    String[] SP_TOP = {"Top Fabrics"};
+    String[] VAL_TOP = {""};
+    String[] SP_BOTTOM = {"Bottom Fabrics"};
+    String[] VAL_BOTTOM = {""};
+    String[] SP_DUPATTA = {"Dupatta"};
+    String[] VAL_DUPATTA = {""};
+    String[] SP_ALL_OVER = {"All Over"};
+    String[] VAL_ALL_OVER = {""};
+    String[] SP_TYPE = {"Type"};
+    String[] VAL_TYPE = {""};
     Bitmap bmp;
+    ScrollView sv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         super.onCreate(savedInstanceState);
-        View rootView = getLayoutInflater().inflate(R.layout.activity_add_product_seller, frameLayout);
-        bindViews(rootView);
+        try {
+            View rootView = getLayoutInflater().inflate(R.layout.activity_add_product_seller, frameLayout);
+            bindViews(rootView);
+            setTopFabricData(SP_TOP, VAL_TOP);
+            setBottomFabricData(SP_BOTTOM, VAL_BOTTOM);
+            setDupattaData(SP_DUPATTA, VAL_DUPATTA);
+            setAllOverData(SP_ALL_OVER, VAL_ALL_OVER);
+            setTypeData(SP_TYPE, VAL_TYPE);
+
+            sv.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return false;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setTypeData(String[] sp_type, String[] val_type) {
+        try {
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, sp_type);
+            mSp_type.setAdapter(arrayAdapter);
+            mSp_type.setOnItemClickListener((adapterView, view, i, l) -> {
+                strType = val_type[i];
+            });
+            mSp_type.setText("");
+            strType = "";
+            mSp_type.clearFocus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setAllOverData(String[] sp_all_over, String[] val_all_over) {
+        try {
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, sp_all_over);
+            mSp_all_over.setAdapter(arrayAdapter);
+            mSp_all_over.setOnItemClickListener((adapterView, view, i, l) -> {
+                strAllOver = val_all_over[i];
+            });
+            mSp_all_over.setText("");
+            strAllOver = "";
+            mSp_all_over.clearFocus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setDupattaData(String[] sp_dupatta, String[] val_dupatta) {
+        try {
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, sp_dupatta);
+            mSp_top_dupatta.setAdapter(arrayAdapter);
+            mSp_top_dupatta.setOnItemClickListener((adapterView, view, i, l) -> {
+                strDupatta = val_dupatta[i];
+            });
+            mSp_top_dupatta.setText("");
+            strDupatta = "";
+            mSp_top_dupatta.clearFocus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setBottomFabricData(String[] sp_bottom, String[] val_bottom) {
+        try {
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, sp_bottom);
+            mSp_bottom_fabrics.setAdapter(arrayAdapter);
+            mSp_bottom_fabrics.setOnItemClickListener((adapterView, view, i, l) -> {
+                strBottom = val_bottom[i];
+            });
+            mSp_bottom_fabrics.setText("");
+            strBottom = "";
+            mSp_bottom_fabrics.clearFocus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setTopFabricData(String[] sp_top, String[] val_top) {
+        try {
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, sp_top);
+            mSp_top_fabrics.setAdapter(arrayAdapter);
+            mSp_top_fabrics.setOnItemClickListener((adapterView, view, i, l) -> {
+                strTop = val_top[i];
+            });
+            mSp_top_fabrics.setText("");
+            strTop = "";
+            mSp_top_fabrics.clearFocus();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void bindViews(View rootView) {
+        sv = (ScrollView) rootView.findViewById(R.id.sv);
         mIv_effectImg = (ImageView) rootView.findViewById(R.id.iv_effectImg);
         mIv_change_image = (ImageView) rootView.findViewById(R.id.iv_change_image);
         mEdt_brand_name = (EditText) rootView.findViewById(R.id.edt_brand_name);
@@ -51,8 +159,7 @@ public class AddProductActivitySeller extends BaseActivitySeller implements View
         mSp_all_over = (MaterialBetterSpinner) findViewById(R.id.sp_all_over);
         mSp_type = (MaterialBetterSpinner) findViewById(R.id.sp_type);
         mEdt_price = (EditText) findViewById(R.id.edt_price);
-        mSp_min_qty = (MaterialBetterSpinner) findViewById(R.id.sp_min_qty);
-
+        mEdt_min_qty = (EditText) findViewById(R.id.edt_min_qty);
 
         mIv_change_image.setOnClickListener(this);
         try {
@@ -70,7 +177,6 @@ public class AddProductActivitySeller extends BaseActivitySeller implements View
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         mBtn_submit.setOnClickListener(this);
         mEdt_brand_name.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -95,8 +201,6 @@ public class AddProductActivitySeller extends BaseActivitySeller implements View
                 if (strBrandName.isEmpty()) {
                     mEdt_brand_name.setError("Brand name required");
                 } else {
-
-
                     Intent intent = new Intent(getApplicationContext(), MainActivitySeller.class);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -116,7 +220,6 @@ public class AddProductActivitySeller extends BaseActivitySeller implements View
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, true);
                 startActivity(intent);
-//                overridePendingTransition(R.anim.slide_up, android.R.anim.fade_out);
             }
         } catch (Exception e) {
             e.printStackTrace();

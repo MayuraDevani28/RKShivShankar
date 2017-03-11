@@ -112,10 +112,12 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mLl_add_product) {
-                Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
-                intent.putExtra(commonVariables.KEY_IS_BRAND, true);//false
+                Intent intent = new Intent(getApplicationContext(), AddProductActivitySeller.class);
                 startActivity(intent);
-                /**/
+                overridePendingTransition(0, 0);
+//                Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
+//                intent.putExtra(commonVariables.KEY_IS_BRAND, false);
+//                startActivity(intent);
             }
         } catch (Exception e) {
             e.printStackTrace();

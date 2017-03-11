@@ -138,12 +138,10 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
         try {
             int id = item.getItemId();
 
-            if (id == R.id.nav_camera) {
-            } else if (id == R.id.nav_gallery) {
-            } else if (id == R.id.nav_slideshow) {
-            } else if (id == R.id.nav_manage) {
-            } else if (id == R.id.nav_share) {
-            } else if (id == R.id.nav_send) {
+            if (id == R.id.nav_my_profile) {
+            }  else if (id == R.id.nav_my_products) {
+            }else if (id == R.id.nav_notification) {
+            } else if (id == R.id.nav_change_pass) {
             }
             drawer.closeDrawer(GravityCompat.START);
         } catch (Exception e) {

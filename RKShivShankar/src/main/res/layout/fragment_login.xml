@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/splashscreen_bg"
     android:orientation="vertical">
-<!--kdfgh mayura-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -39,7 +38,7 @@
                         android:drawablePadding="10dp"
                         android:hint="username"
                         android:imeOptions="actionNext"
-                        android:singleLine="true" />
+                        android:lines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -57,7 +56,7 @@
                         android:drawablePadding="10dp"
                         android:hint="Password"
                         android:inputType="textPassword"
-                        android:singleLine="true" />
+                        android:lines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -105,5 +104,4 @@
         </LinearLayout>
     </ScrollView>
 
-<!--trty-->
 </LinearLayout>
