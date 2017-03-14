@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/splashscreen_bg"
     android:orientation="vertical">
-<!--kdfgh mayura-->
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,16 +15,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="vertical">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="30dp">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -36,11 +35,12 @@
                         android:id="@+id/edt_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_user"
+                        android:drawableLeft="@drawable/ic_user_app"
                         android:drawablePadding="10dp"
                         android:hint="username"
                         android:imeOptions="actionNext"
-                        android:singleLine="true" />
+                        android:lines="1"
+                        android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -54,11 +54,12 @@
                         android:id="@+id/edt_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_user"
+                        android:drawableLeft="@drawable/ic_password_app_col"
                         android:drawablePadding="10dp"
                         android:hint="Password"
                         android:inputType="textPassword"
-                        android:singleLine="true" />
+                        android:lines="1"
+                        android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -67,45 +68,46 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="18dp"
                     android:text="I am"
+                    android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     android:textSize="@dimen/text_size_medium"
-                    android:textColor="@color/black"/>
+                    android:visibility="gone" />
 
 
                 <RadioGroup
                     android:id="@+id/radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginBottom="18dp"
                     android:gravity="center_vertical"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <RadioButton
                         android:id="@+id/radioSeller"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@drawable/rbtn_selector"
                         android:checked="true"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_medium"
+                        android:gravity="left|center_vertical"
                         android:padding="5dp"
-                        android:text="BUYER" />
+                        android:text="Buyer"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
 
                     <RadioButton
                         android:id="@+id/radioBuyer"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@drawable/rbtn_selector"
-                        android:gravity="center"
+                        android:gravity="left|center_vertical"
                         android:padding="5dp"
-                        android:text="SELLER"
+                        android:text="Seller"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_medium"
-                        />
+                        android:textSize="@dimen/text_size_small" />
 
                 </RadioGroup>
 
@@ -153,5 +155,4 @@
         </LinearLayout>
     </ScrollView>
 
-    <!--trty-->
 </LinearLayout>

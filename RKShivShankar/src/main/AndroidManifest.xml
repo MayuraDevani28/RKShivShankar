@@ -29,14 +29,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.shivshankar.UserActivity"
+            android:name="com.shivshankar.LoginRegisterActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.shivshankar.BaseActivitySeller"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.shivshankar.MainActivitySeller"
@@ -84,7 +83,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.shivshankar.OTPMobileNoActivitySeller"
+            android:name="com.shivshankar.OTPMobileNoActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

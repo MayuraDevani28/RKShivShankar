@@ -223,7 +223,7 @@ public class commonMethods {
             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
             editor.putInt(commonVariables.KEY_NOTI_COUNT, cartcount);
             editor.apply();
-            Log.v("TAG", "CART ITEMS: " + AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
+            Log.v("TAGRK", "CART ITEMS: " + AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
             if (mTv_cart_count != null)
                 if (cartcount > 0) {
                     mTv_cart_count.setVisibility(View.VISIBLE);

@@ -69,12 +69,12 @@ public class AddMobileNoActivityBuyer extends BaseActivitySeller implements View
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         try {
-            if (v == mIv_close) {
+            if (view == mIv_close) {
                 finish();
                 overridePendingTransition(0, 0);
-            } else if (v == mBtn_submit) {
+            } else if (view == mBtn_submit) {
                 String mobile = mEdt_register_mobile_wholesaler.getText().toString().trim();
                 mEdt_register_mobile_wholesaler.setError(null);
 
@@ -86,7 +86,7 @@ public class AddMobileNoActivityBuyer extends BaseActivitySeller implements View
                     mEdt_register_mobile_wholesaler.requestFocus();
                 } else
                     callCheckMobileNoForRegistrationAPI(mobile);
-            } else if (v == mBtn_cancel) {
+            } else if (view == mBtn_cancel) {
                 returnBack(false);
             }
         } catch (Exception e) {
@@ -96,12 +96,12 @@ public class AddMobileNoActivityBuyer extends BaseActivitySeller implements View
 
     private void callCheckMobileNoForRegistrationAPI(String strMob) {
         Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/CheckMobileNoForRegistration")
+                .path("MobileAPI/CheckMobileNoForRegistration")
                 .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, ""))
                 .appendQueryParameter("newMobileNo", strMob)
                 .build();
         String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
+        Log.v("TAGRK", "CAlling With:" + query);
 //        new ServerAPICAll(this, this).execute(query);
         APIs.callAPI(null, this, query);
     }
@@ -137,7 +137,7 @@ public class AddMobileNoActivityBuyer extends BaseActivitySeller implements View
                         builder.setTitle(commonVariables.appname);
                         builder.setMessage(result);
                         builder.setPositiveButton("Ok", (dialog, which) -> {
-                            Intent intent = new Intent(AddMobileNoActivityBuyer.this, OTPMobileNoActivitySeller.class);
+                            Intent intent = new Intent(AddMobileNoActivityBuyer.this, OTPMobileNoActivityBuyer.class);
                             intent.putExtra(commonVariables.KEY_MOBILE_NO, mEdt_register_mobile_wholesaler.getText().toString().trim());
                             intent.putExtra(commonVariables.KEY_OTP_MESSAGE, jObjWhole.optString("resMsg"));
                             startActivityForResult(intent, commonVariables.REQUEST_ADD_MOBILE);

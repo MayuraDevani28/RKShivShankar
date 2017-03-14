@@ -34,12 +34,11 @@ public class commonVariables {
     public static final String KEY_SEARCH_STR = "KEY_SEARCH_STR";
     public static final String KEY_LAST_SORT_BY = "KEY_LAST_SORT_BY";
     public static final java.lang.String KEY_FILTER_DATA = "KEY_FILTER_DATA";
-    public static String STRING_SERVER_URL_FOR_GET_METHOD = "www.happyhomegroup.co.in";
+    public static String STRING_SERVER_URL_FOR_GET_METHOD = "rkshivshankar.vivaa.co";
 
 
-    public static String SERVER_BASIC_URL = "http://www.happyhomegroup.co.in/";
-    public static String SERVER_POST_URL = "www.happyhomegroup.co.in";
-    public static String STRING_SERVER_IMAGE_URL = "http://www.happyhomegroup.co.in/images/";
+    public static String SERVER_BASIC_URL = "http://rkshivshankar.vivaa.co/";
+    public static String STRING_SERVER_IMAGE_URL = "http://rkshivshankar.vivaa.co/images/";
     public static String uuid;
     public static String appname = "Happy Home";
 
@@ -50,5 +49,4 @@ public class commonVariables {
     public static final int REQUEST_RECEIVE_MESSAGE = 5;
     public static final int REQUEST_PASSWORD_CHANGE = 6;
     public static final int REQUEST_CODE_SEARCH = 7;
-//    public static final int REQUEST_CODE_ADD_BRAND = 4;
 }

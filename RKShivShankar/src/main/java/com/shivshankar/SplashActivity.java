@@ -118,12 +118,12 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
 
     private void callCheckAppVersionAPI() {
 //        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-//                .path("mobile/CheckAppVersion")
+//                .path("MobileAPI/CheckAppVersion")
 //                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
 //                .appendQueryParameter("GCMRegistraionId", regId)
 //                .build();
 //        String query = uri.toString();
-//        Log.v("TAG", "Calling With:" + query);
+//        Log.v("TAGRK", "Calling With:" + query);
 //        new ServerAPICAll(null, this).execute(query);
 
     }
@@ -174,13 +174,13 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
 //            }
             mJumpBall.finish();
             final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(SplashActivity.this, UserActivity.class));
-                    finish();
-                    overridePendingTransition(0, 0);
-                }
+            handler.postDelayed(() -> {
+                if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false))
+                    startActivity(new Intent(SplashActivity.this, MainActivitySeller.class));
+                else
+                    startActivity(new Intent(SplashActivity.this, LoginRegisterActivity.class));
+                finish();
+                overridePendingTransition(0, 0);
             }, 600);
 
 //            if (cmobile.isEmpty()) {

@@ -7,14 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -22,6 +22,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -46,26 +47,19 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
     private TextView mBtn_logout;
 
     private TextView mBtn_save_profile;//, mBtn_add_mobile;
-    private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_company, mEdt_register_mobile_wholesaler;
-    private EditText mSp_address_state_billing;
-    private EditText mSp_country_billing;
+    private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_mobile_wholesaler, mEdt_pincode;//mEdt_register_company
+    private EditText mSp_country_billing, mSp_address_state_billing;
+
+    private ImageView mIv_logo_nav, mIv_logo_toolbar;
+    private TextView mTv_username, mTv_logout;
+    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
 
     private TextView mBtn_change_password;
     public ImageView mIv_close;
 
-    String strLoginId = "", strCountryCode = "", strStateCode = "";
+    String strLoginId = "", strCountryCode = "";
     ArrayList<SC3Object> listCountry = new ArrayList<SC3Object>();
-    ArrayList<SC3Object> listState = new ArrayList<SC3Object>();
-    boolean calledFirstTime = true;
 
-    /*
-       <android.support.design.widget.TextInputLayout
-                            android:id="@+id/inputLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:errorEnabled="true">
-
-     */
     public MyProfileActivitySeller() {
     }
 
@@ -84,8 +78,8 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
             bindViews(rootView);
             strLoginId = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "");
 
-            callGetCustomerProfileAPI(strLoginId);
-            callCountryAPI();
+            APIs.GetSellerProfile(this, this, strLoginId);
+            APIs.GetCountryList(this, this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,7 +87,8 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 
     @Override
     public void onBackPressed() {
-        finish();
+        super.onBackPressed();
+//        finish();
         overridePendingTransition(0, 0);
     }
 
@@ -113,80 +108,37 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
         super.onResume();
     }
 
-
-    //    private void callClearCartAPI(String strDeviceUUID) {
-//        Uri uri = new Uri.Builder().scheme("http")
-//                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-//                .path("mobile/ClearCart")
-//                .appendQueryParameter("sessionId", strDeviceUUID).build();
-//        String query = uri.toString();
-//        Log.v("TAG", "Calling With:" + query);
-//        new ServerAPICAll(null, this).execute(query);
-//
-//    }
-    private void callGetCountryStateAPI(String strLoginId, String strCountryCode) {
-        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/GetCountryState")
-                .appendQueryParameter("loginId", strLoginId)
-                .appendQueryParameter("countryCode", strCountryCode)
-                .build();
-        String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
-//        new ServerAPICAll(this, this).execute(query);
-        APIs.callAPI(null, this, query);
-    }
-
-    private void callCountryAPI() {
-        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/GetCountryList")
-                .build();
-        String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
-//        new ServerAPICAll(null, this).execute(query);
-        APIs.callAPI(null, this, query);
-    }
-
-    void callGetCustomerProfileAPI(String strLoginId) {
-        Uri uri = new Uri.Builder().scheme("http")
-                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/GetCustomerProfile")
-                .appendQueryParameter("loginId", strLoginId).build();
-        String query = uri.toString();
-        Log.v("TAG", "Calling With:" + query);
-//        new ServerAPICAll(this, this).execute(query);
-        APIs.callAPI(null, this, query);
-    }
-
-
-    private void CallUpdateCustomerProfileAPI(String loginId, String fname, String lname, String email, String mobile, String city, String company, String State) {
-        Uri uri = new Uri.Builder().scheme("http")
-                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/UpdateCustomerProfile")
-                .appendQueryParameter("loginId", loginId)
-                .appendQueryParameter("FirstName", fname)
-                .appendQueryParameter("LastName", lname)
-                .appendQueryParameter("CompanyName", company)
-                .appendQueryParameter("CityName", city)
-                .appendQueryParameter("StateName", State)
-                .appendQueryParameter("CountryCode", strCountryCode)
-                .build();
-        String query = uri.toString();
-        Log.v("TAG", "Calling With:" + query);
-//        new ServerAPICAll(this, this).execute(query);
-        APIs.callAPI(null, this, query);
-    }
-
     private void bindViews(View rootView) {
+
+        mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
+        mIv_logo_nav.setOnClickListener(this);
+        mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+        mIv_logo_toolbar.setOnClickListener(this);
+        mTv_username = (TextView) findViewById(R.id.tv_username);
+        mTv_logout = (TextView) findViewById(R.id.tv_logout);
+        mTv_logout.setOnClickListener(this);
+        mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+        mLl_close.setOnClickListener(this);
+
+        mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
+        mNav_my_profile.setOnClickListener(this);
+        mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
+        mNav_my_products.setOnClickListener(this);
+        mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
+        mNav_notification.setOnClickListener(this);
+        mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
+        mNav_change_pass.setOnClickListener(this);
 
         mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
 
         mEdt_register_first_name = (EditText) rootView.findViewById(R.id.edt_register_first_name);
         mEdt_register_email = (EditText) rootView.findViewById(R.id.edt_register_email);
-        mEdt_register_company = (EditText) rootView.findViewById(R.id.edt_register_company);
+//        mEdt_register_company = (EditText) rootView.findViewById(R.id.edt_register_company);
         mEdt_register_city = (EditText) rootView.findViewById(R.id.edt_register_city);
-        mEdt_register_mobile_wholesaler = (EditText) rootView.findViewById(R.id.edt_otp);
+        mEdt_pincode = (EditText) rootView.findViewById(R.id.edt_pincode);
         mSp_address_state_billing = (EditText) rootView.findViewById(R.id.edt_register_state);
+        mEdt_register_mobile_wholesaler = (EditText) rootView.findViewById(R.id.edt_otp);
         mSp_country_billing = (EditText) rootView.findViewById(R.id.edt_register_country);
 //        mBtn_add_mobile = (TextView) rootView.findViewById(R.id.btn_add_mobile);
 //        mBtn_add_mobile.setOnClickListener(this);
@@ -224,7 +176,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 if (data != null) {
                     boolean isAddressChanged = data.getExtras().getBoolean(commonVariables.KEY_MOBILE_CHANGED);
                     if (isAddressChanged) {
-                        callGetCustomerProfileAPI(strLoginId);
+                        APIs.GetSellerProfile(this, this, strLoginId);
                     }
                 }
             }
@@ -236,12 +188,42 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 
     @SuppressLint("NewApi")
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
 
         try {
-            if (v == mIv_close) {
+            if (view == mIv_logo_toolbar) {
+                Intent intent = new Intent(this, MainActivitySeller.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_profile) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyProfileActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_products) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ProductsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_notification) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, NotificationsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_change_pass) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mLl_close || view == mIv_logo_nav) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (view == mTv_logout) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(commonVariables.appname);
+                builder.setMessage("Do you want to logout ?");
+                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            } else if (view == mIv_close) {
                 returnBack();
-            } else if (v == mBtn_save_profile) {
+            } else if (view == mBtn_save_profile) {
                 updateProfile();
             }
 //            else if (v == mBtn_add_mobile) {
@@ -249,26 +231,19 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 //                startActivityForResult(intent, commonVariables.REQUEST_ADD_MOBILE);
 //                overridePendingTransition(0, 0);
 //            }
-            else if (v == mBtn_logout) {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+            else if (view == mBtn_logout) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(commonVariables.appname);
                 builder.setMessage("Do you want to logout ?");
-                builder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        commonMethods.logout(MyProfileActivitySeller.this);
-//                        callClearCartAPI(strDeviceUUID);
-                    }
-                });
+                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(MyProfileActivitySeller.this));
                 builder.setNegativeButton("Cancel", null);
                 builder.show();
 
-            } else if (v == mBtn_change_password) {
+            } else if (view == mBtn_change_password) {
                 Intent intent = new Intent(this, ChangePasswordActivitySeller.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-            } else if (v == mSp_country_billing)
+            } else if (view == mSp_country_billing)
                 showCountryDialog(mSp_country_billing);
         } catch (Exception e) {
             e.printStackTrace();
@@ -295,14 +270,15 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
             String email = mEdt_register_email.getText().toString().trim();
             String mobile = mEdt_register_mobile_wholesaler.getText().toString().trim();
             String city = mEdt_register_city.getText().toString().trim();
-            String company = mEdt_register_company.getText().toString().trim();
+            String strPincode = mEdt_pincode.getText().toString().trim();
+//            String company = mEdt_register_company.getText().toString().trim();
             String state = mSp_address_state_billing.getText().toString().trim();
             String strCountryB = mSp_country_billing.getText().toString().trim();
             mEdt_register_first_name.setError(null);
             mEdt_register_email.setError(null);
             mEdt_register_mobile_wholesaler.setError(null);
             mEdt_register_city.setError(null);
-            mEdt_register_company.setError(null);
+//            mEdt_register_company.setError(null);
 
             if (Validation.isEmptyEdittext(mEdt_register_first_name)) {
                 mEdt_register_first_name.setError("First name is required.");
@@ -313,6 +289,9 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
             } else if (city.isEmpty()) {
                 mEdt_register_city.setError("City required");
                 mEdt_register_city.requestFocus();
+            } else if (strPincode.isEmpty()) {
+                mEdt_pincode.setError("Pincode required");
+                mEdt_pincode.requestFocus();
             } else if (strCountryB.isEmpty()) {
                 mSp_country_billing.setError("Country required");
                 mSp_country_billing.requestFocus();
@@ -320,7 +299,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 mSp_address_state_billing.setError("State required");
                 mSp_address_state_billing.requestFocus();
             } else if (commonMethods.knowInternetOn(this)) {
-                CallUpdateCustomerProfileAPI(strLoginId, fname, lname, email, mobile, city, company, state);
+                APIs.UpdateSellerProfile(this, this, strLoginId, fname, email, mobile, city, strPincode, state, strCountryCode);
             } else {
                 commonMethods.showInternetAlert(this);
             }
@@ -342,6 +321,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
     public void onResult(JSONObject jObWhole) {
 
         try {
+
             if (jObWhole != null) {
                 String strAPIName = jObWhole.optString("api");
                 if (strAPIName.equalsIgnoreCase("GetCountryList")) {
@@ -356,41 +336,11 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                     }
                     if (!strCountryCode.isEmpty()) {
                         mSp_country_billing.setText(listCountry.get(getIndexOf(listCountry, strCountryCode)).getName());
-                        callGetCountryStateAPI(strLoginId, strCountryCode);
                     }
-                } else if (strAPIName.equalsIgnoreCase("GetCountryState")) {
-                    listState.clear();
-                    JSONArray jarray = jObWhole.optJSONArray("resData");
-                    int length = jarray.length();
-                    if (length == 0) {
-                        strStateCode = "";
-                        mSp_address_state_billing.setOnFocusChangeListener(null);
-                        mSp_address_state_billing.setCursorVisible(true);
-                        mSp_address_state_billing.setOnClickListener(null);
-                    } else {
-                        for (int i = 0; i < jarray.length(); i++) {
-                            JSONObject jo = jarray.optJSONObject(i);
-                            listState.add(new SC3Object(i, jo.optString("Name"), jo.optString("Id"), ""));
-                        }
-                        mSp_address_state_billing.setOnFocusChangeListener(this);
-                        mSp_address_state_billing.setCursorVisible(false);
-                        mSp_address_state_billing.setOnClickListener(this);
-                    }
-                    if (!strStateCode.isEmpty()) {
-                        mSp_address_state_billing.setText(listState.get(getIndexOf(listState, strStateCode)).getName());
-                    }
-                    if (calledFirstTime) {
-                        try {
-                            strStateCode = getStateIdFromName(listState, mSp_address_state_billing.getText().toString().trim());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    calledFirstTime = false;
-                } else if (strAPIName.equalsIgnoreCase("GetCustomerProfile")) {
+                } else if (strAPIName.equalsIgnoreCase("GetSellerProfile")) {
                     JSONObject JOb = jObWhole.optJSONObject("resData");
 
-                    String strFName = JOb.optString("FirstName"), strLName = JOb.optString("LastName"), strMobile = JOb.optString("MobileNo"), strEmail = JOb.optString("EmailId"), strCity = JOb.optString("CityName"), strCompanyName = JOb.optString("CompanyName"), strState = JOb.optString("StateName");
+                    String strFName = JOb.optString("SellerName"), strLName = JOb.optString("LastName"), strMobile = JOb.optString("MobileNo"), strEmail = JOb.optString("EmailId"), strCity = JOb.optString("City"), strPincode = JOb.optString("PinCode"), strState = JOb.optString("State");
                     if (!strFName.equalsIgnoreCase("null")) {
                         mEdt_register_first_name.setText(strFName);
                         mEdt_register_first_name.setText(strFName + " " + strLName);
@@ -405,15 +355,17 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                         mEdt_register_mobile_wholesaler.setText(strMobile);
                     if (!strCity.equalsIgnoreCase("null"))
                         mEdt_register_city.setText(strCity);
-                    if (!strCompanyName.equalsIgnoreCase("null"))
-                        mEdt_register_company.setText(strCompanyName);
+                    if (!strPincode.equalsIgnoreCase("null"))
+                        mEdt_pincode.setText(strPincode);
                     if (!strState.equalsIgnoreCase("null"))
                         mSp_address_state_billing.setText(strState);
                     strCountryCode = JOb.optString("CountryCode");
                     if (strCountryCode == null)
                         strCountryCode = "";
+                    if (!strCountryCode.isEmpty())
+                        mSp_country_billing.setText(listCountry.get(getIndexOf(listCountry, strCountryCode)).getName());
 
-                } else if (strAPIName.equalsIgnoreCase("UpdateCustomerProfile")) {
+                } else if (strAPIName.equalsIgnoreCase("UpdateSellerProfile")) {
                     int strresId = jObWhole.optInt("resId");
 
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
@@ -448,16 +400,6 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
         }
     }
 
-    private String getStateIdFromName(ArrayList<SC3Object> listState, String str) {
-        String strCode = "";
-        for (int i = 0; i < listState.size(); i++) {
-            if (listState.get(i).getName().equalsIgnoreCase(str)) {
-                strCode = listState.get(i).getIFSCCode();
-            }
-        }
-        return strCode;
-    }
-
     private int getIndexOf(ArrayList<SC3Object> listCountry, String strCountryCode) {
         int ccode = 254;
         for (int i = 0; i < listCountry.size(); i++) {
@@ -474,53 +416,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
         if (arg1 == true) {
             if (arg0 == mSp_country_billing)
                 showCountryDialog((EditText) arg0);
-            else if (arg0 == mSp_address_state_billing)
-                showStateDialog((EditText) arg0);
         }
-    }
-
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private void showStateDialog(final EditText mEdt_state) {
-
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.custom_dialog);
-        EditText inputSearch = (EditText) dialog.findViewById(R.id.inputSearch);
-        ListView list = (ListView) dialog.findViewById(R.id.list_view);
-        dialog.setTitle("Select State");
-        dialog.setCancelable(true);
-        final CountryAdapter state_adapter = new CountryAdapter(this, listState);
-        list.setAdapter(state_adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View arg1, int position, long arg3) {
-                try {
-                    SC3Object country = (SC3Object) parent.getItemAtPosition(position);
-                    mEdt_state.setError(null);
-                    mEdt_state.setText(country.getName());
-                    strStateCode = country.getIFSCCode();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                commonMethods.hidesoftKeyboard(MyProfileActivitySeller.this);
-                dialog.cancel();
-            }
-        });
-        inputSearch.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                state_adapter.getFilter().filter(cs);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-            }
-        });
-        dialog.show();
     }
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -542,9 +438,6 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                     mEdt_country.setError(null);
                     mEdt_country.setText(country.getName());
                     strCountryCode = country.getIFSCCode();
-                    mSp_address_state_billing.setText("");
-
-                    callGetCountryStateAPI(strLoginId, strCountryCode);
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimaryDark"
         android:padding="8dp"
-        android:text="Welcome User!"
+        android:text="Welcome Seller!"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_large" />
 

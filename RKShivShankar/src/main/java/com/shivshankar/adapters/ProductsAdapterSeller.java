@@ -83,7 +83,7 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
             holder.mIv_product_image.setOnClickListener(v -> {
                 final int position1 = Integer.parseInt(v.getTag(R.string.position).toString());
                 try {
-                    Log.v("TAG", "I'm Clicked" + position1);
+                    Log.v("TAGRK", "I'm Clicked" + position1);
 
                     try {
                         final Animation anim = AnimationUtils.loadAnimation(activity, 0);
@@ -148,7 +148,7 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
     private void callAddCatalogToCartAPI(String catalogId, int i, String strLoginId, String strcatalogSizes) {
 
         Uri uri = new Uri.Builder().scheme("http")
-                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("mobile/AddCatalogToCart")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/AddCatalogToCart")
                 .appendQueryParameter("catalogId", catalogId)
                 .appendQueryParameter("catalogQty", i + "")
                 .appendQueryParameter("loginId", strLoginId + "")
@@ -156,7 +156,7 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
                 .appendQueryParameter("productIds", "").build();
 
         String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
+        Log.v("TAGRK", "CAlling With:" + query);
         APIs.callAPI(null, this, query);
     }
 

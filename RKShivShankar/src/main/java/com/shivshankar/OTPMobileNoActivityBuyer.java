@@ -30,7 +30,7 @@ import com.shivshankar.utills.commonVariables;
 import org.json.JSONObject;
 
 
-public class OTPMobileNoActivitySeller extends BaseActivitySeller implements View.OnClickListener, OnResult {
+public class OTPMobileNoActivityBuyer extends BaseActivitySeller implements View.OnClickListener, OnResult {
     private EditText mEdt_OTP;
     private TextView mTv_resend_verification_code, mTv_otp_message;
     private Button mBtn_submit;
@@ -111,11 +111,11 @@ public class OTPMobileNoActivitySeller extends BaseActivitySeller implements Vie
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         try {
-            if (v == mIv_close) {
+            if (view == mIv_close) {
                 returnBack(false);
-            } else if (v == mBtn_submit) {
+            } else if (view == mBtn_submit) {
                 String strOTP = mEdt_OTP.getText().toString().trim();
                 mEdt_OTP.setError(null);
 
@@ -124,7 +124,7 @@ public class OTPMobileNoActivitySeller extends BaseActivitySeller implements Vie
                     mEdt_OTP.requestFocus();
                 } else
                     callVerifyOTPForNewMobileNoAPI(strOTP);
-            } else if (v == mTv_resend_verification_code) {
+            } else if (view == mTv_resend_verification_code) {
                 callCheckMobileNoForRegistrationAPI(strMobileNo);
             }
         } catch (Exception e) {
@@ -134,12 +134,12 @@ public class OTPMobileNoActivitySeller extends BaseActivitySeller implements Vie
 
     private void callCheckMobileNoForRegistrationAPI(String strMob) {
         Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/CheckMobileNoForRegistration")
+                .path("MobileAPI/CheckMobileNoForRegistration")
                 .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, ""))
                 .appendQueryParameter("newMobileNo", strMob)
                 .build();
         String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
+        Log.v("TAGRK", "CAlling With:" + query);
 //        new ServerAPICAll(this, this).execute(query);
         APIs.callAPI(null, this, query);
     }
@@ -147,13 +147,13 @@ public class OTPMobileNoActivitySeller extends BaseActivitySeller implements Vie
 
     private void callVerifyOTPForNewMobileNoAPI(String strOTP) {
         Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/VerifyOTPForNewMobileNo")
+                .path("MobileAPI/VerifyOTPForNewMobileNo")
                 .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, ""))
                 .appendQueryParameter("strOTP", strOTP)
                 .appendQueryParameter("newMobileNo", strMobileNo)
                 .build();
         String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
+        Log.v("TAGRK", "CAlling With:" + query);
 //        new ServerAPICAll(null, this).execute(query);
         APIs.callAPI(null, this, query);
     }

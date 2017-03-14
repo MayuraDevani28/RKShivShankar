@@ -1,5 +1,6 @@
 package com.shivshankar;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,6 +27,7 @@ import com.shivshankar.customcontrols.SwipeDismissListViewTouchListener;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
@@ -36,6 +40,11 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
     boolean mAlreadyLoaded = false;
     ListView mLv_notification;
     TextView mTv_no_data_found;
+
+    private ImageView mIv_logo_nav, mIv_logo_toolbar;
+    private TextView mTv_username, mTv_logout;
+    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
+
     NotificationListAdapter mAdapter;
     String strLoginId = "0";
     //    SwipeRefreshLayout swipeRefreshLayout;
@@ -69,12 +78,12 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
     private void callRemoveNotificationsAPI(String strLoginId, String notificationCustBindId) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/RemoveNotifications")
+                .path("MobileAPI/RemoveNotifications")
                 .appendQueryParameter("loginId", strLoginId)
                 .appendQueryParameter("notificationCustBindId", notificationCustBindId)
                 .build();
         String query = uri.toString();
-        Log.v("TAG", "Calling With:" + query);
+        Log.v("TAGRK", "Calling With:" + query);
 //        new ServerAPICAll(null, this).execute(query);
         APIs.callAPI(null, this, query);
     }
@@ -88,16 +97,35 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
     private void callGetNotificationsAPI(AppCompatActivity activity, String userId2) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/GetNotifications")
+                .path("MobileAPI/GetNotifications")
                 .appendQueryParameter("loginId", userId2)
                 .build();
         String query = uri.toString();
-        Log.v("TAG", "Calling With:" + query);
+        Log.v("TAGRK", "Calling With:" + query);
         APIs.callAPI(null, this, query);
     }
 
     private void bindViews(View rootView) {
         try {
+            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
+            mIv_logo_nav.setOnClickListener(this);
+            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+            mIv_logo_toolbar.setOnClickListener(this);
+            mTv_username = (TextView) findViewById(R.id.tv_username);
+            mTv_logout = (TextView) findViewById(R.id.tv_logout);
+            mTv_logout.setOnClickListener(this);
+            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+            mLl_close.setOnClickListener(this);
+
+            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
+            mNav_my_profile.setOnClickListener(this);
+            mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
+            mNav_my_products.setOnClickListener(this);
+            mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
+            mNav_notification.setOnClickListener(this);
+            mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
+            mNav_change_pass.setOnClickListener(this);
+
             mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
             mLv_notification = (ListView) rootView.findViewById(R.id.ll_notification);
@@ -236,8 +264,38 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
     }
 
     @Override
-    public void onClick(View v) {
-        if (v == mIv_close) {
+    public void onClick(View view) {
+        if (view == mIv_logo_toolbar) {
+            Intent intent = new Intent(this, MainActivitySeller.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (view == mNav_my_profile) {
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(this, MyProfileActivitySeller.class));
+            overridePendingTransition(0, 0);
+        } else if (view == mNav_my_products) {
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(this, ProductsActivitySeller.class));
+            overridePendingTransition(0, 0);
+        } else if (view == mNav_notification) {
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(this, NotificationsActivitySeller.class));
+            overridePendingTransition(0, 0);
+        } else if (view == mNav_change_pass) {
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+            overridePendingTransition(0, 0);
+        } else if (view == mLl_close || view == mIv_logo_nav) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (view == mTv_logout) {
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+            builder.setTitle(commonVariables.appname);
+            builder.setMessage("Do you want to logout ?");
+            builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
+            builder.setNegativeButton("Cancel", null);
+            builder.show();
+        } else if (view == mIv_close) {
             finish();
             overridePendingTransition(0, 0);
         }

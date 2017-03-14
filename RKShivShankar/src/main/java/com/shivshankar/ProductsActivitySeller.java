@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.shivshankar.classes.Category;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -37,15 +39,15 @@ import java.util.ArrayList;
 public class ProductsActivitySeller extends BaseActivitySeller implements OnClickListener, OnResult {
 
     String strLoginId = "";
-    TextView mTv_counter;
+    TextView mTv_counter, mTv_no_data_found, mTv_title, mTv_no_items;
     private LinearLayout mLl_counter;
-
     RecyclerView mGv_items;
     RelativeLayout mFl_whole;
-    TextView mTv_no_data_found, mTv_title, mTv_no_items;
-    LinearLayout mCv_bottom_menu;
-    private LinearLayout mTv_sort;
-    private LinearLayout mTv_filter;
+    LinearLayout mCv_bottom_menu, mTv_sort, mTv_filter;
+    private ImageView mIv_logo_nav, mIv_logo_toolbar;
+    private TextView mTv_username, mTv_logout;
+    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
+
     LinearLayoutManager mLayoutManager;
     public ImageView mIv_close;
 
@@ -104,7 +106,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
 
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/GetCatalogList")
+                .path("MobileAPI/GetCatalogList")
                 .appendQueryParameter("categoryId", cId)
                 .appendQueryParameter("filter", filter)
                 .appendQueryParameter("sortby", sortby)
@@ -115,7 +117,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 .build();
 
         String query = uri.toString();
-        Log.v("TAG", "Calling With:" + query);
+        Log.v("TAGRK", "Calling With:" + query);
 //        new ServerAPICAll(activity, this).execute(query);
         APIs.callAPI(activity, this, query);
     }
@@ -123,6 +125,25 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     private void bindViews(View rootView) {
 
         try {
+            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
+            mIv_logo_nav.setOnClickListener(this);
+            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+            mIv_logo_toolbar.setOnClickListener(this);
+            mTv_username = (TextView) findViewById(R.id.tv_username);
+            mTv_logout = (TextView) findViewById(R.id.tv_logout);
+            mTv_logout.setOnClickListener(this);
+            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+            mLl_close.setOnClickListener(this);
+
+            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
+            mNav_my_profile.setOnClickListener(this);
+            mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
+            mNav_my_products.setOnClickListener(this);
+            mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
+            mNav_notification.setOnClickListener(this);
+            mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
+            mNav_change_pass.setOnClickListener(this);
+
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mIv_close = (ImageView) findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
@@ -143,7 +164,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     mLl_counter.setVisibility(View.GONE);
-                    Log.v("TAG", "NewState:" + newState);
+                    Log.v("TAGRK", "NewState:" + newState);
                 }
 
                 @Override
@@ -287,9 +308,39 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
 
     @SuppressLint("NewApi")
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         try {
-            if (v == mIv_close) {
+            if (view == mIv_logo_toolbar) {
+                Intent intent = new Intent(this, MainActivitySeller.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_profile) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyProfileActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_products) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ProductsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_notification) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, NotificationsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_change_pass) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mLl_close || view == mIv_logo_nav) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (view == mTv_logout) {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                builder.setTitle(commonVariables.appname);
+                builder.setMessage("Do you want to logout ?");
+                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            } else if (view == mIv_close) {
                 Intent output = new Intent();
                 setResult(RESULT_OK, output);
                 finish();

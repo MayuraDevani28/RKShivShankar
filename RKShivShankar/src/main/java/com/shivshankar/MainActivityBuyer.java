@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.arlib.floatingsearchview.util.Util;
-import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.DataHelper;
 import com.shivshankar.classes.Suggestion;
 import com.shivshankar.utills.ExceptionHandler;
@@ -50,7 +49,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
             fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show());
 
-            APIs.GetHomeBannerwithText(this, this);
+//            APIs.GetHomeBannerwithText(this, this);
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -58,7 +57,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
                 }
                 swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light, android.R.color.holo_purple, android.R.color.holo_blue_light);
                 swipeRefreshLayout.setOnRefreshListener(() -> {
-                    APIs.GetHomeBannerwithText(MainActivityBuyer.this, MainActivityBuyer.this);
+//                    APIs.GetHomeBannerwithText(MainActivityBuyer.this, MainActivityBuyer.this);
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -77,7 +76,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
     @Override
     public void onResult(JSONObject result) {
         swipeRefreshLayout.setRefreshing(false);
-        Log.v("TAG", "RESULT: " + result.toString());
+        Log.v("TAGRK", "RESULT: " + result.toString());
     }
 
     @Override

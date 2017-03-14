@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.shivshankar.ServerCall.APIs;
@@ -36,6 +39,11 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
     private EditText mEdt_current_password, mEdt_new_password, mEdt_confirm_password;
     ImageView mIv_eye_current_password, mIv_eye_new_password, mIv_eye_confirm_password;
     TextView mBtn_cancel;
+
+    private ImageView mIv_logo_nav, mIv_logo_toolbar;
+    private TextView mTv_username, mTv_logout;
+    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
+
     //    private TextView mTv_forgot_passord;
     private Button mBtn_save;
     ImageView mIv_close;
@@ -75,6 +83,25 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
 
     private void bindViews(View rootView) {
         try {
+            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
+            mIv_logo_nav.setOnClickListener(this);
+            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+            mIv_logo_toolbar.setOnClickListener(this);
+            mTv_username = (TextView) findViewById(R.id.tv_username);
+            mTv_logout = (TextView) findViewById(R.id.tv_logout);
+            mTv_logout.setOnClickListener(this);
+            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+            mLl_close.setOnClickListener(this);
+
+            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
+            mNav_my_profile.setOnClickListener(this);
+            mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
+            mNav_my_products.setOnClickListener(this);
+            mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
+            mNav_notification.setOnClickListener(this);
+            mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
+            mNav_change_pass.setOnClickListener(this);
+
             mEdt_current_password = (EditText) rootView.findViewById(R.id.edt_current_password);
             mEdt_new_password = (EditText) rootView.findViewById(R.id.edt_new_password);
             mEdt_confirm_password = (EditText) rootView.findViewById(R.id.edt_confirm_password);
@@ -150,18 +177,48 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         try {
             mEdt_current_password.setError(null);
             mEdt_confirm_password.setError(null);
             mEdt_new_password.setError(null);
-            if (v == mIv_close || v == mBtn_cancel) {
+            if (view == mIv_logo_toolbar) {
+                Intent intent = new Intent(this, MainActivitySeller.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_profile) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyProfileActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_products) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ProductsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_notification) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, NotificationsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_change_pass) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mLl_close || view == mIv_logo_nav) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (view == mTv_logout) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(commonVariables.appname);
+                builder.setMessage("Do you want to logout ?");
+                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            } else if (view == mIv_close || view == mBtn_cancel) {
                 returnBack();
-            } else if (v == mIv_eye_confirm_password) {
+            } else if (view == mIv_eye_confirm_password) {
                 passwordVisibilityConfirm(mEdt_confirm_password);
-            } else if (v == mIv_eye_current_password) {
+            } else if (view == mIv_eye_current_password) {
                 passwordVisibility_curr(mEdt_current_password);
-            } else if (v == mIv_eye_new_password) {
+            } else if (view == mIv_eye_new_password) {
                 passwordVisibility_new(mEdt_new_password);
             }
 //            else if (v == mTv_forgot_passord) {
@@ -226,7 +283,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
 //                dialog.getButton(android.support.v7.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.black));
 //
 //            }
-            else if (v == mBtn_save) {
+            else if (view == mBtn_save) {
                 String strPassword = mEdt_current_password.getText().toString().trim();
                 String strNew_password = mEdt_new_password.getText().toString().trim();
                 String strConfirm_password = mEdt_confirm_password.getText().toString().trim();
@@ -269,12 +326,12 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
     private void callChangePasswordAPI(String strLoginId, String strPassword, String strNewPassword) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/ChangePassword")
+                .path("MobileAPI/ChangePassword")
                 .appendQueryParameter("loginId", strLoginId)
                 .appendQueryParameter("oldPassword", strPassword)
                 .appendQueryParameter("newPassword", strNewPassword).build();
         String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
+        Log.v("TAGRK", "CAlling With:" + query);
 //        new ServerAPICAll(ChangePasswordActivitySeller.this, this).execute(query);
         APIs.callAPI(null, this, query);
     }
@@ -282,11 +339,11 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
 
     private void callResendRegistrationOTPAPI(String strUserId) {
         Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/ResendRegistrationOTP")
+                .path("MobileAPI/ResendRegistrationOTP")
                 .appendQueryParameter("strUserId", strUserId)
                 .build();
         String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
+        Log.v("TAGRK", "CAlling With:" + query);
 //        new ServerAPICAll(this, this).execute(query);
         APIs.callAPI(null, this, query);
     }

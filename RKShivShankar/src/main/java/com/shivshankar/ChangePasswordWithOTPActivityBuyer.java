@@ -177,20 +177,20 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller imple
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         try {
             mEdt_otp.setError(null);
             mEdt_confirm_password.setError(null);
             mEdt_new_password.setError(null);
-            if (v == mIv_close) {
+            if (view == mIv_close) {
                 returnBack(false);
-            } else if (v == mIv_eye_confirm_password) {
+            } else if (view == mIv_eye_confirm_password) {
                 passwordVisibilityConfirm(mEdt_confirm_password);
-            } else if (v == mTv_resend_verification_code) {
+            } else if (view == mTv_resend_verification_code) {
                 callResendRegistrationOTPAPI();
-            } else if (v == mIv_eye_new_password) {
+            } else if (view == mIv_eye_new_password) {
                 passwordVisibility_new(mEdt_new_password);
-            } else if (v == mBtn_save) {
+            } else if (view == mBtn_save) {
 
                 String strOTP = mEdt_otp.getText().toString().trim();
                 String strNew_password = mEdt_new_password.getText().toString().trim();
@@ -236,11 +236,11 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller imple
 
     private void callResendRegistrationOTPAPI() {
         Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/ResendRegistrationOTP")
+                .path("MobileAPI/ResendRegistrationOTP")
                 .appendQueryParameter("strUserId", strUserId)
                 .build();
         String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
+        Log.v("TAGRK", "CAlling With:" + query);
 //        new ServerAPICAll(this, this).execute(query);
         APIs.callAPI(this, this, query);
     }
@@ -248,12 +248,12 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller imple
     private void callForgotPasswardAPI(String strOTP, String strLoginId, String strNewPassword) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/ForgotPassward")
+                .path("MobileAPI/ForgotPassward")
                 .appendQueryParameter("strUserId", strLoginId)
                 .appendQueryParameter("strOTP", strOTP)
                 .appendQueryParameter("newPassword", strNewPassword).build();
         String query = uri.toString();
-        Log.v("TAG", "CAlling With:" + query);
+        Log.v("TAGRK", "CAlling With:" + query);
         APIs.callAPI(this, this, query);
     }
 

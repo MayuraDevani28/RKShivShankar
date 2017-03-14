@@ -7,16 +7,19 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.view.GravityCompat;
 import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import java.io.ByteArrayOutputStream;
@@ -26,6 +29,10 @@ public class AddBrandActivitySeller extends BaseActivitySeller implements View.O
     EditText mEdt_brand_name;
     TextView mBtn_submit;
     Bitmap bmp;
+
+    private ImageView mIv_logo_nav, mIv_logo_toolbar;
+    private TextView mTv_username, mTv_logout;
+    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,25 @@ public class AddBrandActivitySeller extends BaseActivitySeller implements View.O
         mIv_change_image = (ImageView) rootView.findViewById(R.id.iv_change_image);
         mEdt_brand_name = (EditText) rootView.findViewById(R.id.edt_brand_name);
         mBtn_submit = (TextView) rootView.findViewById(R.id.btn_submit);
+
+        mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
+        mIv_logo_nav.setOnClickListener(this);
+        mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+        mIv_logo_toolbar.setOnClickListener(this);
+        mTv_username = (TextView) findViewById(R.id.tv_username);
+        mTv_logout = (TextView) findViewById(R.id.tv_logout);
+        mTv_logout.setOnClickListener(this);
+        mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+        mLl_close.setOnClickListener(this);
+
+        mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
+        mNav_my_profile.setOnClickListener(this);
+        mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
+        mNav_my_products.setOnClickListener(this);
+        mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
+        mNav_notification.setOnClickListener(this);
+        mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
+        mNav_change_pass.setOnClickListener(this);
 
 
         mIv_change_image.setOnClickListener(this);
@@ -80,13 +106,41 @@ public class AddBrandActivitySeller extends BaseActivitySeller implements View.O
     @Override
     public void onClick(View view) {
         try {
-            if (view == mBtn_submit) {
+             if (view == mIv_logo_toolbar) {
+                Intent intent = new Intent(this, MainActivitySeller.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_profile) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyProfileActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_products) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ProductsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_notification) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, NotificationsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_change_pass) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mLl_close || view == mIv_logo_nav) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (view == mTv_logout) {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                builder.setTitle(commonVariables.appname);
+                builder.setMessage("Do you want to logout ?");
+                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            } else if (view == mBtn_submit) {
                 String strBrandName = mEdt_brand_name.getText().toString().trim();
                 if (strBrandName.isEmpty()) {
                     mEdt_brand_name.setError("Brand name required");
                 } else {
-
-
                     Intent intent = new Intent(getApplicationContext(), MainActivitySeller.class);
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);

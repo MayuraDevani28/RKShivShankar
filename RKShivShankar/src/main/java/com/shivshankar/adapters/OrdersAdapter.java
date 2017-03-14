@@ -42,8 +42,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             holder.mTv_view.setTag(R.string.position, position);
             holder.mTv_view.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    TextView tv = (TextView) v;
+                public void onClick(View view) {
+                    TextView tv = (TextView) view;
                     final int pos = Integer.parseInt(tv.getTag(R.string.position).toString());
 
 //                    OrderDetailFragment fragment = new OrderDetailFragment(listItems.get(pos));
@@ -62,7 +62,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
                 holder.mTv_ship_now.setTag(R.string.position, position);
                 holder.mTv_ship_now.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
 //                        TextView tv = (TextView) v;
 //                        final int pos = Integer.parseInt(tv.getTag(R.string.position).toString());
 //                        Intent intent = new Intent(activity, ShipNowOrdersActivity.class);

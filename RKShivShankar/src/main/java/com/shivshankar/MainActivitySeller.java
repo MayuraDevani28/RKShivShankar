@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.view.GravityCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONObject;
@@ -28,6 +30,9 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     ImageView mIv_change_image, mIv_effectImg;
     TextView mTv_brand_name;
     View view_top;
+    private ImageView mIv_logo_nav, mIv_logo_toolbar;
+    private TextView mTv_username, mTv_logout;
+    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,16 +40,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         super.onCreate(savedInstanceState);
         try {
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_seller, frameLayout);
-            mLl_create_brand = (LinearLayout) rootView.findViewById(R.id.ll_create_brand);
-            mLl_create_brand.setOnClickListener(this);
-            mLl_brand = (LinearLayout) rootView.findViewById(R.id.ll_brand);
-            mLl_add_product = (LinearLayout) rootView.findViewById(R.id.ll_add_product);
-            mLl_add_product.setOnClickListener(this);
-            mIv_change_image = (ImageView) rootView.findViewById(R.id.iv_change_image);
-            mIv_change_image.setOnClickListener(this);
-            mIv_effectImg = (ImageView) rootView.findViewById(R.id.iv_effectImg);
-            mTv_brand_name = (TextView) rootView.findViewById(R.id.tv_brand_name);
-            view_top = rootView.findViewById(R.id.view_top);
+            bindViews(rootView);
 
             try {
                 byte[] byteArray = Base64.decode(AppPreferences.getPrefs().getString("image", ""), Base64.DEFAULT);
@@ -60,7 +56,6 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 e.printStackTrace();
             }
 //            new ServerSMS().execute();
-
 //            APIs.GetHomeBannerwithText(this, this);
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -77,6 +72,39 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void bindViews(View rootView) {
+        mLl_create_brand = (LinearLayout) rootView.findViewById(R.id.ll_create_brand);
+        mLl_create_brand.setOnClickListener(this);
+        mLl_brand = (LinearLayout) rootView.findViewById(R.id.ll_brand);
+        mLl_add_product = (LinearLayout) rootView.findViewById(R.id.ll_add_product);
+        mLl_add_product.setOnClickListener(this);
+        mIv_change_image = (ImageView) rootView.findViewById(R.id.iv_change_image);
+        mIv_change_image.setOnClickListener(this);
+        mIv_effectImg = (ImageView) rootView.findViewById(R.id.iv_effectImg);
+        mTv_brand_name = (TextView) rootView.findViewById(R.id.tv_brand_name);
+        view_top = rootView.findViewById(R.id.view_top);
+
+
+        mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
+        mIv_logo_nav.setOnClickListener(this);
+        mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+        mIv_logo_toolbar.setOnClickListener(this);
+        mTv_username = (TextView) findViewById(R.id.tv_username);
+        mTv_logout = (TextView) findViewById(R.id.tv_logout);
+        mTv_logout.setOnClickListener(this);
+        mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+        mLl_close.setOnClickListener(this);
+
+        mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
+        mNav_my_profile.setOnClickListener(this);
+        mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
+        mNav_my_products.setOnClickListener(this);
+        mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
+        mNav_notification.setOnClickListener(this);
+        mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
+        mNav_change_pass.setOnClickListener(this);
     }
 
     private void setBrandVisibility(boolean b, RoundedBitmapDrawable circularBitmapDrawable, String strBrandName) {
@@ -112,13 +140,37 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mLl_add_product) {
-                Intent intent = new Intent(getApplicationContext(), AddProductActivitySeller.class);
+                Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
+                intent.putExtra(commonVariables.KEY_IS_BRAND, false);
                 startActivity(intent);
+            } else if (view == mNav_my_profile) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyProfileActivitySeller.class));
                 overridePendingTransition(0, 0);
-//                Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
-//                intent.putExtra(commonVariables.KEY_IS_BRAND, false);
-//                startActivity(intent);
+            } else if (view == mNav_my_products) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ProductsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_notification) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, NotificationsActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_change_pass) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mLl_close || view == mIv_logo_nav) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else if (view == mTv_logout) {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                builder.setTitle(commonVariables.appname);
+                builder.setMessage("Do you want to logout ?");
+                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -128,7 +180,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     public void onResult(JSONObject result) {
         try {
             swipeRefreshLayout.setRefreshing(false);
-            Log.v("TAG", "RESULT: " + result.toString());
+            Log.v("TAGRK", "RESULT: " + result.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

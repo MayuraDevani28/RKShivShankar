@@ -10,7 +10,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,17 +53,9 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             toggle.setDrawerIndicatorEnabled(false);
             toolbar.setNavigationIcon(R.drawable.ic_menu);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    drawer.openDrawer(Gravity.LEFT);
-                }
-            });
+            toolbar.setNavigationOnClickListener(view -> drawer.openDrawer(GravityCompat.START));
             drawer.addDrawerListener(toggle);
             toggle.syncState();
-
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
 
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
@@ -85,7 +76,7 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
             commonMethods.cartCountAnimation(this, mTv_cart_count);
             new BaseActivitySeller.MyMenuItemStuffListener(menu_layout, "Show hot message") {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_cart_count);
                 }
             };
@@ -139,8 +130,8 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
             int id = item.getItemId();
 
             if (id == R.id.nav_my_profile) {
-            }  else if (id == R.id.nav_my_products) {
-            }else if (id == R.id.nav_notification) {
+            } else if (id == R.id.nav_my_products) {
+            } else if (id == R.id.nav_notification) {
             } else if (id == R.id.nav_change_pass) {
             }
             drawer.closeDrawer(GravityCompat.START);

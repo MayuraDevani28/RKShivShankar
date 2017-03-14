@@ -87,11 +87,11 @@ public class MyOrdersActivityBuyer extends AppCompatActivity implements OnClickL
 
     private void callOrdersAPI(String strLoginId) {
         Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("mobile/GetMyOrders")
+                .path("MobileAPI/GetMyOrders")
                 .appendQueryParameter("loginId", strLoginId)
                 .build();
         String query = uri.toString();
-        Log.v("TAG", "Calling With:" + query);
+        Log.v("TAGRK", "Calling With:" + query);
 //        new ServerAPICAll(this, this).execute(query);
         APIs.callAPI(null, this, query);
     }
@@ -124,10 +124,10 @@ public class MyOrdersActivityBuyer extends AppCompatActivity implements OnClickL
 
     @SuppressLint("NewApi")
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
 
         try {
-            if (v == mIv_close) {
+            if (view == mIv_close) {
                 returnBack();
             }
         } catch (Exception e) {
