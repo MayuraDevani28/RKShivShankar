@@ -306,14 +306,13 @@ public class CropImageActivity extends MonitoredActivity {
 
         try {
             /*
-			 * if (!ImageManager.hasStorage()) { return NO_STORAGE_ERROR; } else
+             * if (!ImageManager.hasStorage()) { return NO_STORAGE_ERROR; } else
 			 * {
 			 */
             String storageDirectory = "";
             String state = Environment.getExternalStorageState();
             if (Environment.MEDIA_MOUNTED.equals(state)) {
-                storageDirectory = Environment.getExternalStorageDirectory()
-                        .toString();
+                storageDirectory = Environment.getExternalStorageDirectory().toString();
             } else {
                 storageDirectory = activity.getFilesDir().toString();
             }

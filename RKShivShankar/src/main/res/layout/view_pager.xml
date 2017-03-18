@@ -54,7 +54,7 @@
         android:shadowRadius="8"
         android:src="@drawable/ic_arrow_right" />
 
-    <com.setblue.happyhome.customcontrols.CirclePageIndicator
+    <com.shivshankar.customcontrols.CirclePageIndicator
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

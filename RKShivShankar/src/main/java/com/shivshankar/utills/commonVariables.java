@@ -9,7 +9,6 @@ public class commonVariables {
     // Replace this key with your's
     public static final String DEVELOPER_KEY = "AIzaSyCExc-vIuaqkumMgZx4MyFCqL2UoMcVBuM";
 
-    public static final String TAG = "TAGHappy";
     public static final String KEY_IS_LOG_IN = "KEY_IS_LOG_IN";
     public static final String KEY_LOGIN_ID = "KEY_LOGIN_ID";
     public static final String KEY_FIRST_TIME = "KEY_FIRST_TIME";
@@ -17,11 +16,10 @@ public class commonVariables {
     public static final String KEY_IS_LANDSCAPE = "KEY_IS_LANDSCAPE";
     public static final String KEY_NOTI_COUNT = "KEY_NOTI_COUNT";
     public static final String KEY_IS_BRAND = "KEY_IS_BRAND";
-    public static final String KEY_BRAND_NAME = "KEY_BRAND_NAME";
     public static final String KEY_MOBILE_CHANGED = "KEY_MOBILE_CHANGED";
     public static final String KEY_MOBILE_NO = "KEY_MOBILE_NO";
     public static final String KEY_OTP_MESSAGE = "KEY_OTP_MESSAGE";
-    public static final String KEY_LOGIN_USERNAME = "KEY_LOGIN_USERNAME";
+    public static final String KEY_LOGIN_SELLER_PROFILE = "KEY_LOGIN_SELLER_PROFILE";
     public static final String KEY_PASSWORD_CHANGED = "KEY_PASSWORD_CHANGED";
     public static final String KEY_CACHE_EMAIL = "KEY_CACHE_EMAIL";
 
@@ -34,13 +32,19 @@ public class commonVariables {
     public static final String KEY_SEARCH_STR = "KEY_SEARCH_STR";
     public static final String KEY_LAST_SORT_BY = "KEY_LAST_SORT_BY";
     public static final java.lang.String KEY_FILTER_DATA = "KEY_FILTER_DATA";
+    public static final String KEY_PRODUCT_NAME = "KEY_PRODUCT_NAME";
+    public static final String INTENT_EXTRA_PRODUCT_ID = "PRODUCT_ID";
+    public static final java.lang.String KEY_IS_BRAND_UPDATED = "BRAND_UPDATED";
+    public static final String KEY_BRAND = "KEY_BRAND";
+
+
     public static String STRING_SERVER_URL_FOR_GET_METHOD = "rkshivshankar.vivaa.co";
 
 
     public static String SERVER_BASIC_URL = "http://rkshivshankar.vivaa.co/";
     public static String STRING_SERVER_IMAGE_URL = "http://rkshivshankar.vivaa.co/images/";
     public static String uuid;
-    public static String appname = "Happy Home";
+    public static String appname = "ShivShankar";
 
     public static final int REQUEST_CODE_GALLERY = 1;
     public static final int REQUEST_CODE_TAKE_PICTURE = 2;
@@ -49,4 +53,5 @@ public class commonVariables {
     public static final int REQUEST_RECEIVE_MESSAGE = 5;
     public static final int REQUEST_PASSWORD_CHANGE = 6;
     public static final int REQUEST_CODE_SEARCH = 7;
+    public static final int REQUEST_ADD_UPDATE_BRAND = 8;
 }

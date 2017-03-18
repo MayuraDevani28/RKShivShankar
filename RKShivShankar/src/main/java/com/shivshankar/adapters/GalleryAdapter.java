@@ -53,13 +53,13 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         try {
-                    holder.imageView.setVisibility(View.VISIBLE);
-                    holder.mTv_count.setVisibility(View.VISIBLE);
-                    holder.mTv_count.setText(position+"");
-                    String strImageURL = listImages.get(position);
-                    if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                        Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray).error(R.drawable.camera).into(holder.imageView);
-                    }
+            holder.imageView.setVisibility(View.VISIBLE);
+            holder.mTv_count.setVisibility(View.VISIBLE);
+            holder.mTv_count.setText(position + "");
+            String strImageURL = listImages.get(position);
+            if ((strImageURL != null) && (!strImageURL.equals(""))) {
+                Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).error(R.drawable.camera).into(holder.imageView);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,12 +104,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             activity.getWindow().setExitTransition(null);
-                            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-                                    view,   // Starting view
-                                    "Detail"    // The String
-                            );
-
-                            //Start the Intent
+                            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, view, "Detail");
                             ActivityCompat.startActivity(activity, intent, options.toBundle());
                         } else {
                             activity.startActivity(intent);

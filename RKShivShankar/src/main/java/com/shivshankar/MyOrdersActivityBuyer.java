@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -91,8 +90,6 @@ public class MyOrdersActivityBuyer extends AppCompatActivity implements OnClickL
                 .appendQueryParameter("loginId", strLoginId)
                 .build();
         String query = uri.toString();
-        Log.v("TAGRK", "Calling With:" + query);
-//        new ServerAPICAll(this, this).execute(query);
         APIs.callAPI(null, this, query);
     }
 

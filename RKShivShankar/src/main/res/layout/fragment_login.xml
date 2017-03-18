@@ -57,6 +57,7 @@
                         android:drawableLeft="@drawable/ic_password_app_col"
                         android:drawablePadding="10dp"
                         android:hint="Password"
+                        android:imeOptions="actionGo"
                         android:inputType="textPassword"
                         android:lines="1"
                         android:textSize="@dimen/text_size_small" />

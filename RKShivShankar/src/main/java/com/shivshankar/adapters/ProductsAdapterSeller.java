@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.shivshankar.ProductsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
@@ -77,9 +77,6 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            holder.mIv_product_image.setTag(R.string.position, position);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                holder.mIv_product_image.setTransitionName("Image" + position);
             holder.mIv_product_image.setOnClickListener(v -> {
                 final int position1 = Integer.parseInt(v.getTag(R.string.position).toString());
                 try {
@@ -114,8 +111,8 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
 
 
             String strImageURL = item.getImageName();
-            if (!holder.mIv_product_image.getTag(R.string.position).equals("-1")) {
-//                commonVariables.imageLoader.displayImage(strImageURL, holder.mIv_product_image, commonVariables.options_loader_rect);
+            if ((strImageURL != null) && (!strImageURL.equals(""))) {
+                Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).error(R.drawable.camera).into(holder.mIv_product_image);
             } else {
                 holder.mPbar_product.setVisibility(View.GONE);
             }
@@ -156,7 +153,6 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
                 .appendQueryParameter("productIds", "").build();
 
         String query = uri.toString();
-        Log.v("TAGRK", "CAlling With:" + query);
         APIs.callAPI(null, this, query);
     }
 

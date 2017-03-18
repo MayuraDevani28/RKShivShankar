@@ -139,8 +139,6 @@ public class OTPMobileNoActivityBuyer extends BaseActivitySeller implements View
                 .appendQueryParameter("newMobileNo", strMob)
                 .build();
         String query = uri.toString();
-        Log.v("TAGRK", "CAlling With:" + query);
-//        new ServerAPICAll(this, this).execute(query);
         APIs.callAPI(null, this, query);
     }
 
@@ -153,7 +151,6 @@ public class OTPMobileNoActivityBuyer extends BaseActivitySeller implements View
                 .appendQueryParameter("newMobileNo", strMobileNo)
                 .build();
         String query = uri.toString();
-        Log.v("TAGRK", "CAlling With:" + query);
 //        new ServerAPICAll(null, this).execute(query);
         APIs.callAPI(null, this, query);
     }

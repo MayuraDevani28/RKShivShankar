@@ -58,13 +58,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.shivshankar.AddBrandActivitySeller"
+            android:name="com.shivshankar.AddUpdateBrandActivitySeller"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.shivshankar.AddProductActivitySeller"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name="com.shivshankar.AddMobileNoActivityBuyer"
@@ -73,7 +75,8 @@
         <activity
             android:name="com.shivshankar.ChangePasswordActivitySeller"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.shivshankar.ChangePasswordWithOTPActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
@@ -81,7 +84,8 @@
         <activity
             android:name="com.shivshankar.MyProfileActivitySeller"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.shivshankar.OTPMobileNoActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
@@ -97,6 +101,10 @@
 
         <activity
             android:name="com.shivshankar.ProductsActivitySeller"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.shivshankar.BrandsActivitySeller"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
 

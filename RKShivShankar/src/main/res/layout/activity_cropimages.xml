@@ -19,7 +19,7 @@
             android:gravity="center"
             android:padding="15sp"
             android:text="@string/app_name"
-            android:textColor="#000000"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>

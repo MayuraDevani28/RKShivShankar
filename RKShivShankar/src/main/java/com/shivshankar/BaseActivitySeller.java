@@ -23,13 +23,15 @@ import android.widget.Toast;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonMethods;
 
+import java.io.File;
+
 public class BaseActivitySeller extends AppCompatActivity {
     public TextView mTv_cart_count;
     protected FrameLayout frameLayout;
     Toolbar toolbar;
     SwipeRefreshLayout swipeRefreshLayout;
     DrawerLayout drawer;
-
+    File file = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +113,7 @@ public class BaseActivitySeller extends AppCompatActivity {
         try {
             MenuInflater menuInflater = getMenuInflater();
             menuInflater.inflate(R.menu.main, menu);
-            final View menu_layout = menu.findItem(R.id.action_settings).getActionView();
+            final View menu_layout = menu.findItem(R.id.action_notifications).getActionView();
             mTv_cart_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
 
             updateHotCount(3);
@@ -120,6 +122,8 @@ public class BaseActivitySeller extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     commonMethods.cartCountAnimation(BaseActivitySeller.this, mTv_cart_count);
+                    startActivity(new Intent(BaseActivitySeller.this, NotificationsActivitySeller.class));
+                    overridePendingTransition(0, 0);
                 }
             };
 

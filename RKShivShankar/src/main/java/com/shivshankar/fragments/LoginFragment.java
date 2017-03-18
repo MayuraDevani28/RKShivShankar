@@ -14,6 +14,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -58,6 +60,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
     private void init(View v) {
         mEdtUsername = (EditText) v.findViewById(R.id.edt_username);
         mEdtPassword = (EditText) v.findViewById(R.id.edt_password);
+        mEdtPassword.setOnEditorActionListener((v1, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE) {
+                login();
+                // hide virtual keyboard
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mEdtPassword.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+
+                return true;
+            }
+            return false;
+        });
         mTv_forget = (TextView) v.findViewById(R.id.tv_forget);
         mTv_forget.setOnClickListener(this);
 //        radioGroup = (RadioGroup) v.findViewById(R.id.radioGroup);
@@ -101,25 +114,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
     public void onClick(View v) {
 
         if (v == btnLogin) {
-
-            strUserId = mEdtUsername.getText().toString().trim();
-            stPassword = mEdtPassword.getText().toString().trim();
-            AppPreferences.getPrefs().edit().putString(commonVariables.KEY_CACHE_EMAIL, strUserId).apply();
-
-            if (Validation.isEmptyEdittext(mEdtUsername) && Validation.isEmptyEdittext(mEdtPassword)) {
-                mEdtUsername.setError("Enter Username");
-                mEdtPassword.setError("Enter Password");
-            } else if (Validation.isEmptyEdittext(mEdtUsername)) {
-                mEdtUsername.setError("Enter Username");
-            } else if (Validation.isEmptyEdittext(mEdtPassword)) {
-                mEdtPassword.setError("Enter Password");
-            } else {
-                String strModelName = Build.MODEL;
-                String strOSVersion = Build.VERSION.RELEASE;
-                String strDeviceType = "Android" + strDeviceUUID;
-                //FirebaseInstanceId.getInstance().getToken()
-                APIs.SellerLogin((AppCompatActivity) getActivity(), this, strUserId, stPassword, strDeviceType, strDeviceUUID, strModelName, strOSVersion, regId);
-            }
+            login();
         } else if (v == mTv_forget) {
 
             android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(getActivity());
@@ -187,6 +182,27 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
         }
     }
 
+    private void login() {
+        strUserId = mEdtUsername.getText().toString().trim();
+        stPassword = mEdtPassword.getText().toString().trim();
+        AppPreferences.getPrefs().edit().putString(commonVariables.KEY_CACHE_EMAIL, strUserId).apply();
+
+        if (Validation.isEmptyEdittext(mEdtUsername) && Validation.isEmptyEdittext(mEdtPassword)) {
+            mEdtUsername.setError("Enter Username");
+            mEdtPassword.setError("Enter Password");
+        } else if (Validation.isEmptyEdittext(mEdtUsername)) {
+            mEdtUsername.setError("Enter Username");
+        } else if (Validation.isEmptyEdittext(mEdtPassword)) {
+            mEdtPassword.setError("Enter Password");
+        } else {
+            String strModelName = Build.MODEL;
+            String strOSVersion = Build.VERSION.RELEASE;
+            String strDeviceType = "Android" + strDeviceUUID;
+            //FirebaseInstanceId.getInstance().getToken()
+            APIs.SellerLogin((AppCompatActivity) getActivity(), this, strUserId, stPassword, strDeviceType, strDeviceUUID, strModelName, strOSVersion, regId);
+        }
+    }
+
     @Override
     public void onResult(JSONObject jobj) {
         try {
@@ -194,12 +210,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                 String strApiName = jobj.optString("api");
                 String result = jobj.optString("res");
                 if (strApiName.equalsIgnoreCase("SellerLogin")) {
-                    int resultId = jobj.optInt("sellerId");
+                    int resultId = jobj.optInt("resInt");
                     if (resultId != 0) {
                         SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                         editor.putBoolean(commonVariables.KEY_IS_LOG_IN, true);
-                        editor.putString(commonVariables.KEY_LOGIN_ID, resultId + "");
-                        editor.putString(commonVariables.KEY_LOGIN_USERNAME, jobj.optString("sellerName"));
+                        editor.putString(commonVariables.KEY_LOGIN_ID, jobj.optString("sellerId"));
+                        editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, jobj.optJSONObject("resData").toString());
                         editor.apply();
 
                         Intent i = new Intent(getActivity(), MainActivitySeller.class);

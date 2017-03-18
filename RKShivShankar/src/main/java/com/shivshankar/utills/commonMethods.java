@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -124,7 +125,7 @@ public class commonMethods {
         try {
             if (!strSearch.equals("")) {
 
-                Log.v(commonVariables.TAG, "SEARCHING FOR: " + strSearch);
+                Log.v("TAGRK", "SEARCHING FOR: " + strSearch);
                 ArrayList<Suggestion> array = getSavedSearchArray();
                 if (!SavedStill(array, strSearch)) {
                     array.add(new Suggestion(strSearch));
@@ -237,7 +238,9 @@ public class commonMethods {
         SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
         editor.putString(commonVariables.KEY_LOGIN_ID, "");
         editor.putBoolean(commonVariables.KEY_IS_LOG_IN, false);
-        editor.putString(commonVariables.KEY_LOGIN_USERNAME, "");
+        editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+        editor.putString(commonVariables.KEY_BRAND, "");
+        editor.putBoolean(commonVariables.KEY_IS_BRAND, false);
 //        editor.putString(commonVariables.KEY_ORDER_ID, "0");
         editor.commit();
         Intent intent = new Intent(activity, SplashActivity.class);
@@ -250,4 +253,30 @@ public class commonMethods {
     }
 
 
+    public static void startZommingAnim(View mLl_create_brand) {
+        ScaleAnimation scal = new ScaleAnimation(0.5f, 1.1f, 0.5f, 1.1f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
+        scal.setDuration(500);
+        scal.setFillAfter(true);
+        mLl_create_brand.setAnimation(scal);
+        scal.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                ScaleAnimation scal = new ScaleAnimation(1.1f, 1f, 1.1f, 1f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
+                scal.setDuration(100);
+                scal.setFillAfter(true);
+                mLl_create_brand.setAnimation(scal);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+    }
 }

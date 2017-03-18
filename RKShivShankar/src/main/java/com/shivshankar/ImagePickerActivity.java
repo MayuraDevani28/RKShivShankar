@@ -25,6 +25,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.shivshankar.classes.Brand;
 import com.shivshankar.cropimage.CropImageActivity;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
@@ -45,7 +47,7 @@ import static com.shivshankar.utills.commonVariables.REQUEST_CODE_GALLERY;
 @SuppressLint("NewApi")
 public class ImagePickerActivity extends Activity {
     public static final String TEMP_PHOTO_FILE_NAME = "temp_photo.jpg";
-    File mFileTemp;
+    static File mFileTemp;
     TextView mTv_title;
     String[] permissions = new String[]{
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -53,6 +55,7 @@ public class ImagePickerActivity extends Activity {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     boolean isBrand = true;
+    Brand item;
 
     public static void copyStream(InputStream input, OutputStream output) throws IOException {
 
@@ -75,7 +78,12 @@ public class ImagePickerActivity extends Activity {
 
             setContentView(R.layout.dialog_gall_cams);
             isBrand = getIntent().getBooleanExtra(commonVariables.KEY_IS_BRAND, true);
-
+            if (isBrand) {
+                Gson gson = new Gson();
+                String json = AppPreferences.getPrefs().getString(commonVariables.KEY_BRAND, "");
+                if (!json.isEmpty())
+                    item = gson.fromJson(json, Brand.class);
+            }
             setTitle(null);
             getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -200,8 +208,7 @@ public class ImagePickerActivity extends Activity {
                     }
                     Bitmap bitmap1 = BitmapFactory.decodeFile(mFileTemp.getPath());
                     if (bitmap1 != null) {
-
-                        Intent intent = new Intent(ImagePickerActivity.this, AddBrandActivitySeller.class);
+                        Intent intent = new Intent(ImagePickerActivity.this, AddUpdateBrandActivitySeller.class);
                         if (isBrand) {
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             bitmap1.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -210,6 +217,19 @@ public class ImagePickerActivity extends Activity {
                             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                             editor.putString("image", saveThis);
                             editor.apply();
+
+                            if (item == null) {
+                                startActivity(intent);
+                            } else {
+                                Gson gson = new Gson();
+                                Intent output = new Intent();
+                                output.putExtra(commonVariables.KEY_IS_BRAND_UPDATED, true);
+                                if (item != null) {
+                                    String json = gson.toJson(item);
+                                    output.putExtra(commonVariables.KEY_BRAND, json);
+                                }
+                                setResult(RESULT_OK, output);
+                            }
                         } else {
                             intent = new Intent(ImagePickerActivity.this, AddProductActivitySeller.class);
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -219,9 +239,9 @@ public class ImagePickerActivity extends Activity {
                             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                             editor.putString("image_product", saveThis);
                             editor.apply();
+                            startActivity(intent);
                         }
 
-                        startActivity(intent);
                         finish();
                         overridePendingTransition(0, 0);
                     }

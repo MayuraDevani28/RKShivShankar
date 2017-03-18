@@ -65,7 +65,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
 //                .appendQueryParameter("GCMRegistraionId", regId)
 //                .build();
 //        String query = uri.toString();
-//        Log.v("TAGRK", "Calling With:" + query);
 //        new ServerAPICAll(null, this).execute(query);
 
     }

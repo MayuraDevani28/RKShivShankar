@@ -69,7 +69,7 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
         try {
             MenuInflater menuInflater = getMenuInflater();
             menuInflater.inflate(R.menu.main, menu);
-            final View menu_layout = menu.findItem(R.id.action_settings).getActionView();
+            final View menu_layout = menu.findItem(R.id.action_notifications).getActionView();
             mTv_cart_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
 
             updateHotCount(3);

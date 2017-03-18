@@ -3,5 +3,5 @@ package com.shivshankar.utills;
 import org.json.JSONObject;
 
 public interface OnResult {
-    public void onResult(JSONObject result);
+    void onResult(JSONObject jobjWhole);
 }

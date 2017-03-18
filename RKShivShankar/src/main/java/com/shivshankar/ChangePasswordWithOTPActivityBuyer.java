@@ -62,7 +62,7 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller imple
         bindViews(rootView);
 
         try {
-            strUserId = getIntent().getStringExtra(commonVariables.KEY_LOGIN_USERNAME);
+            strUserId = getIntent().getStringExtra(commonVariables.KEY_LOGIN_ID);
             otp_message = getIntent().getStringExtra(commonVariables.KEY_OTP_MESSAGE);
 
             requestPermissionSMSReceive();
@@ -240,8 +240,6 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller imple
                 .appendQueryParameter("strUserId", strUserId)
                 .build();
         String query = uri.toString();
-        Log.v("TAGRK", "CAlling With:" + query);
-//        new ServerAPICAll(this, this).execute(query);
         APIs.callAPI(this, this, query);
     }
 
@@ -253,7 +251,6 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller imple
                 .appendQueryParameter("strOTP", strOTP)
                 .appendQueryParameter("newPassword", strNewPassword).build();
         String query = uri.toString();
-        Log.v("TAGRK", "CAlling With:" + query);
         APIs.callAPI(this, this, query);
     }
 

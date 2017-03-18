@@ -3,7 +3,6 @@ package com.shivshankar;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -11,7 +10,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +29,7 @@ import com.shivshankar.utills.Validation;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
 @SuppressLint("NewApi")
@@ -88,6 +87,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
             mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
             mIv_logo_toolbar.setOnClickListener(this);
             mTv_username = (TextView) findViewById(R.id.tv_username);
+            mTv_username.setOnClickListener(this);
             mTv_logout = (TextView) findViewById(R.id.tv_logout);
             mTv_logout.setOnClickListener(this);
             mLl_close = (LinearLayout) findViewById(R.id.ll_close);
@@ -119,6 +119,20 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
             mIv_close.setOnClickListener(this);
             mBtn_cancel = (TextView) rootView.findViewById(R.id.btn_cancel_receiver);
             mBtn_cancel.setOnClickListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        try {
+            super.onResume();
+            if (mTv_username != null) {
+                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
+                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("SellerName")));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -203,12 +217,13 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ChangePasswordActivitySeller.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav) {
+            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
+                drawer.closeDrawer(GravityCompat.START);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout ?");
+                builder.setMessage("Do you want to logout?");
                 builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
                 builder.setNegativeButton("Cancel", null);
                 builder.show();
@@ -300,7 +315,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                     mEdt_confirm_password.setError("Passwords Does not match.");
                 } else {
                     if (commonMethods.knowInternetOn(ChangePasswordActivitySeller.this)) {
-                        callChangePasswordAPI(strLoginId, strPassword, strNew_password);
+                        APIs.SellerChangePassword(this, this, strLoginId, strPassword, strNew_password);
                     } else {
                         commonMethods.showInternetAlert(ChangePasswordActivitySeller.this);
                     }
@@ -323,30 +338,15 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
         }
     }
 
-    private void callChangePasswordAPI(String strLoginId, String strPassword, String strNewPassword) {
-        Uri uri = new Uri.Builder().scheme("http")
-                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("MobileAPI/ChangePassword")
-                .appendQueryParameter("loginId", strLoginId)
-                .appendQueryParameter("oldPassword", strPassword)
-                .appendQueryParameter("newPassword", strNewPassword).build();
-        String query = uri.toString();
-        Log.v("TAGRK", "CAlling With:" + query);
-//        new ServerAPICAll(ChangePasswordActivitySeller.this, this).execute(query);
-        APIs.callAPI(null, this, query);
-    }
-
-
-    private void callResendRegistrationOTPAPI(String strUserId) {
-        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("MobileAPI/ResendRegistrationOTP")
-                .appendQueryParameter("strUserId", strUserId)
-                .build();
-        String query = uri.toString();
-        Log.v("TAGRK", "CAlling With:" + query);
-//        new ServerAPICAll(this, this).execute(query);
-        APIs.callAPI(null, this, query);
-    }
+//    private void callResendRegistrationOTPAPI(String strUserId) {
+//        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+//                .path("MobileAPI/ResendRegistrationOTP")
+//                .appendQueryParameter("strUserId", strUserId)
+//                .build();
+//        String query = uri.toString();
+////        new ServerAPICAll(this, this).execute(query);
+//        APIs.callAPI(null, this, query);
+//    }
 
     @Override
     public void onResult(JSONObject jObjWhole) {
@@ -355,7 +355,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 String strApiName = jObjWhole.optString("api");
                 int resId = jObjWhole.optInt("resInt");
                 String result = jObjWhole.optString("res");
-                if (strApiName.equalsIgnoreCase("ChangePassword") && resId == 1) {
+                if (strApiName.equalsIgnoreCase("SellerChangePassword") && resId == 1) {
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
                     builder.setTitle(commonVariables.appname);
                     builder.setMessage(result);
@@ -375,7 +375,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
 //                        dialog.dismiss();
 //
 //                    Intent intent = new Intent(ChangePasswordActivitySeller.this, ChangePasswordWithOTPActivityBuyer.class);
-//                    intent.putExtra(commonVariables.KEY_LOGIN_USERNAME, strUserId);
+//                    intent.putExtra(commonVariables.KEY_LOGIN_SELLER_PROFILE, strUserId);
 //                    intent.putExtra(commonVariables.KEY_OTP_MESSAGE, jObjWhole.optString("resMsg"));
 //                    startActivityForResult(intent, commonVariables.REQUEST_PASSWORD_CHANGE);
 //                    overridePendingTransition(0, 0);

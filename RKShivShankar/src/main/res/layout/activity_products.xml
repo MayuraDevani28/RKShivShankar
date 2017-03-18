@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:gravity="bottom"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -39,10 +38,10 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:padding="5dp"
                 android:text="My Products"
                 android:textColor="@color/white"
-                android:gravity="center_vertical"
                 android:textSize="@dimen/text_size_large" />
 
             <TextView
@@ -50,14 +49,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="no items found"
-                android:textColor="@color/black"
+                android:text="0 items"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_small"
                 android:visibility="gone" />
 
         </LinearLayout>
-    </LinearLayout>
 
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/fl_whole"
@@ -75,7 +74,7 @@
             android:fadingEdge="none"
             android:paddingBottom="34dp"
             android:requiresFadingEdge="none"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/ll_counter"
@@ -99,6 +98,61 @@
                 android:text=""
                 android:textColor="@color/white"
                 android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_no_data_found"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animation_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:lottie_fileName="Mobilo/R.json"
+                    app:lottie_loop="false" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animation_view2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-40dp"
+                    app:lottie_fileName="Mobilo/K.json"
+                    app:lottie_loop="false" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_no_data_found"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="Uhh You have not added any brand yet. Want to add now ?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_medium" />
+
+            <Button
+                android:id="@+id/btn_add_now"
+                style="@style/ButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Add Now" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -195,18 +249,4 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_no_data_found"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:gravity="center"
-        android:paddingLeft="18dp"
-        android:paddingRight="18dp"
-        android:text="Sorry ! No record(s) found"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_medium"
-        android:visibility="gone" />
-</RelativeLayout>
+</LinearLayout>

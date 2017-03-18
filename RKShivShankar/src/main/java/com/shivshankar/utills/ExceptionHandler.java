@@ -53,7 +53,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         // errorReport.append(Build.VERSION.INCREMENTAL);
         // errorReport.append(LINE_SEPARATOR);
 
-        Log.e(commonVariables.TAG, errorReport.toString());
+        Log.e("TAGRK", errorReport.toString());
         // Toast.makeText(myContext, errorReport.toString(),
         // Toast.LENGTH_SHORT).show();
         // SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();

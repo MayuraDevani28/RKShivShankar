@@ -173,7 +173,7 @@
 
                     <TextView
                         android:id="@+id/tv_ship_now"
-                        style="@style/YellowButtonStyle"
+                        style="@style/ButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
@@ -184,7 +184,7 @@
 
                     <TextView
                         android:id="@+id/tv_view"
-                        style="@style/YellowButtonStyle"
+                        style="@style/ButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"

@@ -98,7 +98,7 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener 
                 String fName = url.substring(url.lastIndexOf('/') + 1);
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); //Notify client once download is completed!
                 request.setTitle(fName);
-                request.setDestinationInExternalPublicDir("Happy Home", fName);
+                request.setDestinationInExternalPublicDir("ShivShankar", fName);
                 DownloadManager dm = (DownloadManager) getActivity().getSystemService(DOWNLOAD_SERVICE);
                 dm.enqueue(request);
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT); //This is important!
