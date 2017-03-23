@@ -34,7 +34,6 @@ import org.json.JSONObject;
 
 @SuppressLint("NewApi")
 public class SplashActivity extends AppCompatActivity implements OnResult {
-    String cmobile = "";
     Animation animation;
     String versionName = "";
     int versionCode = 0;
@@ -61,7 +60,6 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
 //            editor.apply();
 //            changePage();
 
-            cmobile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "");
             //edit
 //            regId = FirebaseInstanceId.getInstance().getToken();
             Log.d("ReId", regId);
@@ -174,10 +172,17 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
             mJumpBall.finish();
             final Handler handler = new Handler();
             handler.postDelayed(() -> {
-                if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false))
-                    startActivity(new Intent(SplashActivity.this, MainActivitySeller.class));
-                else
-                    startActivity(new Intent(SplashActivity.this, LoginRegisterActivity.class));
+                if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
+                    if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_SELLER, false))
+                        startActivity(new Intent(SplashActivity.this, MainActivitySeller.class));
+                    else
+                        startActivity(new Intent(SplashActivity.this, MainActivityBuyer.class));
+                } else {
+                    if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_SKIPPED_LOGIN_BUYER, false))
+                        startActivity(new Intent(SplashActivity.this, MainActivityBuyer.class));
+                    else
+                        startActivity(new Intent(SplashActivity.this, LoginRegisterActivity.class));
+                }
                 finish();
                 overridePendingTransition(0, 0);
             }, 600);

@@ -10,15 +10,14 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name="com.shivshankar.Application.App"
+        android:name=".Application.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.shivshankar.SplashActivity"
+            android:name=".SplashActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
@@ -29,85 +28,112 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.shivshankar.LoginRegisterActivity"
+            android:name=".LoginRegisterActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.shivshankar.BaseActivitySeller"
+            android:name=".BaseActivitySeller"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.shivshankar.MainActivitySeller"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name="com.shivshankar.MainActivityBuyer"
+            android:name=".MainActivitySeller"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.shivshankar.ImagePickerActivity"
+            android:name=".MainActivityBuyer"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ImagePickerActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:theme="@style/Theme.MyDialog" />
         <activity
-            android:name="com.shivshankar.cropimage.CropImageActivity"
+            android:name=".cropimage.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.shivshankar.AddUpdateBrandActivitySeller"
+            android:name=".AddUpdateBrandActivitySeller"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.shivshankar.AddProductActivitySeller"
+            android:name=".AddUpdateProductActivitySeller"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".AddMobileNoActivityBuyer"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ChangePasswordActivitySeller"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ChangePasswordWithOTPActivityBuyer"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyProfileActivitySeller"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".OTPMobileNoActivityBuyer"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NotificationsActivitySeller"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyOrdersActivitySeller"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ProductsActivitySeller"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".BrandsActivitySeller"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NotificationsActivityBuyer"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyProfileActivityBuyer"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MyOrdersActivityBuyer"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CustomerServiceActivityBuyer"
+            android:label="@string/title_activity_customer_service_buyer"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".OurPolicyActivityBuyer"
+            android:label="@string/title_activity_customer_service_buyer"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".AboutUsActivityBuyer"
+            android:label="@string/title_activity_customer_service_buyer"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name="com.shivshankar.AddMobileNoActivityBuyer"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.shivshankar.ChangePasswordActivitySeller"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="com.shivshankar.ChangePasswordWithOTPActivityBuyer"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.shivshankar.MyProfileActivitySeller"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="com.shivshankar.OTPMobileNoActivityBuyer"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.shivshankar.NotificationsActivitySeller"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.shivshankar.MyOrdersActivityBuyer"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name="com.shivshankar.ProductsActivitySeller"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.shivshankar.BrandsActivitySeller"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+            android:name=".ContactUsActivityBuyer"
+            android:label="@string/title_activity_customer_service_buyer"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

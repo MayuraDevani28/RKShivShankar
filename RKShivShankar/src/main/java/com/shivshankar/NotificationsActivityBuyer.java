@@ -35,7 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsActivitySeller extends BaseActivitySeller implements OnResult, View.OnClickListener, AdapterView.OnItemClickListener {
+public class NotificationsActivityBuyer extends BaseActivitySeller implements OnResult, View.OnClickListener, AdapterView.OnItemClickListener {
     boolean mAlreadyLoaded = false;
     ListView mLv_notification;
     TextView mTv_no_data_found;
@@ -45,6 +45,7 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
     private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
 
     NotificationListAdapter mAdapter;
+    //    SwipeRefreshLayout swipeRefreshLayout;
     List<NavigationItem> listNavigationItems = new ArrayList<NavigationItem>();
     ImageView mIv_close;
     boolean unDoClicked = false;
@@ -87,6 +88,7 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
         finish();
         overridePendingTransition(0, 0);
     }
+
 
     @Override
     protected void onResume() {
@@ -180,7 +182,7 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
                                 public void onDismissed(Snackbar snackbar, int event) {
                                     try {
 //                                        if (!unDoClicked)
-//                                            callRemoveNotificationsAPI(strLoginId, item.getNotificationCustBindId());
+//                                            callRemoveNotificationsAPI(item.getNotificationCustBindId());
                                         //                                    super.onDismissed(snackbar, event);
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -278,7 +280,7 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
             overridePendingTransition(0, 0);
         } else if (view == mNav_notification) {
             drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, NotificationsActivitySeller.class));
+            startActivity(new Intent(this, NotificationsActivityBuyer.class));
             overridePendingTransition(0, 0);
         } else if (view == mNav_change_pass) {
             drawer.closeDrawer(GravityCompat.START);

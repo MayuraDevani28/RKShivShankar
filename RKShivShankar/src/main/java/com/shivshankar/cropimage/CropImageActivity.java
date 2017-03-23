@@ -45,6 +45,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.shivshankar.R;
 import com.shivshankar.utills.ExceptionHandler;
 
@@ -499,7 +500,6 @@ public class CropImageActivity extends MonitoredActivity {
             if (isFinishing()) {
                 return;
             }
-
             mImageView.setImageBitmapResetBase(mBitmap, true);
 
             UtilActivity.startBackgroundJob(this, null, "Please wait\u2026",

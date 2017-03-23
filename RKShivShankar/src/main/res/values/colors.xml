@@ -10,6 +10,7 @@
 
     <color name="white">#FFFFFF</color>
     <color name="white_transparent">#7fffffff</color>
+    <color name="white_more_transparent">#ccffffff</color>
     <color name="white_light_transparent">#7fffffff</color>
 
     <color name="gray_bg">#CCCCCC</color>

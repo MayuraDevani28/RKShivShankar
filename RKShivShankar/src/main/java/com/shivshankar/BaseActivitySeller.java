@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,6 +32,7 @@ public class BaseActivitySeller extends AppCompatActivity {
     Toolbar toolbar;
     SwipeRefreshLayout swipeRefreshLayout;
     DrawerLayout drawer;
+    CoordinatorLayout main_content;
     File file = null;
 
     @Override
@@ -69,6 +71,7 @@ public class BaseActivitySeller extends AppCompatActivity {
             frameLayout = (FrameLayout) findViewById(R.id.container);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            main_content = (CoordinatorLayout) findViewById(R.id.main_content);
 
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 

@@ -24,7 +24,6 @@
             android:src="@drawable/ic_close_white" />
 
         <TextView
-            android:id="@+id/floating_search_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -112,6 +111,13 @@
                     android:gravity="top"
                     android:orientation="horizontal">
 
+                    <ImageView
+                        android:id="@+id/iv_brand"
+                        android:layout_width="40dp"
+                        android:visibility="gone"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY" />
+
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -138,6 +144,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_top_bottom_fab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="18dp"
@@ -188,9 +195,10 @@
                     android:padding="3dp">
 
                     <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-                        android:id="@+id/sp_top_dupatta"
+                        android:id="@+id/sp_dupatta"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="18dp"
                         android:layout_weight="1"
                         android:hint="Dupatta"
                         android:textSize="@dimen/text_size_small"
@@ -202,9 +210,16 @@
                         app:met_textColorHint="@color/black"
                         app:met_underlineColor="@color/black" />
 
-                    <View
-                        android:layout_width="18dp"
-                        android:layout_height="match_parent" />
+
+                    <CheckBox
+                        android:id="@+id/cb_all_over"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="18dp"
+                        android:layout_weight="1"
+                        android:text="All over"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_medium" />
 
                     <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
                         android:id="@+id/sp_all_over"
@@ -213,6 +228,7 @@
                         android:layout_weight="1"
                         android:hint="All Over"
                         android:textSize="@dimen/text_size_small"
+                        android:visibility="gone"
                         app:met_baseColor="@color/black"
                         app:met_floatingLabel="highlight"
                         app:met_floatingLabelTextColor="@color/black"
@@ -253,7 +269,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Type"
+                        android:hint="Fabric Type"
                         android:textSize="@dimen/text_size_small"
                         app:met_baseColor="@color/black"
                         app:met_floatingLabel="highlight"

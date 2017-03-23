@@ -47,7 +47,6 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
     private Button mBtn_save;
     ImageView mIv_close;
     android.support.v7.app.AlertDialog dialog;
-    private String strLoginId = "", strUserId = "";
     private boolean isVisiblePass_curr = false, isVisiblePass_new = false, isVisiblePass_conf = false;
 
     @Override
@@ -62,7 +61,6 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         View rootView = getLayoutInflater().inflate(R.layout.activity_change_password_seller, frameLayout);
         bindViews(rootView);
-        strLoginId = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "");
 
     }
 
@@ -315,7 +313,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                     mEdt_confirm_password.setError("Passwords Does not match.");
                 } else {
                     if (commonMethods.knowInternetOn(ChangePasswordActivitySeller.this)) {
-                        APIs.SellerChangePassword(this, this, strLoginId, strPassword, strNew_password);
+                        APIs.SellerChangePassword(this, this, strPassword, strNew_password);
                     } else {
                         commonMethods.showInternetAlert(ChangePasswordActivitySeller.this);
                     }

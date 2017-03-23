@@ -1,8 +1,8 @@
 package com.shivshankar;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,12 +21,13 @@ import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonMethods;
 
 
-public class BaseActivityBuyer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-    public TextView mTv_cart_count;
+public class BaseActivityBuyer extends AppCompatActivity {
+    public TextView mTv_noti_count, mTv_cart_count;
     protected FrameLayout frameLayout;
     Toolbar toolbar;
     DrawerLayout drawer;
     SwipeRefreshLayout swipeRefreshLayout;
+    CoordinatorLayout main_content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +35,15 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_base_buyer);
-            frameLayout = (FrameLayout) findViewById(R.id.container);
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+            bindViews();
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setLogo(R.drawable.ic_logo);
+            getSupportActionBar().setLogo(null);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
 
-
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show());
-
-            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             toggle.setDrawerIndicatorEnabled(false);
@@ -56,6 +51,22 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
             toolbar.setNavigationOnClickListener(view -> drawer.openDrawer(GravityCompat.START));
             drawer.addDrawerListener(toggle);
             toggle.syncState();
+
+
+            swipeRefreshLayout.setEnabled(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void bindViews() {
+        try {
+
+            frameLayout = (FrameLayout) findViewById(R.id.container);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            main_content = (CoordinatorLayout) findViewById(R.id.main_content);
 
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
@@ -65,19 +76,66 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    Intent intent = new Intent(this, MainActivitySeller.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        try {
+            super.onResume();
+            if (mTv_cart_count != null && !commonMethods.isOnline(this)) {
+                Snackbar.make(mTv_cart_count, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         try {
             MenuInflater menuInflater = getMenuInflater();
-            menuInflater.inflate(R.menu.main, menu);
+            menuInflater.inflate(R.menu.main_buyer, menu);
             final View menu_layout = menu.findItem(R.id.action_notifications).getActionView();
-            mTv_cart_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
+            mTv_noti_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
 
-            updateHotCount(3);
-            commonMethods.cartCountAnimation(this, mTv_cart_count);
+            updateHotCount(mTv_noti_count, 3);
+            commonMethods.cartCountAnimation(this, mTv_noti_count);
             new BaseActivitySeller.MyMenuItemStuffListener(menu_layout, "Show hot message") {
                 @Override
                 public void onClick(View view) {
+                    commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_noti_count);
+                    startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivitySeller.class));
+                    overridePendingTransition(0, 0);
+                }
+            };
+
+            final View cart_layout = menu.findItem(R.id.action_notifications).getActionView();
+            mTv_cart_count = (TextView) cart_layout.findViewById(R.id.tv_cart_count);
+
+            updateHotCount(mTv_cart_count, 3);
+            commonMethods.cartCountAnimation(this, mTv_cart_count);
+            new BaseActivitySeller.MyMenuItemStuffListener(cart_layout, "Show hot message") {
+                @Override
+                public void onClick(View view) {
                     commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_cart_count);
+                    startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivitySeller.class));
+                    overridePendingTransition(0, 0);
                 }
             };
 
@@ -88,57 +146,42 @@ public class BaseActivityBuyer extends AppCompatActivity implements NavigationVi
     }
 
     // so we can call this asynchronously
-    public void updateHotCount(final int count) {
-        if (mTv_cart_count == null) return;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (count > 0) {
-                    mTv_cart_count.setVisibility(View.VISIBLE);
-                    mTv_cart_count.setText(count + "");
-                } else
-                    mTv_cart_count.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View view) {
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void updateHotCount(TextView mTv_cart_count, final int count) {
+        try {
+            if (mTv_cart_count == null) return;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (count > 0) {
+                            mTv_cart_count.setVisibility(View.VISIBLE);
+                            mTv_cart_count.setText(count + "");
+                        } else
+                            mTv_cart_count.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
         try {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_my_profile) {
-            } else if (id == R.id.nav_my_products) {
-            } else if (id == R.id.nav_notification) {
-            } else if (id == R.id.nav_change_pass) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
             }
-            drawer.closeDrawer(GravityCompat.START);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
     }
+
 }
 

@@ -1,14 +1,12 @@
 package com.shivshankar;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -38,7 +36,6 @@ import com.shivshankar.utills.commonVariables;
 import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements View.OnClickListener, OnResultString {
@@ -146,7 +143,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
 
             mBtn_submit.setOnClickListener(this);
             mEdt_brand_name.setOnEditorActionListener((v, actionId, event) -> {
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE) {
                     mBtn_submit.performClick();
                     return true;
                 }
@@ -188,7 +185,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
     @Override
     public void onClick(View view) {
         try {
-            file = ImagePickerActivity.mFileTemp;
+
             if (view == mIv_logo_toolbar) {
                 Intent intent = new Intent(this, MainActivitySeller.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -223,6 +220,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             } else if (view == mIv_close) {
                 onBackPressed();
             } else if (view == mBtn_submit) {
+                file = ImagePickerActivity.mFileTemp;
                 String strBrandName = mEdt_brand_name.getText().toString().trim();
                 if (strBrandName.isEmpty()) {
                     mEdt_brand_name.setError("Brand name required");
@@ -234,10 +232,8 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                         builder.setPositiveButton("Ok", null);
                         builder.show();
                     } else {
-                        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-                        Uri tempUri = getImageUri(getApplicationContext(), ((RoundedBitmapDrawable) mIv_imageView.getDrawable()).getBitmap());
-                        // CALL THIS METHOD TO GET THE ACTUAL PATH
-                        file = new File(getRealPathFromURI(tempUri));
+                        Uri tempUri = commonMethods.getImageUri(getApplicationContext(), ((RoundedBitmapDrawable) mIv_imageView.getDrawable()).getBitmap());
+                        file = new File(commonMethods.getRealPathFromURI(this, tempUri));
                         if (item == null || item.getBrandId() == null || item.getBrandId().isEmpty()) {
                             APIs.CreateSellerBrand(this, this, strBrandName, file, mIv_imageView);
                         } else
@@ -252,13 +248,14 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             } else if (view == mIv_change_image) {
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, true);
-                SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                Gson gson = new Gson();
-                item.setBrandName(mEdt_brand_name.getText().toString());
-                String json = gson.toJson(item);
-                editor.putString(commonVariables.KEY_BRAND, json);
-                editor.apply();
-
+                if (item != null) {
+                    SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                    Gson gson = new Gson();
+                    item.setBrandName(mEdt_brand_name.getText().toString());
+                    String json = gson.toJson(item);
+                    editor.putString(commonVariables.KEY_BRAND, json);
+                    editor.apply();
+                }
                 startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_BRAND);
 //                overridePendingTransition(R.anim.slide_up, android.R.anim.fade_out);
             }
@@ -267,24 +264,6 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
         }
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        int idx = 0;
-        try {
-            cursor.moveToFirst();
-            idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return cursor.getString(idx);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -347,7 +326,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
 //                                String saveThis = Base64.encodeToString(byteArray, Base64.DEFAULT);
                                 SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                                 Gson gson = new Gson();
-                                item = new Brand(item.getBrandId(), mEdt_brand_name.getText().toString(), job.optString("brandLogoPath"));
+                                item = new Brand(job.optString("brandId"), mEdt_brand_name.getText().toString(), job.optString("brandLogoPath"));
                                 String json = gson.toJson(item);
                                 editor.putString(commonVariables.KEY_BRAND, json);
                                 editor.apply();
@@ -357,7 +336,12 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                                     alDialog.dismiss();
                                 Intent output = new Intent();
                                 output.putExtra(commonVariables.KEY_IS_BRAND_UPDATED, true);
-                                setResult(RESULT_OK, output);
+//                                setResult(RESULT_OK, output);
+                                if (getParent() == null) {
+                                    setResult(Activity.RESULT_OK, output);
+                                } else {
+                                    getParent().setResult(Activity.RESULT_OK, output);
+                                }
                                 finish();
                                 overridePendingTransition(0, 0);
                             });

@@ -58,7 +58,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
             holder.mTv_count.setText(position + "");
             String strImageURL = listImages.get(position);
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).error(R.drawable.camera).into(holder.imageView);
+                Glide.with(activity).load(strImageURL).placeholder(R.color.gray_bg).error(R.drawable.camera).into(holder.imageView);
             }
         } catch (Exception e) {
             e.printStackTrace();

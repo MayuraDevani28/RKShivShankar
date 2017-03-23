@@ -19,8 +19,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.shivshankar.LoginRegisterActivity;
+import com.shivshankar.MainActivityBuyer;
 import com.shivshankar.MainActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
@@ -36,12 +40,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
     private Button btnLogin;
     private EditText mEdtUsername, mEdtPassword;
     TextView mTv_forget;
+    LinearLayout mLl_skip;
     private String strUserId, stPassword;
     AlertDialog dialog;
-    //    private RadioGroup radioGroup;
+    private RadioGroup radioGroup;
     public String stType;
     String regId, strDeviceUUID = commonVariables.uuid;
-    Context context;
 
     public LoginFragment() {
     }
@@ -73,7 +77,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
         });
         mTv_forget = (TextView) v.findViewById(R.id.tv_forget);
         mTv_forget.setOnClickListener(this);
-//        radioGroup = (RadioGroup) v.findViewById(R.id.radioGroup);
+        mLl_skip = (LinearLayout) v.findViewById(R.id.ll_skip);
+        mLl_skip.setOnClickListener(this);
+        radioGroup = (RadioGroup) v.findViewById(R.id.radioGroup);
 
         btnLogin = (Button) v.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
@@ -84,13 +90,26 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             mEdtUsername.setSelection(strCacheEmail.length());
         }
 
-//        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-//            if (checkedId == R.id.radioBuyer) {
-//                stType = "BUYER";
-//            } else if (checkedId == R.id.radioSeller) {
-//                stType = "SELLER";
-//            }
-//        });
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                try {
+                    if (checkedId == R.id.radioBuyer) {
+                        stType = "BUYER";
+                        ((LoginRegisterActivity) getActivity()).setRegisterVisibility(true);
+                        ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.VISIBLE);
+                        mLl_skip.setVisibility(View.VISIBLE);
+                    } else if (checkedId == R.id.radioSeller) {
+                        stType = "SELLER";
+                        ((LoginRegisterActivity) getActivity()).setRegisterVisibility(false);
+                        ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.GONE);
+                        mLl_skip.setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
 //        context = getActivity().getApplicationContext();
 //        if (commonMethods.knowInternetOn(getActivity())) {
@@ -115,6 +134,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
 
         if (v == btnLogin) {
             login();
+        } else if (v == mLl_skip) {
+            callBuyerWithoutLogin();
         } else if (v == mTv_forget) {
 
             android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(getActivity());
@@ -182,6 +203,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
         }
     }
 
+    public void callBuyerWithoutLogin() {
+
+        SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+        editor.putBoolean(commonVariables.KEY_IS_LOG_IN, false);
+        editor.putBoolean(commonVariables.KEY_IS_SELLER, false);
+        editor.putBoolean(commonVariables.KEY_IS_SKIPPED_LOGIN_BUYER, true);
+        editor.apply();
+
+        Intent i = new Intent(getActivity(), MainActivityBuyer.class);
+        getActivity().finish();
+        getActivity().startActivity(i);
+        getActivity().overridePendingTransition(0, 0);
+    }
+
     private void login() {
         strUserId = mEdtUsername.getText().toString().trim();
         stPassword = mEdtPassword.getText().toString().trim();
@@ -214,6 +249,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                     if (resultId != 0) {
                         SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                         editor.putBoolean(commonVariables.KEY_IS_LOG_IN, true);
+                        editor.putBoolean(commonVariables.KEY_IS_SELLER, true);
                         editor.putString(commonVariables.KEY_LOGIN_ID, jobj.optString("sellerId"));
                         editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, jobj.optJSONObject("resData").toString());
                         editor.apply();

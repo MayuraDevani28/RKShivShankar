@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_header_whole"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/xml_black_white_square_box"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:text="FILTER BY"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_large" />
+
+            <ImageView
+                android:id="@+id/iv_down"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:adjustViewBounds="true"
+                android:clickable="false"
+                android:padding="5dp"
+                android:src="@drawable/ic_expand_more_black_18dp"
+                android:tint="@color/colorPrimary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_header_views"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                    android:id="@+id/sp_category"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Category"
+                    android:textSize="@dimen/text_size_small"
+                    app:met_baseColor="@color/black"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelTextColor="@color/black"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_textColor="@color/black"
+                    app:met_textColorHint="@color/black"
+                    app:met_underlineColor="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="5dp"
+                    android:text="Or"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColorHint="@color/text_color_hint">
+
+                    <EditText
+                        android:id="@+id/edt_product_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Product Code"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:textSize="@dimen/text_size_small" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/tv_go"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/xml_round_yellow_noti"
+                    android:gravity="center"
+                    android:text="GO" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

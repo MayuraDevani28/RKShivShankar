@@ -53,6 +53,7 @@
             android:background="@drawable/xml_round_yellow"
             android:src="@drawable/ic_edit"
             android:tint="@color/blue"
+            android:padding="5dp"
             android:visibility="visible" />
 
         <View
@@ -70,7 +71,7 @@
             android:layout_gravity="bottom|right"
             android:background="@drawable/xml_round_yellow"
             android:padding="5dp"
-            android:src="@drawable/ic_close"
+            android:src="@drawable/met_ic_close"
             android:visibility="visible" />
     </LinearLayout>
 </RelativeLayout>

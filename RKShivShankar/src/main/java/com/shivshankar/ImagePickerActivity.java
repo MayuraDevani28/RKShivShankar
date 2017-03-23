@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.shivshankar.classes.Brand;
+import com.shivshankar.classes.ProductItem;
 import com.shivshankar.cropimage.CropImageActivity;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
@@ -56,6 +57,7 @@ public class ImagePickerActivity extends Activity {
     };
     boolean isBrand = true;
     Brand item;
+    ProductItem product;
 
     public static void copyStream(InputStream input, OutputStream output) throws IOException {
 
@@ -78,11 +80,16 @@ public class ImagePickerActivity extends Activity {
 
             setContentView(R.layout.dialog_gall_cams);
             isBrand = getIntent().getBooleanExtra(commonVariables.KEY_IS_BRAND, true);
+            Gson gson = new Gson();
             if (isBrand) {
-                Gson gson = new Gson();
                 String json = AppPreferences.getPrefs().getString(commonVariables.KEY_BRAND, "");
-                if (!json.isEmpty())
+                if (json != null && !json.isEmpty())
                     item = gson.fromJson(json, Brand.class);
+            } else {
+                String json = getIntent().getStringExtra(commonVariables.KEY_PRODUCT);
+                if (json != null && !json.isEmpty())
+                    product = gson.fromJson(json, ProductItem.class);
+
             }
             setTitle(null);
             getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -231,7 +238,16 @@ public class ImagePickerActivity extends Activity {
                                 setResult(RESULT_OK, output);
                             }
                         } else {
-                            intent = new Intent(ImagePickerActivity.this, AddProductActivitySeller.class);
+//                            intent = new Intent(ImagePickerActivity.this, AddUpdateProductActivitySeller.class);
+//                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                            bitmap1.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                            byte[] byteArray = stream.toByteArray();
+//                            String saveThis = Base64.encodeToString(byteArray, Base64.DEFAULT);
+//                            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+//                            editor.putString("image_product", saveThis);
+//                            editor.apply();
+//                            startActivity(intent);
+                            intent = new Intent(ImagePickerActivity.this, AddUpdateProductActivitySeller.class);
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             bitmap1.compress(Bitmap.CompressFormat.PNG, 100, stream);
                             byte[] byteArray = stream.toByteArray();
@@ -239,7 +255,20 @@ public class ImagePickerActivity extends Activity {
                             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                             editor.putString("image_product", saveThis);
                             editor.apply();
-                            startActivity(intent);
+
+                            if (product == null) {
+                                startActivity(intent);
+                            } else {
+                                Gson gson = new Gson();
+                                Intent output = new Intent();
+                                output.putExtra(commonVariables.KEY_IS_PRODUCT_UPDATED, true);
+                                if (product != null) {
+                                    String json = gson.toJson(product);
+                                    output.putExtra(commonVariables.KEY_PRODUCT, json);
+                                }
+                                setResult(RESULT_OK, output);
+                            }
+
                         }
 
                         finish();

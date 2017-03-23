@@ -68,24 +68,24 @@ public class APIs {
     }
 
 
-    public static void GetSellerProfile(AppCompatActivity activity, OnResult onresult, String strLoginId) {
+    public static void GetSellerProfile(AppCompatActivity activity, OnResult onresult) {
         Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/GetSellerProfile")
-                .appendQueryParameter("loginId", strLoginId)
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
                 .build();
         String query = uri.toString();
         callAPI(activity, onresult, query);
     }
 
 
-    public static void UpdateSellerProfile(AppCompatActivity activity, OnResult onresult, String loginId,
+    public static void UpdateSellerProfile(AppCompatActivity activity, OnResult onresult,
                                            String fname, String email, String mobile, String city, String pincode,
                                            String State, String strCountryCode) {
 
         String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/UpdateSellerProfile";
 
         Map<String, String> params = new HashMap<String, String>();
-        params.put("loginId", loginId);
+        params.put("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
         params.put("sellername", fname);
         params.put("emailId", email);
         params.put("mobileno", mobile);
@@ -97,13 +97,13 @@ public class APIs {
         APIs.callPostAPI(activity, onresult, query, params);
     }
 
-    public static void SellerChangePassword(AppCompatActivity activity, OnResult onresult, String strLoginId, String strPassword, String strNewPassword) {
+    public static void SellerChangePassword(AppCompatActivity activity, OnResult onresult, String strPassword, String strNewPassword) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/SellerChangePassword")
-                .appendQueryParameter("loginId", strLoginId)
                 .appendQueryParameter("oldPassword", strPassword)
-                .appendQueryParameter("newPassword", strNewPassword).build();
+                .appendQueryParameter("newPassword", strNewPassword)
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
     }
@@ -112,7 +112,7 @@ public class APIs {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/GetSellerBrandList")
-                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "")).build();
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
     }
@@ -140,7 +140,7 @@ public class APIs {
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/RemoveSellerBrand")
                 .appendQueryParameter("brandId", brandId)
-                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "")).build();
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
     }
@@ -152,6 +152,77 @@ public class APIs {
                 .build();
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void AddUpdateProduct_Suit(AppCompatActivity activity, OnResultString onresult, String strProductId, String brandId, String strCategory, String strTop, String strBottom, String strDupatta, String strAllOver, boolean checked, String strFabricType, String strPrice, String strMinQty, File file, ImageView mAvatarImage) {
+        try {
+            new MultipartCreateProduct(activity, onresult, file, mAvatarImage, strProductId, brandId, strCategory, strTop, strBottom, strDupatta, strAllOver, checked, strFabricType, strPrice, strMinQty).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void callGetNotificationsAPI(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/GetNotifications")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(null, onresult, query);
+    }
+
+    public static void GetProductList_Suit_Seller(AppCompatActivity activity, OnResult onresult, String srchCategoryId, int pageNo, String srchProductCode) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/GetProductList_Suit_Seller")
+                .appendQueryParameter("pageNo", pageNo + "")
+                .appendQueryParameter("srchCategoryId", srchCategoryId)
+                .appendQueryParameter("srchProductCode", srchProductCode)
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+
+    public static void RemoveProduct_Suit(AppCompatActivity activity, OnResult onresult, String productId) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/RemoveProduct_Suit")
+                .appendQueryParameter("productId", productId)
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void GetProductDetail_Suit_Seller(AppCompatActivity activity, OnResult onresult, String productId) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/GetProductDetail_Suit_Seller")
+                .appendQueryParameter("productId", productId)
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void GetCategory(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/GetCategory")
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+
+    public static void GetBuyerHome(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/GetBuyerHome")
+                .appendQueryParameter("buyerLoginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+
     }
 
 
@@ -290,7 +361,136 @@ public class APIs {
                         multipart.addFormField("brandId", strBrandId);
                         Log.d("TAGRK", ", " + strBrandId);
                     }
-                    multipart.addFormField("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, ""));
+                    multipart.addFormField("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+                    List<String> response = multipart.finish();
+
+                    System.out.println("SERVER REPLIED:");
+
+                    for (String line : response) {
+                        System.out.println(line);
+                        responseString = line;
+                    }
+                } catch (IOException ex) {
+                    System.err.println(ex);
+                    responseString = ex.getMessage();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("TAGRK", "Exception: " + e.getMessage());
+                responseString = e.getMessage();
+            }
+            return responseString;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            try {
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            mView = new DialogHorizontalView();
+                            mView.show(((AppCompatActivity) activity).getSupportFragmentManager(), "load");
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("TAGRK", "Exception: " + e.getMessage());
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            try {
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            if (mView != null)
+                                mView.dismiss();
+                        }
+                    });
+                }
+                if (onresult != null && result != null) {
+                    Log.v("TAGRK", "l RESPONSE:" + result);
+                    onresult.onResult(result);
+                } else
+                    Log.v("TAGRK", "RESPONSE:" + result);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("TAGRK", "Exception: " + e.getMessage());
+            }
+        }
+
+    }
+
+    public static class MultipartCreateProduct extends AsyncTask<String, String, String> {
+        AppCompatActivity activity;
+        OnResultString onresult;
+        DialogHorizontalView mView;
+        String responseString = null;
+        File file;
+        ImageView imageView;
+
+        String strProductId, strBrandId, strCategory, strTop, strBottom, strDupatta, strAllOver, strFabricType, strPrice, strMinQty;
+        boolean checked;
+
+
+        public MultipartCreateProduct(AppCompatActivity activity, OnResultString onresult, File file, ImageView imageView,
+                                      String strProductId, String strBrandId, String strCategory, String strTop, String strBottom, String strDupatta, String strAllOver, boolean checked, String strFabricType, String strPrice, String strMinQty) {
+            this.activity = activity;
+            this.onresult = onresult;
+            this.file = file;
+            this.file = file;
+            this.imageView = imageView;
+            this.strProductId = strProductId;
+            this.strBrandId = strBrandId;
+            this.strCategory = strCategory;
+            this.strTop = strTop;
+            this.strBottom = strBottom;
+            this.strDupatta = strDupatta;
+            this.strAllOver = strAllOver;
+            this.strFabricType = strFabricType;
+            this.strPrice = strPrice;
+            this.strMinQty = strMinQty;
+            this.checked = checked;
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return uploadFile();
+        }
+
+
+        private String uploadFile() {
+            try {
+                String charset = "UTF-8";
+
+                Uri uri2 = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/" + "AddUpdateProduct_Suit").build();
+                Log.d("TAGRK", uri2 + "\n");
+                try {
+                    MultipartUtility multipart = new MultipartUtility(uri2.toString(), charset);
+                    multipart.addFormField("productId", strProductId);
+                    multipart.addFormField("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+                    multipart.addFormField("brandId", strBrandId);
+                    multipart.addFormField("categoryId", strCategory);
+                    multipart.addFormField("topFabricId", strTop);
+                    multipart.addFormField("bottomFabricId", strBottom);
+                    multipart.addFormField("dupattaFabricId", strDupatta);
+                    multipart.addFormField("fabricId", strAllOver);
+                    multipart.addFormField("IsallOverFlag", checked + "");
+                    multipart.addFormField("fabricType", strFabricType);
+                    multipart.addFormField("price", strPrice);
+                    multipart.addFormField("minOrderQty", strMinQty);
+                    multipart.addFilePart("ImageFile", file);
                     List<String> response = multipart.finish();
 
                     System.out.println("SERVER REPLIED:");

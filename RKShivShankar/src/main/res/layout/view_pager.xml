@@ -39,8 +39,9 @@
         android:shadowColor="@color/black"
         android:shadowDx="2"
         android:shadowDy="2"
+        android:tint="@color/colorPrimary"
         android:shadowRadius="8"
-        android:src="@drawable/ic_close" />
+        android:src="@drawable/met_ic_close" />
 
     <ImageView
         android:id="@+id/iv_next_pager"

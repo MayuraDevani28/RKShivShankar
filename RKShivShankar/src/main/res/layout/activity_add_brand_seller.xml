@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Brand Name*"
-                    android:imeOptions="actionNext"
+                    android:imeOptions="actionGo"
                     android:inputType="textCapWords"
                     android:textSize="@dimen/text_size_small" />
 

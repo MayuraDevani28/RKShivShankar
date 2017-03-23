@@ -43,7 +43,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 @SuppressLint("NewApi")
-public class MyProfileActivitySeller extends BaseActivitySeller implements OnClickListener, OnResult, View.OnFocusChangeListener {
+public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClickListener, OnResult, View.OnFocusChangeListener {
 
     private TextView mBtn_logout;
 
@@ -61,7 +61,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
     String strCountryCode = "";
     ArrayList<SC3Object> listCountry = new ArrayList<SC3Object>();
 
-    public MyProfileActivitySeller() {
+    public MyProfileActivityBuyer() {
     }
 
     @Override
@@ -211,7 +211,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 overridePendingTransition(0, 0);
             } else if (view == mNav_my_profile) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivitySeller.class));
+                startActivity(new Intent(this, MyProfileActivityBuyer.class));
                 overridePendingTransition(0, 0);
             } else if (view == mNav_my_products) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -249,7 +249,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(commonVariables.appname);
                 builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(MyProfileActivitySeller.this));
+                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(MyProfileActivityBuyer.this));
                 builder.setNegativeButton("Cancel", null);
                 builder.show();
 
@@ -350,7 +350,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 } else if (strAPIName.equalsIgnoreCase("UpdateSellerProfile")) {
                     int strresId = jObWhole.optInt("resInt");
 
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(commonVariables.appname);
                     builder.setMessage(jObWhole.optString("res"));
                     if (strresId == 1) {
@@ -446,7 +446,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                commonMethods.hidesoftKeyboard(MyProfileActivitySeller.this);
+                commonMethods.hidesoftKeyboard(MyProfileActivityBuyer.this);
                 dialog.cancel();
             }
         });

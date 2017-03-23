@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.shivshankar.adapters.ViewPagerAdapter;
 import com.shivshankar.fragments.LoginFragment;
@@ -14,13 +16,15 @@ import com.shivshankar.fragments.RegisterFragment;
 import com.shivshankar.utills.ExceptionHandler;
 
 @SuppressLint("NewApi")
-public class LoginRegisterActivity extends AppCompatActivity {
+public class LoginRegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private LoginFragment loginFragment;
     private RegisterFragment registerFragment;
+    ViewPagerAdapter pagerAdapter;
+    public ImageView mIv_close;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,31 +37,32 @@ public class LoginRegisterActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             setContentView(R.layout.activity_login_register);
             init();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void init() {
-        viewPager = (ViewPager)findViewById(R.id.view_pager);
-        tabLayout = (TabLayout)findViewById(R.id.pager_tabs);
+        mIv_close = (ImageView) findViewById(R.id.iv_close);
+        mIv_close.setOnClickListener(this);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        tabLayout = (TabLayout) findViewById(R.id.pager_tabs);
         setupViewPager();
     }
-    private void setupViewPager() {
 
-        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+    private void setupViewPager() {
+        pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), tabLayout);
         loginFragment = new LoginFragment();
         pagerAdapter.addFragment(loginFragment, "LOGIN");
-//        registerFragment = new RegisterFragment();
-//        pagerAdapter.addFragment(registerFragment, "REGISTER");
-
+        registerFragment = new RegisterFragment();
+        pagerAdapter.addFragment(registerFragment, "REGISTER");
 
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(1);
     }
+
     private void callCheckAppVersionAPI() {
 //        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
 //                .path("MobileAPI/CheckAppVersion")
@@ -77,11 +82,6 @@ public class LoginRegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onResume();
     }
 
@@ -92,7 +92,23 @@ public class LoginRegisterActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    public void setRegisterVisibility(boolean b) {
+        try {
+            if (b) {
+                pagerAdapter.addFragment(registerFragment, "REGISTER");
+            } else {
+                pagerAdapter.removeFragment("REGISTER");
+            }
+            pagerAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-
-
+    @Override
+    public void onClick(View view) {
+        if (view == mIv_close) {
+            loginFragment.callBuyerWithoutLogin();
+        }
+    }
 }

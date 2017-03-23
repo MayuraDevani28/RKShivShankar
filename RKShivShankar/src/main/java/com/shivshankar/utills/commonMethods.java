@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,6 +26,7 @@ import com.shivshankar.R;
 import com.shivshankar.SplashActivity;
 import com.shivshankar.classes.Suggestion;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -236,11 +241,13 @@ public class commonMethods {
 
     public static void logout(AppCompatActivity activity) {
         SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-        editor.putString(commonVariables.KEY_LOGIN_ID, "");
+        editor.putString(commonVariables.KEY_LOGIN_ID, "0");
         editor.putBoolean(commonVariables.KEY_IS_LOG_IN, false);
         editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
         editor.putString(commonVariables.KEY_BRAND, "");
         editor.putBoolean(commonVariables.KEY_IS_BRAND, false);
+        editor.putBoolean(commonVariables.KEY_IS_SELLER,false);
+        editor.putBoolean(commonVariables.KEY_IS_SKIPPED_LOGIN_BUYER,false);
 //        editor.putString(commonVariables.KEY_ORDER_ID, "0");
         editor.commit();
         Intent intent = new Intent(activity, SplashActivity.class);
@@ -279,4 +286,24 @@ public class commonMethods {
         });
 
     }
+
+    public static Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public static String getRealPathFromURI(AppCompatActivity activity, Uri uri) {
+        Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
+        int idx = 0;
+        try {
+            cursor.moveToFirst();
+            idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cursor.getString(idx);
+    }
+
 }

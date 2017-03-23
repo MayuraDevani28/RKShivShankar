@@ -70,7 +70,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.6" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/ll_brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,47 +81,65 @@
                 android:padding="18dp"
                 android:visibility="gone">
 
-                <FrameLayout
-                    android:id="@+id/fl_with_brand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/xml_round_yellow"
+                    android:padding="7dp"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="gone" />
 
-                    <LinearLayout
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:background="@drawable/xml_round_white"
-                        android:gravity="center">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/fl_with_brand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:background="@drawable/xml_round_white"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/iv_effectImg"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/splashscreen_logo" />
+
+                        </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/iv_effectImg"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/splashscreen_logo" />
+                            android:id="@+id/iv_change_image"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="bottom|right"
+                            android:background="@drawable/xml_round_yellow"
+                            android:padding="7dp"
+                            android:src="@drawable/ic_edit" />
 
-                    </LinearLayout>
+                    </FrameLayout>
 
-                    <ImageView
-                        android:id="@+id/iv_change_image"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="bottom|right"
-                        android:background="@drawable/xml_round_yellow"
-                        android:src="@drawable/ic_edit" />
-
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/tv_brand_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Women's"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_brand_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="Women's"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/ll_create_brand"

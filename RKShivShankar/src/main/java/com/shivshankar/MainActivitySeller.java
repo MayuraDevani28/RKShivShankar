@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -35,8 +37,9 @@ import static com.shivshankar.R.id.ll_create_brand;
 
 public class MainActivitySeller extends BaseActivitySeller implements View.OnClickListener, OnResult {
 
-    LinearLayout mLl_create_brand, mLl_add_product, mLl_brand;
-    ImageView mIv_change_image, mIv_imageView;
+    LinearLayout mLl_create_brand, mLl_add_product;
+    RelativeLayout mLl_brand;
+    ImageView mIv_change_image, mIv_imageView, mIv_delete_image;
     TextView mTv_brand_name, mTv_welcome;
     View view_top;
     FrameLayout mFl_with_brand;
@@ -53,7 +56,13 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_seller, frameLayout);
             bindViews(rootView);
 
-            APIs.GetSellerBrandList(this, this);
+            Gson gson = new Gson();
+            String json = AppPreferences.getPrefs().getString(commonVariables.KEY_BRAND, "");
+            item = gson.fromJson(json, Brand.class);
+            if (item != null)
+                setBrandVisibility(true, item);
+            else
+                APIs.GetSellerBrandList(this, this);
 
 //            try {
 //                byte[] byteArray = Base64.decode(AppPreferences.getPrefs().getString("image", ""), Base64.DEFAULT);
@@ -90,12 +99,14 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     private void bindViews(View rootView) {
         mLl_create_brand = (LinearLayout) rootView.findViewById(ll_create_brand);
         mLl_create_brand.setOnClickListener(this);
-        mLl_brand = (LinearLayout) rootView.findViewById(R.id.ll_brand);
+        mLl_brand = (RelativeLayout) rootView.findViewById(R.id.ll_brand);
         mFl_with_brand = (FrameLayout) rootView.findViewById(R.id.fl_with_brand);
         mLl_add_product = (LinearLayout) rootView.findViewById(R.id.ll_add_product);
         mLl_add_product.setOnClickListener(this);
         mIv_change_image = (ImageView) rootView.findViewById(R.id.iv_change_image);
         mIv_change_image.setOnClickListener(this);
+//        mIv_delete_image = (ImageView) rootView.findViewById(R.id.iv_delete);
+//        mIv_delete_image.setOnClickListener(this);
         mIv_imageView = (ImageView) rootView.findViewById(R.id.iv_effectImg);
         mTv_brand_name = (TextView) rootView.findViewById(R.id.tv_brand_name);
         view_top = rootView.findViewById(R.id.view_top);
@@ -114,8 +125,8 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 
         mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
         mNav_my_profile.setOnClickListener(this);
-        mNav_my_brands = (LinearLayout) findViewById(R.id.nav_my_brands);
-        mNav_my_brands.setOnClickListener(this);
+//        mNav_my_brands = (LinearLayout) findViewById(R.id.nav_my_brands);
+//        mNav_my_brands.setOnClickListener(this);
         mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
         mNav_my_products.setOnClickListener(this);
         mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
@@ -127,6 +138,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     private void setBrandVisibility(boolean b, Brand brand) {
         try {
             if (b) {
+                view_top.setVisibility(View.GONE);
                 mLl_brand.setVisibility(View.VISIBLE);
                 mLl_create_brand.setVisibility(View.GONE);
                 String strImageURL = brand.getBrandLogo();
@@ -145,12 +157,13 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 }
                 mIv_imageView.setDrawingCacheEnabled(true);
                 mTv_brand_name.setText(brand.getBrandName());
-                view_top.setVisibility(View.GONE);
-                commonMethods.startZommingAnim(mFl_with_brand);
+
+//                commonMethods.startZommingAnim(mFl_with_brand);
             } else {
+                view_top.setVisibility(View.VISIBLE);
                 mLl_brand.setVisibility(View.GONE);
                 mLl_create_brand.setVisibility(View.VISIBLE);
-                view_top.setVisibility(View.VISIBLE);
+
 
                 commonMethods.startZommingAnim(mLl_create_brand);
             }
@@ -163,12 +176,19 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     protected void onResume() {
         try {
             super.onResume();
+
             String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
             if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null")) {
                 String strUname = WordUtils.capitalizeFully(new JSONObject(strProfile).optString("SellerName"));
                 mTv_username.setText(strUname);
                 mTv_welcome.setText("Welcome " + strUname);
             }
+            Gson gson = new Gson();
+            String json = AppPreferences.getPrefs().getString(commonVariables.KEY_BRAND, "");
+            item = gson.fromJson(json, Brand.class);
+            if (item != null)
+                setBrandVisibility(true, item);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -198,31 +218,12 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     @Override
     public void onClick(View view) {
         try {
-
             if (view == mLl_create_brand) {
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, true);
                 startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_BRAND);
             } else if (view == mIv_change_image) {
                 Intent intent = new Intent(getApplicationContext(), AddUpdateBrandActivitySeller.class);
-
-
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                String saveThis = "";
-//                if (mIv_imageView.getDrawable() != null) {
-//                    try {
-//                        Bitmap bitmap1;
-//                        if (mIv_imageView.getDrawable() instanceof RoundedBitmapDrawable)
-//                            bitmap1 = ((RoundedBitmapDrawable) mIv_imageView.getDrawable()).getBitmap();
-//                        else
-//                            bitmap1 = ((BitmapDrawable) mIv_imageView.getDrawable()).getBitmap();
-//                        bitmap1.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                        byte[] byteArray = stream.toByteArray();
-//                        saveThis = Base64.encodeToString(byteArray, Base64.DEFAULT);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
                 SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                 Gson gson = new Gson();
                 String json = gson.toJson(item);
@@ -231,6 +232,13 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 
                 startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_BRAND);
                 overridePendingTransition(0, 0);
+            } else if (view == mIv_delete_image) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(commonVariables.appname);
+                builder.setMessage("Do you want to delete this brand?");
+                builder.setPositiveButton("Yes", (dialog, which) -> APIs.RemoveSellerBrand(this, this, item.getBrandId() + ""));
+                builder.setNegativeButton("No", null);
+                builder.show();
             } else if (view == mLl_add_product) {
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, false);
@@ -284,8 +292,29 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                         JSONObject jObjItem = jarray.optJSONObject(0);
                         item = new Brand(jObjItem.optString("BrandId"), jObjItem.optString("BrandName"), jObjItem.optString("BrandLogo"));
                         setBrandVisibility(true, item);
+                        SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(item);
+                        editor.putString(commonVariables.KEY_BRAND, json);
+                        editor.apply();
+
                     } else
                         setBrandVisibility(false, null);
+                }
+                if (strApiName.equalsIgnoreCase("RemoveSellerBrand")) {
+                    int strresId = jobjWhole.optInt("resInt");
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                    builder.setTitle(commonVariables.appname);
+                    builder.setMessage(jobjWhole.optString("res"));
+                    if (strresId == 1) {
+                        builder.setPositiveButton("Ok", (dialog, which) -> {
+                            AppPreferences.getPrefs().edit().putString(commonVariables.KEY_BRAND, "").apply();
+                            setBrandVisibility(false, null);
+                        });
+                    } else {
+                        builder.setPositiveButton("Ok", null);
+                    }
+                    builder.show();
                 }
             } else {
                 setBrandVisibility(false, null);

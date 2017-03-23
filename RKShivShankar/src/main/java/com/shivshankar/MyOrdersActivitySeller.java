@@ -32,14 +32,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 @SuppressLint("NewApi")
-public class MyOrdersActivityBuyer extends AppCompatActivity implements OnClickListener, OnResult {
+public class MyOrdersActivitySeller extends AppCompatActivity implements OnClickListener, OnResult {
 
     private RecyclerView mLv_orders;
     private TextView mTv_order_no_data;
     ArrayList<Order> listArray = new ArrayList<Order>();
     public ImageView mIv_close;
 
-    public MyOrdersActivityBuyer() {
+    public MyOrdersActivitySeller() {
     }
 
     @Override
