@@ -343,7 +343,12 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
             if (view == mIv_filer) {
-                startActivity(new Intent(this, FilterActivityBuyer.class));
+                Intent intent = new Intent(this, FilterActivityBuyer.class);
+                intent.putExtra(commonVariables.KEY_FABRIC_TYPE, strFabricType);
+                intent.putExtra(commonVariables.KEY_BRAND, brandId);
+                intent.putExtra(commonVariables.KEY_SUIT_OR_FABRIC, 1);
+                startActivityForResult(intent, commonVariables.REQUEST_FILTER_PRODUCT);
+                overridePendingTransition(R.anim.slide_up, R.anim.hold);
             } else if (view == mIv_logo_toolbar) {
                 Intent intent = new Intent(this, MainActivityBuyer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -377,12 +382,12 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
+                if (mTv_logout.getText().equals("Login")) {
+                    startActivity(new Intent(this, LoginRegisterActivity.class));
+                    onBackPressed();
+                } else {
+                    commonMethods.logout(this, true);
+                }
             } else if (view == mIv_close) {
                 Intent output = new Intent();
                 setResult(RESULT_OK, output);

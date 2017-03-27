@@ -81,7 +81,7 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_RECEIVE_MESSAGE: {
+            case commonVariables.REQUEST_RECEIVE_MESSAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
                 }

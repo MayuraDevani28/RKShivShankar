@@ -365,12 +365,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
+                commonMethods.logout(this,true);
             } else if (view == mIv_close) {
                 onBackPressed();
             } else if (view == mBtn_submit) {

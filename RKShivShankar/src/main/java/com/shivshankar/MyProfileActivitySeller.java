@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -46,7 +45,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 
     private TextView mBtn_logout;
 
-    private TextView mBtn_save_profile,mBtn_change_password;//, mBtn_add_mobile;
+    private TextView mBtn_save_profile, mBtn_change_password;//, mBtn_add_mobile;
     private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_mobile_wholesaler, mEdt_pincode;//mEdt_register_company
 
     private EditText mSp_country_billing, mSp_address_state_billing;
@@ -215,12 +214,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
+                commonMethods.logout(this, true);
             } else if (view == mIv_close) {
                 returnBack();
             } else if (view == mBtn_save_profile) {
@@ -232,13 +226,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 //                overridePendingTransition(0, 0);
 //            }
             else if (view == mBtn_logout) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(MyProfileActivitySeller.this));
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
-
+                commonMethods.logout(this, true);
             } else if (view == mBtn_change_password) {
                 Intent intent = new Intent(this, ChangePasswordActivitySeller.class);
                 startActivity(intent);

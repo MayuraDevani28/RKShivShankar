@@ -214,15 +214,15 @@ public class ChangePasswordActivityBuyer extends BaseActivityBuyer implements On
                 overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
+            }else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
-            } else if (view == mIv_close || view == mBtn_cancel) {
+                if (mTv_logout.getText().equals("Login")) {
+                    startActivity(new Intent(this, LoginRegisterActivity.class));
+                    onBackPressed();
+                } else {
+                    commonMethods.logout(this, true);
+                }
+            }else if (view == mIv_close || view == mBtn_cancel) {
                 returnBack();
             } else if (view == mIv_eye_confirm_password) {
                 passwordVisibilityConfirm(mEdt_confirm_password);

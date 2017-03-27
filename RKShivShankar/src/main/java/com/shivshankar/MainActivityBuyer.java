@@ -25,7 +25,6 @@ import com.shivshankar.classes.Suggestion;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
-import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -131,12 +130,12 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
+                if (mTv_logout.getText().equals("Login")) {
+                    startActivity(new Intent(this, LoginRegisterActivity.class));
+                    onBackPressed();
+                } else {
+                    commonMethods.logout(this, true);
+                }
             }
 
         } catch (Exception e) {

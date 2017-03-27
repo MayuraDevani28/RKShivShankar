@@ -18,10 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.FilterAttrubuteAdapter;
 import com.shivshankar.classes.FilterAttribute;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,8 +43,8 @@ public class FilterActivityBuyer extends AppCompatActivity implements OnClickLis
     String strOcation = "^Ocassion_", strFabric = "^Fabric_", strPrice = "^Price_", strDiscount = "";
     public String strColor = "^Color_";
 
-    String strCategoryName;
-    String strFilter;
+    String strCategoryName, strFilter, strFabricType, brandId;
+    int suit_or_fab;//1=suit, 2=fab
     ArrayList<FilterAttribute> listOcation = new ArrayList<FilterAttribute>();
     ArrayList<FilterAttribute> listFabric = new ArrayList<FilterAttribute>();
     //	ArrayList<ColorJodhaa> listColor = new ArrayList<ColorJodhaa>();
@@ -60,6 +62,10 @@ public class FilterActivityBuyer extends AppCompatActivity implements OnClickLis
         try {
             setContentView(R.layout.activity_filter);
 
+            strFabricType = getIntent().getStringExtra(commonVariables.KEY_FABRIC_TYPE);
+            brandId = getIntent().getStringExtra(commonVariables.KEY_BRAND);
+            suit_or_fab = getIntent().getIntExtra(commonVariables.KEY_SUIT_OR_FABRIC, 1);
+
 //			strCategoryName = getIntent().getStringExtra(commonVariables.INTENT_EXTRA_CATEGORY_NAME);
 //			strFilter = getIntent().getStringExtra(commonVariables.INTENT_EXTRA_FILTER_DATA);
 //			strColor = getIntent().getStringExtra(commonVariables.INTENT_FILTER_COLOR);
@@ -73,7 +79,7 @@ public class FilterActivityBuyer extends AppCompatActivity implements OnClickLis
                 arryAttrbs = new ArrayList<String>();
             setActionBar();
             bindViews();
-//			APIs.GetProductListFilters_Buyer();
+            APIs.GetProductListFilters_Buyer(this, this, strFabricType, brandId, suit_or_fab);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,6 +136,7 @@ public class FilterActivityBuyer extends AppCompatActivity implements OnClickLis
     @Override
     public void onBackPressed() {
         finish();
+        overridePendingTransition(R.anim.hold, R.anim.slide_bottom);
     }
 
     private void returnBack() {
