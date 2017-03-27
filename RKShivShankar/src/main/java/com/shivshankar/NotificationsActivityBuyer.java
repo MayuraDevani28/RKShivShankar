@@ -7,14 +7,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,14 +33,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsActivityBuyer extends BaseActivitySeller implements OnResult, View.OnClickListener, AdapterView.OnItemClickListener {
+public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnResult, View.OnClickListener, AdapterView.OnItemClickListener {
     boolean mAlreadyLoaded = false;
     ListView mLv_notification;
     TextView mTv_no_data_found;
-
-    private ImageView mIv_logo_nav, mIv_logo_toolbar;
-    private TextView mTv_username, mTv_logout;
-    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
 
     NotificationListAdapter mAdapter;
     //    SwipeRefreshLayout swipeRefreshLayout;
@@ -59,7 +53,6 @@ public class NotificationsActivityBuyer extends BaseActivitySeller implements On
             Window window = getWindow();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -95,9 +88,9 @@ public class NotificationsActivityBuyer extends BaseActivitySeller implements On
         try {
             super.onResume();
             if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_BUYER_PROFILE, "");
                 if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("SellerName")));
+                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,25 +99,17 @@ public class NotificationsActivityBuyer extends BaseActivitySeller implements On
 
     private void bindViews(View rootView) {
         try {
-            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
             mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
             mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username = (TextView) findViewById(R.id.tv_username);
             mTv_username.setOnClickListener(this);
-            mTv_logout = (TextView) findViewById(R.id.tv_logout);
             mTv_logout.setOnClickListener(this);
-            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
             mLl_close.setOnClickListener(this);
-
-            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
             mNav_my_profile.setOnClickListener(this);
-            mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
-            mNav_my_products.setOnClickListener(this);
-            mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
-            mNav_notification.setOnClickListener(this);
-            mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
-            mNav_change_pass.setOnClickListener(this);
+            mNav_my_orders.setOnClickListener(this);
+            mNav_customer_service.setOnClickListener(this);
+            mNav_about_us.setOnClickListener(this);
+            mNav_our_policy.setOnClickListener(this);
+            mNav_contact_us.setOnClickListener(this);
 
             mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
@@ -266,25 +251,33 @@ public class NotificationsActivityBuyer extends BaseActivitySeller implements On
     @Override
     public void onClick(View view) {
         if (view == mIv_logo_toolbar) {
-            Intent intent = new Intent(this, MainActivitySeller.class);
+            Intent intent = new Intent(this, MainActivityBuyer.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(0, 0);
-        } else if (view == mNav_my_profile) {
+        }else if (view == mNav_my_profile) {
             drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, MyProfileActivitySeller.class));
+            startActivity(new Intent(this, MyProfileActivityBuyer.class));
             overridePendingTransition(0, 0);
-        } else if (view == mNav_my_products) {
+        } else if (view == mNav_my_orders) {
             drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, ProductsActivitySeller.class));
+            startActivity(new Intent(this, MyOrdersActivityBuyer.class));
             overridePendingTransition(0, 0);
-        } else if (view == mNav_notification) {
+        } else if (view == mNav_customer_service) {
             drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, NotificationsActivityBuyer.class));
+            startActivity(new Intent(this, CustomerServiceActivityBuyer.class));
             overridePendingTransition(0, 0);
-        } else if (view == mNav_change_pass) {
+        } else if (view == mNav_about_us) {
             drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+            startActivity(new Intent(this, AboutUsActivityBuyer.class));
+            overridePendingTransition(0, 0);
+        } else if (view == mNav_our_policy) {
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(this, OurPolicyActivityBuyer.class));
+            overridePendingTransition(0, 0);
+        } else if (view == mNav_contact_us) {
+            drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(this, ContactUsActivityBuyer.class));
             overridePendingTransition(0, 0);
         } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
             drawer.closeDrawer(GravityCompat.START);

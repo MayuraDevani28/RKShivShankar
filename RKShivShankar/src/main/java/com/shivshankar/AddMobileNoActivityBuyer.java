@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,7 +24,7 @@ import com.shivshankar.utills.commonVariables;
 import org.json.JSONObject;
 
 
-public class AddMobileNoActivityBuyer extends BaseActivitySeller implements View.OnClickListener, OnResult {
+public class AddMobileNoActivityBuyer extends BaseActivityBuyer implements View.OnClickListener, OnResult {
     private EditText mEdt_register_mobile_wholesaler;
     private Button mBtn_submit;
     public ImageView mIv_close;
@@ -38,10 +38,8 @@ public class AddMobileNoActivityBuyer extends BaseActivitySeller implements View
             Window window = getWindow();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
             }
-            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                    WindowManager.LayoutParams.FLAG_SECURE);
+            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_add_mobile_seller, frameLayout);
             bindViews(rootView);
 
@@ -70,6 +68,8 @@ public class AddMobileNoActivityBuyer extends BaseActivitySeller implements View
     @Override
     public void onClick(View view) {
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mIv_close) {
                 finish();
                 overridePendingTransition(0, 0);

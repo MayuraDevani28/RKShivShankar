@@ -82,7 +82,6 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/rbtn_selector"
-                android:checked="true"
                 android:gravity="left|center_vertical"
                 android:padding="5dp"
                 android:text="Dyed"

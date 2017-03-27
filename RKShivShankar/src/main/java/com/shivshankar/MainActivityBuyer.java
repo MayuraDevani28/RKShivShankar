@@ -10,10 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -40,9 +39,6 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
     private boolean mIsDarkSearchTheme = false;
     private String mLastQuery = "";
 
-    private ImageView mIv_logo_nav, mIv_logo_toolbar;
-    private TextView mTv_username, mTv_logout;
-    private LinearLayout mNav_my_profile, mNav_my_orders, mNav_customer_service, mNav_about_us, mNav_our_policy, mNav_contact_us, mLl_close;
     ArrayList<Brand> listArray = new ArrayList<Brand>();
     HomeCategoryAdapterBuyer adapter;
 
@@ -73,6 +69,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
             e.printStackTrace();
         }
     }
+//overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
 
     public void bindViews(View rootView) {
         try {
@@ -84,28 +81,17 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
             LinearLayoutManager manager = new LinearLayoutManager(this);
             mRv_items.setLayoutManager(manager);
 
-            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
             mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
             mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username = (TextView) findViewById(R.id.tv_username);
             mTv_username.setOnClickListener(this);
-            mTv_logout = (TextView) findViewById(R.id.tv_logout);
             mTv_logout.setOnClickListener(this);
-            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
             mLl_close.setOnClickListener(this);
 
-            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
             mNav_my_profile.setOnClickListener(this);
-            mNav_my_orders = (LinearLayout) findViewById(R.id.nav_my_orders);
             mNav_my_orders.setOnClickListener(this);
-            mNav_customer_service = (LinearLayout) findViewById(R.id.nav_customer_service);
             mNav_customer_service.setOnClickListener(this);
-            mNav_about_us = (LinearLayout) findViewById(R.id.nav_about_us);
             mNav_about_us.setOnClickListener(this);
-            mNav_our_policy = (LinearLayout) findViewById(R.id.nav_our_policy);
             mNav_our_policy.setOnClickListener(this);
-            mNav_contact_us = (LinearLayout) findViewById(R.id.nav_contact_us);
             mNav_contact_us.setOnClickListener(this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,6 +101,8 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
     @Override
     public void onClick(View view) {
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mNav_my_profile) {
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, MyProfileActivityBuyer.class));
@@ -168,7 +156,13 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
                         listArray.clear();
                         for (int i = 0; i < jarray.length(); i++) {
                             JSONObject jo = jarray.optJSONObject(i);
-                            listArray.add(new Brand(jo.optString("CategoryId"), jo.optString("CategoryName"), "http://www.webindia123.com/fashionfabrics/images/saree.jpg"));//jo.optString("CategoryImage")
+                            String strimg;
+                            if (i == 0)
+                                strimg = "https://2.bp.blogspot.com/-wXBht38cDw4/WEFhq2JZFYI/AAAAAAAADMI/57HnJbpCwcAYKoJvhs_ANSXh-ceOYh9pACLcB/s400/banner3%2B%25281%2529.png";
+                            else
+                                strimg = "http://www.webindia123.com/fashionfabrics/images/saree.jpg";
+
+                            listArray.add(new Brand(jo.optString("CategoryId"), jo.optString("CategoryName"), strimg));//jo.optString("CategoryImage")
                         }
                         setListAdapter(listArray);
                     }
@@ -203,6 +197,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
             e.printStackTrace();
         }
     }
+
 
     private void setupFloatingSearch() {
         try {

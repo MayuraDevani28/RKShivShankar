@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,7 +37,7 @@ import org.json.JSONObject;
 
 
 @SuppressLint("NewApi")
-public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller implements OnClickListener, OnResult {
+public class ChangePasswordWithOTPActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult {
 
     private EditText mEdt_otp, mEdt_new_password, mEdt_confirm_password;
     ImageView mIv_eye_new_password, mIv_eye_confirm_password;
@@ -55,7 +56,6 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller imple
         Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         }
         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         View rootView = getLayoutInflater().inflate(R.layout.activity_change_password_otp_seller, frameLayout);
@@ -179,6 +179,8 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivitySeller imple
     @Override
     public void onClick(View view) {
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             mEdt_otp.setError(null);
             mEdt_confirm_password.setError(null);
             mEdt_new_password.setError(null);

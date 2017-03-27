@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cb_filter_option"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:drawSelectorOnTop="true"
+    android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:gravity="center_vertical"
+    android:paddingBottom="5dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp"
+    android:text="Desiner Sarees"
+    android:textColor="@color/black"
+    android:textSize="@dimen/text_size_medium" />

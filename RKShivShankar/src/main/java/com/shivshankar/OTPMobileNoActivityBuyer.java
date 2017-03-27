@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,7 +31,7 @@ import com.shivshankar.utills.commonVariables;
 import org.json.JSONObject;
 
 
-public class OTPMobileNoActivityBuyer extends BaseActivitySeller implements View.OnClickListener, OnResult {
+public class OTPMobileNoActivityBuyer extends BaseActivityBuyer implements View.OnClickListener, OnResult {
     private EditText mEdt_OTP;
     private TextView mTv_resend_verification_code, mTv_otp_message;
     private Button mBtn_submit;
@@ -46,7 +47,6 @@ public class OTPMobileNoActivityBuyer extends BaseActivitySeller implements View
             Window window = getWindow();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_otp_mobile_seller, frameLayout);
@@ -113,6 +113,8 @@ public class OTPMobileNoActivityBuyer extends BaseActivitySeller implements View
     @Override
     public void onClick(View view) {
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mIv_close) {
                 returnBack(false);
             } else if (view == mBtn_submit) {

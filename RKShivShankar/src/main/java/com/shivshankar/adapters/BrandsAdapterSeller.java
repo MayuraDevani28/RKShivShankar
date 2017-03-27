@@ -150,7 +150,7 @@ public class BrandsAdapterSeller extends RecyclerView.Adapter<BrandsAdapterSelle
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_row_brands, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_row_brands_seller, parent, false);
         return new MyViewHolder(itemView);
     }
 

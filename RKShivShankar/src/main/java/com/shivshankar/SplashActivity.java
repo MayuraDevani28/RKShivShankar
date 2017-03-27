@@ -196,7 +196,7 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
 //                        SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
 //                        editor.putString(commonVariables.KEY_LOGIN_ID, "");
 //                        editor.putBoolean(commonVariables.KEY_IS_LOG_IN, false);
-//                        editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+//                        editor.putString(commonVariables.KEY_SELLER_PROFILE, "");
 //                        editor.putString(commonVariables.KEY_ORDER_ID, "0");
 //                        editor.commit();
 //                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));

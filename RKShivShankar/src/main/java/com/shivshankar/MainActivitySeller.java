@@ -10,6 +10,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,9 +44,6 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     TextView mTv_brand_name, mTv_welcome;
     View view_top;
     FrameLayout mFl_with_brand;
-    private ImageView mIv_logo_nav, mIv_logo_toolbar;
-    private TextView mTv_username, mTv_logout;
-    private LinearLayout mNav_my_profile, mNav_my_brands, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
     Brand item;
 
     @Override
@@ -112,26 +110,17 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         view_top = rootView.findViewById(R.id.view_top);
         mTv_welcome = (TextView) rootView.findViewById(R.id.tv_welcome);
 
-        mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
         mIv_logo_nav.setOnClickListener(this);
-        mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
         mIv_logo_toolbar.setOnClickListener(this);
-        mTv_username = (TextView) findViewById(R.id.tv_username);
         mTv_username.setOnClickListener(this);
-        mTv_logout = (TextView) findViewById(R.id.tv_logout);
         mTv_logout.setOnClickListener(this);
-        mLl_close = (LinearLayout) findViewById(R.id.ll_close);
         mLl_close.setOnClickListener(this);
 
-        mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
-        mNav_my_profile.setOnClickListener(this);
 //        mNav_my_brands = (LinearLayout) findViewById(R.id.nav_my_brands);
 //        mNav_my_brands.setOnClickListener(this);
-        mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
+        mNav_my_profile.setOnClickListener(this);
         mNav_my_products.setOnClickListener(this);
-        mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
         mNav_notification.setOnClickListener(this);
-        mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
         mNav_change_pass.setOnClickListener(this);
     }
 
@@ -176,12 +165,8 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     protected void onResume() {
         try {
             super.onResume();
-
-            String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
-            if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null")) {
-                String strUname = WordUtils.capitalizeFully(new JSONObject(strProfile).optString("SellerName"));
-                mTv_username.setText(strUname);
-                mTv_welcome.setText("Welcome " + strUname);
+            if (mTv_username != null) {
+                setUserName();
             }
             Gson gson = new Gson();
             String json = AppPreferences.getPrefs().getString(commonVariables.KEY_BRAND, "");
@@ -189,6 +174,19 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
             if (item != null)
                 setBrandVisibility(true, item);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setUserName() {
+        try {
+            String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
+            if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null")) {
+                String strUname = WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name"));
+                mTv_username.setText(strUname);
+                mTv_welcome.setText("Welcome " + strUname);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -218,6 +216,8 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     @Override
     public void onClick(View view) {
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mLl_create_brand) {
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, true);
@@ -247,11 +247,13 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, MyProfileActivitySeller.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_my_brands) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, BrandsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_products) {
+            }
+//            else if (view == mNav_my_brands) {
+//                drawer.closeDrawer(GravityCompat.START);
+//                startActivity(new Intent(this, BrandsActivitySeller.class));
+//                overridePendingTransition(0, 0);
+//            }
+            else if (view == mNav_my_products) {
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ProductsActivitySeller.class));
                 overridePendingTransition(0, 0);

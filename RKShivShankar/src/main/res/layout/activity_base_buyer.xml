@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/transparent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -12,15 +13,16 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/splashscreen_bg"
         android:fitsSystemWindows="true"
         android:focusableInTouchMode="true">
-
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:contentInsetStartWithNavigation="0dp"
             app:elevation="0dp">
 
             <include layout="@layout/toolbar_main" />
@@ -32,18 +34,11 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v4.widget.NestedScrollView
+            <FrameLayout
+                android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                <FrameLayout
-                    android:id="@+id/container"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true" />
-            </android.support.v4.widget.NestedScrollView>
+                android:clickable="true" />
         </android.support.v4.widget.SwipeRefreshLayout>
     </android.support.design.widget.CoordinatorLayout>
 
@@ -90,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:paddingTop="@dimen/nav_header_vertical_spacing"
-                        android:text="Welcome Seller!"
+                        android:text="Welcome !"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white" />
 
@@ -143,10 +138,10 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/v_prof"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/colorPrimaryDark"
-                        android:visibility="gone" />
+                        android:background="@color/colorPrimaryDark" />
 
 
                     <LinearLayout
@@ -170,12 +165,13 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical"
                             android:padding="5dp"
-                            android:text="My Brands"
+                            android:text="My Orders"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/v_order"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/colorPrimaryDark" />

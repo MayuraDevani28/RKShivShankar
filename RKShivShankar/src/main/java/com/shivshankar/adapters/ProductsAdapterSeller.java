@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.gson.Gson;
@@ -113,7 +114,7 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
         holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
         String strImageURL = item.getImageName();
         if ((strImageURL != null) && (!strImageURL.equals(""))) {
-            Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).dontAnimate().error(R.drawable.camera).into(holder.mIv_product_image);
+            Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).dontAnimate().diskCacheStrategy( DiskCacheStrategy.SOURCE ).error(R.drawable.no_img).thumbnail(0.1f).into(holder.mIv_product_image);
         }
     }
 

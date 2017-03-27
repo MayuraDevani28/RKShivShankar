@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 @SuppressLint("NewApi")
-public class MyOrdersActivitySeller extends AppCompatActivity implements OnClickListener, OnResult {
+public class MyOrdersActivitySeller extends BaseActivitySeller implements OnClickListener, OnResult {
 
     private RecyclerView mLv_orders;
     private TextView mTv_order_no_data;
@@ -50,7 +50,6 @@ public class MyOrdersActivitySeller extends AppCompatActivity implements OnClick
             Window window = getWindow();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                     WindowManager.LayoutParams.FLAG_SECURE);
@@ -117,6 +116,8 @@ public class MyOrdersActivitySeller extends AppCompatActivity implements OnClick
     public void onClick(View view) {
 
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mIv_close) {
                 returnBack();
             }

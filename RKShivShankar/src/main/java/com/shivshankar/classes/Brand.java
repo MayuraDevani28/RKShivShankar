@@ -1,10 +1,12 @@
 package com.shivshankar.classes;
 
+import java.io.Serializable;
+
 /**
  * Created by Mayura on 3/16/2017.
  */
 
-public class Brand {
+public class Brand implements Serializable {
 
     String brandId;
     String brandName, brandLogo;

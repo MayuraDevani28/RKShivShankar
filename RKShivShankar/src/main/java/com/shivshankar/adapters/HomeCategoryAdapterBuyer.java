@@ -1,5 +1,6 @@
 package com.shivshankar.adapters;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.shivshankar.BrandsActivityBuyer;
 import com.shivshankar.BrandsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.classes.Brand;
@@ -83,6 +86,31 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
                 mIv_down = (ImageView) itemView.findViewById(R.id.iv_down);
                 mRadioGroup = (RadioGroup) itemView.findViewById(R.id.radioGroup);
                 mLl_top.setOnClickListener(this);
+                mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                        try {
+                            String stType = "";
+                            if (checkedId == R.id.radioDyed) {
+                                stType = "dyed";
+                            } else if (checkedId == R.id.radioPrinted) {
+                                stType = "printed";
+                            }
+                            Intent intent = new Intent(activity, BrandsActivityBuyer.class);
+                            intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
+                            Gson gson = new Gson();
+                            Brand item = list.get(getLayoutPosition());
+                            String json = gson.toJson(item);
+
+                            intent.putExtra(commonVariables.KEY_CATEGORY, json);
+
+                            activity.startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -18,21 +18,32 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonMethods;
+import com.shivshankar.utills.commonVariables;
+
+import org.apache.commons.lang3.text.WordUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
 public class BaseActivitySeller extends AppCompatActivity {
-    public TextView mTv_cart_count;
     protected FrameLayout frameLayout;
+
     Toolbar toolbar;
     SwipeRefreshLayout swipeRefreshLayout;
     DrawerLayout drawer;
     CoordinatorLayout main_content;
+    LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
+    TextView mTv_cart_count, mTv_username, mTv_logout;
+    ImageView mIv_logo_nav, mIv_logo_toolbar;
     File file = null;
 
     @Override
@@ -75,7 +86,31 @@ public class BaseActivitySeller extends AppCompatActivity {
 
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
+            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
+            mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
+            mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
+            mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
+
+            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
+            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+            mTv_username = (TextView) findViewById(R.id.tv_username);
+            mTv_logout = (TextView) findViewById(R.id.tv_logout);
+            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+
+            setUserName();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setUserName() {
+        try {
+            String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
+            if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null")) {
+                String strUname = WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name"));
+                mTv_username.setText(strUname);
+            }
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
@@ -103,6 +138,9 @@ public class BaseActivitySeller extends AppCompatActivity {
     protected void onResume() {
         try {
             super.onResume();
+            if (mTv_username != null) {
+                setUserName();
+            }
             if (mTv_cart_count != null && !commonMethods.isOnline(this)) {
                 Snackbar.make(mTv_cart_count, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
@@ -167,7 +205,8 @@ public class BaseActivitySeller extends AppCompatActivity {
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                super.onBackPressed();
+                finish();
+                overridePendingTransition(0, 0);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -32,7 +32,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
 @SuppressLint("NewApi")
-public class ChangePasswordActivitySeller extends BaseActivitySeller implements OnClickListener, OnResult {
+public class ChangePasswordActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult {
 
     private EditText mEdt_current_password, mEdt_new_password, mEdt_confirm_password;
     ImageView mIv_eye_current_password, mIv_eye_new_password, mIv_eye_confirm_password;
@@ -41,7 +41,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
     //    private TextView mTv_forgot_passord;
     private Button mBtn_save;
     ImageView mIv_close;
-    android.support.v7.app.AlertDialog dialog;
+    AlertDialog dialog;
     private boolean isVisiblePass_curr = false, isVisiblePass_new = false, isVisiblePass_conf = false;
 
     @Override
@@ -81,9 +81,11 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
             mLl_close.setOnClickListener(this);
 
             mNav_my_profile.setOnClickListener(this);
-            mNav_my_products.setOnClickListener(this);
-            mNav_notification.setOnClickListener(this);
-            mNav_change_pass.setOnClickListener(this);
+            mNav_my_orders.setOnClickListener(this);
+            mNav_customer_service.setOnClickListener(this);
+            mNav_about_us.setOnClickListener(this);
+            mNav_our_policy.setOnClickListener(this);
+            mNav_contact_us.setOnClickListener(this);
 
             mEdt_current_password = (EditText) rootView.findViewById(R.id.edt_current_password);
             mEdt_new_password = (EditText) rootView.findViewById(R.id.edt_new_password);
@@ -188,19 +190,27 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 overridePendingTransition(0, 0);
             } else if (view == mNav_my_profile) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivitySeller.class));
+                startActivity(new Intent(this, MyProfileActivityBuyer.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_my_products) {
+            } else if (view == mNav_my_orders) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ProductsActivitySeller.class));
+                startActivity(new Intent(this, MyOrdersActivityBuyer.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_notification) {
+            } else if (view == mNav_customer_service) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, NotificationsActivitySeller.class));
+                startActivity(new Intent(this, CustomerServiceActivityBuyer.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_change_pass) {
+            } else if (view == mNav_about_us) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                startActivity(new Intent(this, AboutUsActivityBuyer.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_our_policy) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, OurPolicyActivityBuyer.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_contact_us) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ContactUsActivityBuyer.class));
                 overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -299,10 +309,10 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 } else if (!strNew_password.equals(strConfirm_password)) {
                     mEdt_confirm_password.setError("Passwords Does not match.");
                 } else {
-                    if (commonMethods.knowInternetOn(ChangePasswordActivitySeller.this)) {
-                        APIs.SellerChangePassword(this, this, strPassword, strNew_password);
+                    if (commonMethods.knowInternetOn(ChangePasswordActivityBuyer.this)) {
+                        APIs.BuyerChangePassword(this, this, strPassword, strNew_password);
                     } else {
-                        commonMethods.showInternetAlert(ChangePasswordActivitySeller.this);
+                        commonMethods.showInternetAlert(ChangePasswordActivityBuyer.this);
                     }
                 }
 
@@ -341,7 +351,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 int resId = jObjWhole.optInt("resInt");
                 String result = jObjWhole.optString("res");
                 if (strApiName.equalsIgnoreCase("SellerChangePassword") && resId == 1) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(commonVariables.appname);
                     builder.setMessage(result);
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -369,7 +379,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 else {
                     if (dialog != null)
                         dialog.dismiss();
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(commonVariables.appname);
                     builder.setMessage(result);
                     builder.setPositiveButton("Ok", null);

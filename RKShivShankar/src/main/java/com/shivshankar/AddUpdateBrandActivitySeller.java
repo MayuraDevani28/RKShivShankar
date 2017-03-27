@@ -14,10 +14,10 @@ import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -44,9 +44,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
     TextView mBtn_submit, mTv_title;
     Bitmap bmp;
 
-    private ImageView mIv_logo_nav, mIv_logo_toolbar, mIv_close;
-    private TextView mTv_username, mTv_logout;
-    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
+    private ImageView mIv_close;
     Brand item;
     AlertDialog alDialog;
 
@@ -120,24 +118,15 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mBtn_submit = (TextView) rootView.findViewById(R.id.btn_submit);
 
-            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
             mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
             mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username = (TextView) findViewById(R.id.tv_username);
             mTv_username.setOnClickListener(this);
-            mTv_logout = (TextView) findViewById(R.id.tv_logout);
             mTv_logout.setOnClickListener(this);
-            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
             mLl_close.setOnClickListener(this);
 
-            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
             mNav_my_profile.setOnClickListener(this);
-            mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
             mNav_my_products.setOnClickListener(this);
-            mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
             mNav_notification.setOnClickListener(this);
-            mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
             mNav_change_pass.setOnClickListener(this);
             mIv_change_image.setOnClickListener(this);
 
@@ -167,9 +156,9 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
         try {
             super.onResume();
             if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
                 if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("SellerName")));
+                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,7 +174,8 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
     @Override
     public void onClick(View view) {
         try {
-
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mIv_logo_toolbar) {
                 Intent intent = new Intent(this, MainActivitySeller.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -5,7 +5,7 @@
         android:id="@+id/action_notifications"
         android:icon="@drawable/ic_notification"
         android:title="@string/action_notifications"
-        app:actionLayout="@layout/component_count"
+        app:actionLayout="@layout/component_count_noti"
         app:showAsAction="always" />
 
 </menu>

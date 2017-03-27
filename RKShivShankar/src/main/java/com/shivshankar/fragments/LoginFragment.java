@@ -1,15 +1,22 @@
 package com.shivshankar.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -30,22 +38,28 @@ import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.SmsListener;
+import com.shivshankar.utills.SmsReceiver;
 import com.shivshankar.utills.Validation;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONObject;
 
+import static com.shivshankar.utills.commonVariables.REQUEST_RECEIVE_MESSAGE;
+
 public class LoginFragment extends Fragment implements View.OnClickListener, OnResult {
 
     private Button btnLogin;
-    private EditText mEdtUsername, mEdtPassword;
+    public EditText mEdtUsername, mEdtPassword, mEdt_OTP;
     TextView mTv_forget;
-    LinearLayout mLl_skip;
+    ImageView mIv_resend;
+    LinearLayout mLl_skip, mLl_otp;
     private String strUserId, stPassword;
     AlertDialog dialog;
     private RadioGroup radioGroup;
-    public String stType;
+    public int stType = 1;
     String regId, strDeviceUUID = commonVariables.uuid;
+    private BroadcastReceiver mReceiver;
 
     public LoginFragment() {
     }
@@ -63,6 +77,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
 
     private void init(View v) {
         mEdtUsername = (EditText) v.findViewById(R.id.edt_username);
+        mLl_otp = (LinearLayout) v.findViewById(R.id.ll_otp);
+        mEdt_OTP = (EditText) v.findViewById(R.id.edt_otp);
+        mIv_resend = (ImageView) v.findViewById(R.id.iv_resend);
+        mIv_resend.setOnClickListener(this);
         mEdtPassword = (EditText) v.findViewById(R.id.edt_password);
         mEdtPassword.setOnEditorActionListener((v1, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE) {
@@ -89,25 +107,56 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             mEdtUsername.setText(strCacheEmail);
             mEdtUsername.setSelection(strCacheEmail.length());
         }
+        mEdtUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mLl_otp.setVisibility(View.GONE);
+                mEdtUsername.setError(null);
+                mEdtPassword.setError(null);
+                mEdt_OTP.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                 try {
                     if (checkedId == R.id.radioBuyer) {
-                        stType = "BUYER";
+                        stType = 1;
                         ((LoginRegisterActivity) getActivity()).setRegisterVisibility(true);
                         ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.VISIBLE);
                         mLl_skip.setVisibility(View.VISIBLE);
+                        mLl_otp.setVisibility(View.GONE);
                     } else if (checkedId == R.id.radioSeller) {
-                        stType = "SELLER";
+                        stType = 0;
                         ((LoginRegisterActivity) getActivity()).setRegisterVisibility(false);
                         ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.GONE);
                         mLl_skip.setVisibility(View.GONE);
+                        mLl_otp.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        requestPermissionSMSReceive((AppCompatActivity) getActivity());
+
+        SmsReceiver.bindListener(new SmsListener() {
+            @Override
+            public void messageReceived(String messageText) {
+                Log.d("Text", messageText);
+                mEdt_OTP.setText(messageText);
+                mEdt_OTP.setSelection(messageText.length());
             }
         });
 
@@ -125,6 +174,46 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
     }
 
     @Override
+    public void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter(
+                "android.intent.action.MAIN");
+
+        mReceiver = new SmsReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String msg_for_me = intent.getStringExtra("some_msg");
+                Log.i("TAG", "Received Message: " + msg_for_me);
+
+            }
+        };
+        getActivity().registerReceiver(mReceiver, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(this.mReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void requestPermissionSMSReceive(AppCompatActivity activity) {
+        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, android.Manifest.permission.RECEIVE_SMS)) {
+            } else {
+                ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.RECEIVE_SMS}, REQUEST_RECEIVE_MESSAGE);
+            }
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
@@ -136,6 +225,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             login();
         } else if (v == mLl_skip) {
             callBuyerWithoutLogin();
+        } else if (v == mIv_resend) {
+
+            strUserId = mEdtUsername.getText().toString().trim();
+            if (Validation.isEmptyEdittext(mEdtUsername))
+                mEdtUsername.setError("Email/Mobile required");
+            else if (strUserId.contains("@") && !Validation.isValidEmail(strUserId))
+                mEdtUsername.setError("Invalid email");
+            else {
+                APIs.ResendRegistrationOTP((AppCompatActivity) getActivity(), this, stType);
+                mIv_resend.setVisibility(View.GONE);
+            }
         } else if (v == mTv_forget) {
 
             android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(getActivity());
@@ -192,7 +292,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                     else if (strUserId.contains("@") && !Validation.isValidEmail(strUserId))
                         input.setError("Invalid Email Address.");
                     else {
-                        APIs.SellerForgotPassward((AppCompatActivity) getActivity(), LoginFragment.this, strUserId);
+                        APIs.SellerBuyerForgotPassward((AppCompatActivity) getActivity(), LoginFragment.this, strUserId, stType);
                     }
                 }
             });
@@ -218,23 +318,43 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
     }
 
     private void login() {
-        strUserId = mEdtUsername.getText().toString().trim();
-        stPassword = mEdtPassword.getText().toString().trim();
-        AppPreferences.getPrefs().edit().putString(commonVariables.KEY_CACHE_EMAIL, strUserId).apply();
+        if (!(mLl_otp.getVisibility() == View.VISIBLE)) {
 
-        if (Validation.isEmptyEdittext(mEdtUsername) && Validation.isEmptyEdittext(mEdtPassword)) {
-            mEdtUsername.setError("Enter Username");
-            mEdtPassword.setError("Enter Password");
-        } else if (Validation.isEmptyEdittext(mEdtUsername)) {
-            mEdtUsername.setError("Enter Username");
-        } else if (Validation.isEmptyEdittext(mEdtPassword)) {
-            mEdtPassword.setError("Enter Password");
+            strUserId = mEdtUsername.getText().toString().trim();
+            stPassword = mEdtPassword.getText().toString().trim();
+            AppPreferences.getPrefs().edit().putString(commonVariables.KEY_CACHE_EMAIL, strUserId).apply();
+
+            if (Validation.isEmptyEdittext(mEdtUsername) && Validation.isEmptyEdittext(mEdtPassword)) {
+                mEdtUsername.setError("Enter Username");
+                mEdtUsername.requestFocus();
+                mEdtPassword.setError("Enter Password");
+            } else if (Validation.isEmptyEdittext(mEdtUsername)) {
+                mEdtUsername.requestFocus();
+                mEdtUsername.setError("Enter Username");
+            } else if (Validation.isEmptyEdittext(mEdtPassword)) {
+                mEdtPassword.requestFocus();
+                mEdtPassword.setError("Enter Password");
+            } else {
+                String strModelName = Build.MODEL;
+                String strOSVersion = Build.VERSION.RELEASE;
+                String strDeviceType = "Android";
+                //FirebaseInstanceId.getInstance().getToken()
+                APIs.SellerBuyerLogin((AppCompatActivity) getActivity(), this, strUserId, stPassword, strDeviceType, strDeviceUUID, strModelName, strOSVersion, regId, stType);
+            }
         } else {
-            String strModelName = Build.MODEL;
-            String strOSVersion = Build.VERSION.RELEASE;
-            String strDeviceType = "Android" + strDeviceUUID;
-            //FirebaseInstanceId.getInstance().getToken()
-            APIs.SellerLogin((AppCompatActivity) getActivity(), this, strUserId, stPassword, strDeviceType, strDeviceUUID, strModelName, strOSVersion, regId);
+            String strOTP = mEdt_OTP.getText().toString().trim();
+            mEdt_OTP.setError(null);
+            strUserId = mEdtUsername.getText().toString().trim();
+            if (Validation.isEmptyEdittext(mEdt_OTP)) {
+                mEdt_OTP.setError("Enter OTP");
+                mEdt_OTP.requestFocus();
+            } else if (Validation.isEmptyEdittext(mEdtUsername))
+                mEdtUsername.setError("Email/Mobile is required.");
+            else if (strUserId.contains("@") && !Validation.isValidEmail(strUserId))
+                mEdtUsername.setError("Invalid Email Address.");
+            else {
+                APIs.VerifyOTP((AppCompatActivity) getActivity(), this, strOTP, stType);
+            }
         }
     }
 
@@ -244,20 +364,42 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             if (jobj != null) {
                 String strApiName = jobj.optString("api");
                 String result = jobj.optString("res");
-                if (strApiName.equalsIgnoreCase("SellerLogin")) {
+                if (strApiName.equalsIgnoreCase("ResendRegistrationOTP")) {
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                    builder.setTitle(commonVariables.appname);
+                    builder.setMessage(result);
+                    builder.setPositiveButton("Ok", null);
+                    builder.show();
+                } else if (strApiName.equalsIgnoreCase("SellerBuyerLogin")) {
                     int resultId = jobj.optInt("resInt");
-                    if (resultId != 0) {
-                        SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                        editor.putBoolean(commonVariables.KEY_IS_LOG_IN, true);
-                        editor.putBoolean(commonVariables.KEY_IS_SELLER, true);
-                        editor.putString(commonVariables.KEY_LOGIN_ID, jobj.optString("sellerId"));
-                        editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, jobj.optJSONObject("resData").toString());
-                        editor.apply();
+                    if (resultId == 1) {
+                        if (stType == 0) {
+                            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                            editor.putBoolean(commonVariables.KEY_IS_LOG_IN, true);
+                            editor.putBoolean(commonVariables.KEY_IS_SELLER, true);
+                            editor.putString(commonVariables.KEY_LOGIN_ID, jobj.optString("loginId"));
+                            editor.putString(commonVariables.KEY_SELLER_PROFILE, jobj.optJSONObject("resData").toString());
+                            editor.apply();
 
-                        Intent i = new Intent(getActivity(), MainActivitySeller.class);
-                        getActivity().finish();
-                        getActivity().startActivity(i);
-                        getActivity().overridePendingTransition(0, 0);
+                            Intent i = new Intent(getActivity(), MainActivitySeller.class);
+                            getActivity().finish();
+                            getActivity().startActivity(i);
+                            getActivity().overridePendingTransition(0, 0);
+                        } else {
+                            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                            editor.putBoolean(commonVariables.KEY_IS_LOG_IN, true);
+                            editor.putBoolean(commonVariables.KEY_IS_SELLER, false);
+                            editor.putString(commonVariables.KEY_LOGIN_ID, jobj.optString("loginId"));
+                            editor.putString(commonVariables.KEY_BUYER_PROFILE, jobj.optJSONObject("resData").toString());
+                            editor.apply();
+
+                            Intent i = new Intent(getActivity(), MainActivityBuyer.class);
+                            getActivity().finish();
+                            getActivity().startActivity(i);
+                            getActivity().overridePendingTransition(0, 0);
+                        }
+                    } else if (resultId == 2) {
+                        mLl_otp.setVisibility(View.VISIBLE);
                     } else {
                         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
                         builder.setTitle(commonVariables.appname);
@@ -265,7 +407,19 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                         builder.setPositiveButton("Ok", null);
                         builder.show();
                     }
-                } else if (strApiName.equalsIgnoreCase("SellerForgotPassward")) {
+                } else if (strApiName.equalsIgnoreCase("VerifyOTP")) {
+                    int resultId = jobj.optInt("resInt");
+                    if (resultId == 1) {
+                        mLl_otp.setVisibility(View.GONE);
+                        login();
+                    } else {
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+                        builder.setTitle(commonVariables.appname);
+                        builder.setMessage(result);
+                        builder.setPositiveButton("Ok", null);
+                        builder.show();
+                    }
+                } else if (strApiName.equalsIgnoreCase("SellerBuyerForgotPassward")) {
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
                     builder.setTitle(commonVariables.appname);
                     builder.setMessage(result);

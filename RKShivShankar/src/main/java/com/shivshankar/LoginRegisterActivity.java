@@ -4,10 +4,13 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 import com.shivshankar.adapters.ViewPagerAdapter;
@@ -19,30 +22,32 @@ import com.shivshankar.utills.ExceptionHandler;
 public class LoginRegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    private ViewPager viewPager;
+    public ViewPager viewPager;
     private TabLayout tabLayout;
-    private LoginFragment loginFragment;
+    public LoginFragment loginFragment;
     private RegisterFragment registerFragment;
     ViewPagerAdapter pagerAdapter;
     public ImageView mIv_close;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         try {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = this.getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+            }
             setContentView(R.layout.activity_login_register);
-            init();
+            bindViews();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void init() {
+    private void bindViews() {
         mIv_close = (ImageView) findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
         viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -107,6 +112,8 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
+        AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+        view.startAnimation(buttonClick);
         if (view == mIv_close) {
             loginFragment.callBuyerWithoutLogin();
         }

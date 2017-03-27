@@ -15,19 +15,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonMethods;
+import com.shivshankar.utills.commonVariables;
 
 
 public class BaseActivityBuyer extends AppCompatActivity {
-    public TextView mTv_noti_count, mTv_cart_count;
+
     protected FrameLayout frameLayout;
     Toolbar toolbar;
     DrawerLayout drawer;
     SwipeRefreshLayout swipeRefreshLayout;
     CoordinatorLayout main_content;
+    LinearLayout mNav_my_profile, mNav_my_orders, mNav_customer_service, mNav_about_us, mNav_our_policy, mNav_contact_us, mLl_close;
+
+    ImageView mIv_logo_nav, mIv_logo_toolbar;
+    TextView mTv_noti_count, mTv_cart_count, mTv_username, mTv_logout;
+    View v_order, v_prof;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +72,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
     private void bindViews() {
         try {
 
+
             frameLayout = (FrameLayout) findViewById(R.id.container);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -70,6 +80,25 @@ public class BaseActivityBuyer extends AppCompatActivity {
 
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
+            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
+            mNav_my_orders = (LinearLayout) findViewById(R.id.nav_my_orders);
+            mNav_customer_service = (LinearLayout) findViewById(R.id.nav_customer_service);
+            mNav_about_us = (LinearLayout) findViewById(R.id.nav_about_us);
+            mNav_our_policy = (LinearLayout) findViewById(R.id.nav_our_policy);
+            mNav_contact_us = (LinearLayout) findViewById(R.id.nav_contact_us);
+
+            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
+            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+            mTv_username = (TextView) findViewById(R.id.tv_username);
+            mTv_logout = (TextView) findViewById(R.id.tv_logout);
+            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+
+            if (!AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
+                findViewById(R.id.v_order).setVisibility(View.GONE);
+                findViewById(R.id.v_prof).setVisibility(View.GONE);
+                mNav_my_profile.setVisibility(View.GONE);
+                mNav_my_orders.setVisibility(View.GONE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +109,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
         try {
             switch (item.getItemId()) {
                 case android.R.id.home:
-                    Intent intent = new Intent(this, MainActivitySeller.class);
+                    Intent intent = new Intent(this, MainActivityBuyer.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
@@ -126,10 +155,11 @@ public class BaseActivityBuyer extends AppCompatActivity {
             };
 
             final View cart_layout = menu.findItem(R.id.action_notifications).getActionView();
+            ((ImageView) cart_layout.findViewById(R.id.iv_icon)).setImageResource(R.drawable.ic_cart);
             mTv_cart_count = (TextView) cart_layout.findViewById(R.id.tv_cart_count);
 
-            updateHotCount(mTv_cart_count, 3);
-            commonMethods.cartCountAnimation(this, mTv_cart_count);
+//            updateHotCount(mTv_cart_count, 3);
+//            commonMethods.cartCountAnimation(this, mTv_cart_count);
             new BaseActivitySeller.MyMenuItemStuffListener(cart_layout, "Show hot message") {
                 @Override
                 public void onClick(View view) {
@@ -176,7 +206,8 @@ public class BaseActivityBuyer extends AppCompatActivity {
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             } else {
-                super.onBackPressed();
+                finish();
+                overridePendingTransition(0, 0);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
+import com.shivshankar.LoginRegisterActivity;
+import com.shivshankar.MainActivityBuyer;
 import com.shivshankar.MainActivitySeller;
 
 import java.io.PrintWriter;
@@ -61,7 +63,20 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         // editor.commit();
         // Toast.makeText(myContext, errorReport.toString(),
         // Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(myContext, MainActivitySeller.class);
+        Intent intent;
+
+        if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
+            if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_SELLER, false))
+                intent = new Intent(myContext, MainActivitySeller.class);
+            else
+                intent = new Intent(myContext, MainActivityBuyer.class);
+        } else {
+            if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_SKIPPED_LOGIN_BUYER, false))
+                intent = new Intent(myContext, MainActivityBuyer.class);
+            else
+                intent = new Intent(myContext, LoginRegisterActivity.class);
+        }
+
         intent.putExtra("error", errorReport.toString());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         myContext.startActivity(intent);

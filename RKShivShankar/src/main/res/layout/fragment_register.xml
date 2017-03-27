@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splashscreen_bg"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
 
@@ -32,14 +32,15 @@
                     android:textColorHint="@color/gray">
 
                     <EditText
-                        android:id="@+id/edt_full_name"
+                        android:id="@+id/edt_register_first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_user_app"
                         android:drawablePadding="10dp"
                         android:hint="Full Name"
                         android:imeOptions="actionNext"
-                        android:lines="1"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
                         android:textSize="@dimen/text_size_small" />
@@ -53,7 +54,7 @@
                     android:textColorHint="@color/gray">
 
                     <EditText
-                        android:id="@+id/edt_email"
+                        android:id="@+id/edt_register_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_mail"
@@ -61,39 +62,19 @@
                         android:hint="Email"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
-                    android:textColorHint="@color/gray">
-
-                    <EditText
-                        android:id="@+id/edt_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_user_app"
-                        android:drawablePadding="10dp"
-                        android:hint="Password"
-                        android:imeOptions="actionNext"
-                        android:inputType="textPassword"
-                        android:singleLine="true"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="18dp"
+                    android:drawableLeft="@drawable/ic_mobile"
                     android:textColorHint="@color/gray">
 
                     <EditText
@@ -102,10 +83,34 @@
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_mobile"
                         android:drawablePadding="10dp"
-                        android:hint="Mobile No."
+                        android:hint="@string/add_mobile_number"
                         android:imeOptions="actionNext"
                         android:inputType="number"
-                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="@dimen/text_size_small" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/ll_firm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginBottom="18dp"
+                    android:textColorHint="@color/gray">
+
+                    <EditText
+                        android:id="@+id/edt_register_company"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_city"
+                        android:drawablePadding="10dp"
+                        android:hint="Firm name"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
                         android:textSize="@dimen/text_size_small" />
@@ -119,19 +124,60 @@
                     android:textColorHint="@color/gray">
 
                     <EditText
-                        android:id="@+id/edt_otp"
+                        android:id="@+id/edt_register_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_user_app"
+                        android:drawableLeft="@drawable/ic_city"
                         android:drawablePadding="10dp"
-                        android:drawableRight="@drawable/ic_refresh"
-                        android:hint="Enter OTP"
-                        android:singleLine="true"
+                        android:hint="City"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColorHint="@color/gray">
+
+                        <EditText
+                            android:id="@+id/edt_register_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_user_app"
+                            android:drawablePadding="10dp"
+                            android:hint="Password"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="@dimen/text_size_small" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_eye"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="3dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_eye" />
+                </LinearLayout>
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -144,7 +190,7 @@
 
 
                 <RadioGroup
-                    android:id="@+id/radioGroup1"
+                    android:id="@+id/radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -153,7 +199,7 @@
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/radioSeller"
+                        android:id="@+id/radioBuyer"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_weight="1"
@@ -166,7 +212,7 @@
                         android:textSize="@dimen/text_size_small" />
 
                     <RadioButton
-                        android:id="@+id/radioBuyer"
+                        android:id="@+id/radioSeller"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_weight="1"

@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -18,10 +17,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,15 +46,10 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 
     private TextView mBtn_logout;
 
-    private TextView mBtn_save_profile;//, mBtn_add_mobile;
+    private TextView mBtn_save_profile,mBtn_change_password;//, mBtn_add_mobile;
     private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_mobile_wholesaler, mEdt_pincode;//mEdt_register_company
+
     private EditText mSp_country_billing, mSp_address_state_billing;
-
-    private ImageView mIv_logo_nav, mIv_logo_toolbar;
-    private TextView mTv_username, mTv_logout;
-    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
-
-    private TextView mBtn_change_password;
     public ImageView mIv_close;
 
     String strCountryCode = "";
@@ -72,14 +66,13 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
             Window window = getWindow();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_my_profile_seller, frameLayout);
             bindViews(rootView);
 
             try {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
                 if (!strProfile.isEmpty())
                     setProfile(new JSONObject(strProfile));
             } catch (JSONException e) {
@@ -111,9 +104,9 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 snack.show();
             }
             if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
                 if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("SellerName")));
+                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,24 +116,15 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 
     private void bindViews(View rootView) {
 
-        mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
         mIv_logo_nav.setOnClickListener(this);
-        mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
         mIv_logo_toolbar.setOnClickListener(this);
-        mTv_username = (TextView) findViewById(R.id.tv_username);
         mTv_username.setOnClickListener(this);
-        mTv_logout = (TextView) findViewById(R.id.tv_logout);
         mTv_logout.setOnClickListener(this);
-        mLl_close = (LinearLayout) findViewById(R.id.ll_close);
         mLl_close.setOnClickListener(this);
 
-        mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
         mNav_my_profile.setOnClickListener(this);
-        mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
         mNav_my_products.setOnClickListener(this);
-        mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
         mNav_notification.setOnClickListener(this);
-        mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
         mNav_change_pass.setOnClickListener(this);
 
         mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
@@ -204,6 +188,8 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
     @Override
     public void onClick(View view) {
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mIv_logo_toolbar) {
                 Intent intent = new Intent(this, MainActivitySeller.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -344,7 +330,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 
                     setProfile(JOb);
                     SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                    editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, JOb.toString());
+                    editor.putString(commonVariables.KEY_SELLER_PROFILE, JOb.toString());
                     editor.apply();
 
                 } else if (strAPIName.equalsIgnoreCase("UpdateSellerProfile")) {
@@ -360,7 +346,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                                 overridePendingTransition(0, 0);
                             });
                             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                            editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, jObWhole.optString("resData"));
+                            editor.putString(commonVariables.KEY_SELLER_PROFILE, jObWhole.optString("resData"));
                             editor.apply();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -379,7 +365,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
 
     private void setProfile(JSONObject JOb) {
         try {
-            String strFName = JOb.optString("SellerName"), strMobile = JOb.optString("MobileNo"), strEmail = JOb.optString("EmailId"), strCity = JOb.optString("City"), strPincode = JOb.optString("PinCode"), strState = JOb.optString("State");
+            String strFName = JOb.optString("Name"), strMobile = JOb.optString("MobileNo"), strEmail = JOb.optString("EmailId"), strCity = JOb.optString("City"), strPincode = JOb.optString("PinCode"), strState = JOb.optString("State");
             if (!strFName.equalsIgnoreCase("null")) {
                 mEdt_register_first_name.setText(strFName);
             }

@@ -243,7 +243,8 @@ public class commonMethods {
         SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
         editor.putString(commonVariables.KEY_LOGIN_ID, "0");
         editor.putBoolean(commonVariables.KEY_IS_LOG_IN, false);
-        editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+        editor.putString(commonVariables.KEY_SELLER_PROFILE, "");
+        editor.putString(commonVariables.KEY_BUYER_PROFILE, "");
         editor.putString(commonVariables.KEY_BRAND, "");
         editor.putBoolean(commonVariables.KEY_IS_BRAND, false);
         editor.putBoolean(commonVariables.KEY_IS_SELLER,false);

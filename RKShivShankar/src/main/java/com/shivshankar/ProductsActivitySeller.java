@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +23,6 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.ProductsAdapterSeller;
-import com.shivshankar.classes.Category;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
@@ -42,13 +42,11 @@ import static com.shivshankar.R.id.ll_no_data_found;
 
 public class ProductsActivitySeller extends BaseActivitySeller implements OnClickListener, OnResult, View.OnFocusChangeListener {
 
-    TextView mTv_no_data_found, mTv_title, mTv_count_items;
+    TextView mTv_no_data_found, mTv_title, mTv_count_items, mTv_go;
     Button mBtn_add_now;
     private LinearLayout mLl_no_data_found, mFl_whole, mLl_header_whole;
     RecyclerView mRv_items;
-    private ImageView mIv_logo_nav, mIv_logo_toolbar, mIv_filer;
-    private TextView mTv_username, mTv_logout, mTv_go;
-    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
+    private ImageView mIv_filer;
     LottieAnimationView animationView2, animationView;
 
     private LinearLayout mLl_header;
@@ -74,15 +72,11 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        View rootView = getLayoutInflater().inflate(R.layout.activity_products, frameLayout);
+        View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
         try {
             res = getResources();
             bindViews(rootView);
-            Category category = (Category) getIntent().getSerializableExtra(commonVariables.INTENT_EXTRA_KEY_PRODUCT_OBJECT);
-            if (category != null) {
-                strCategory = category.getId();
-                mTv_title.setText(WordUtils.capitalizeFully(category.getName()));
-            }
+
             setCategoryData(SP_CATEGOTY, VAL_CATEGOTY);
             APIs.GetCategory(null, this);
             APIs.GetProductList_Suit_Seller(this, this, strCategory, pageNo, strSearch);
@@ -95,26 +89,17 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
 
         try {
             main_content.setBackgroundResource(R.color.white);
-            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
-            mIv_logo_toolbar.setOnClickListener(this);
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setOnClickListener(this);
-            mTv_username = (TextView) findViewById(R.id.tv_username);
+            mIv_logo_nav.setOnClickListener(this);
+            mIv_logo_toolbar.setOnClickListener(this);
             mTv_username.setOnClickListener(this);
-            mTv_logout = (TextView) findViewById(R.id.tv_logout);
             mTv_logout.setOnClickListener(this);
-            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
             mLl_close.setOnClickListener(this);
 
-            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
             mNav_my_profile.setOnClickListener(this);
-            mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
             mNav_my_products.setOnClickListener(this);
-            mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
             mNav_notification.setOnClickListener(this);
-            mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
             mNav_change_pass.setOnClickListener(this);
 
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
@@ -290,6 +275,8 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     @Override
     public void onClick(View view) {
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mLl_header) {
                 if (mLl_header_views.getVisibility() == View.VISIBLE) {
                     mIv_down.setRotation(0);
@@ -367,9 +354,9 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 adapter.notifyDataSetChanged();
 
             if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
                 if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("SellerName")));
+                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
             }
             if (mLl_no_data_found.getVisibility() == View.VISIBLE && animationView != null) {
                 startAnim();

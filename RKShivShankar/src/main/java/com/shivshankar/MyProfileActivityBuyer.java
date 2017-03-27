@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -18,10 +17,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,7 +34,6 @@ import com.shivshankar.utills.Validation;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,17 +41,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 @SuppressLint("NewApi")
-public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClickListener, OnResult, View.OnFocusChangeListener {
+public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult, View.OnFocusChangeListener {
 
     private TextView mBtn_logout;
 
     private TextView mBtn_save_profile;//, mBtn_add_mobile;
     private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_mobile_wholesaler, mEdt_pincode;//mEdt_register_company
     private EditText mSp_country_billing, mSp_address_state_billing;
-
-    private ImageView mIv_logo_nav, mIv_logo_toolbar;
-    private TextView mTv_username, mTv_logout;
-    private LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
 
     private TextView mBtn_change_password;
     public ImageView mIv_close;
@@ -72,14 +66,13 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
             Window window = getWindow();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_my_profile_seller, frameLayout);
             bindViews(rootView);
 
             try {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
+                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_BUYER_PROFILE, "");
                 if (!strProfile.isEmpty())
                     setProfile(new JSONObject(strProfile));
             } catch (JSONException e) {
@@ -87,7 +80,7 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
             }
 
             APIs.GetCountryList(this, this);
-            APIs.GetSellerProfile(this, this);
+            APIs.GetBuyerProfile(this, this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,11 +103,6 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
                 tv.setTextColor(Color.WHITE);
                 snack.show();
             }
-            if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_SELLER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("SellerName")));
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,25 +111,18 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
 
     private void bindViews(View rootView) {
 
-        mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
         mIv_logo_nav.setOnClickListener(this);
-        mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
         mIv_logo_toolbar.setOnClickListener(this);
-        mTv_username = (TextView) findViewById(R.id.tv_username);
         mTv_username.setOnClickListener(this);
-        mTv_logout = (TextView) findViewById(R.id.tv_logout);
         mTv_logout.setOnClickListener(this);
-        mLl_close = (LinearLayout) findViewById(R.id.ll_close);
         mLl_close.setOnClickListener(this);
 
-        mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
         mNav_my_profile.setOnClickListener(this);
-        mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
-        mNav_my_products.setOnClickListener(this);
-        mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
-        mNav_notification.setOnClickListener(this);
-        mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
-        mNav_change_pass.setOnClickListener(this);
+        mNav_my_orders.setOnClickListener(this);
+        mNav_customer_service.setOnClickListener(this);
+        mNav_about_us.setOnClickListener(this);
+        mNav_our_policy.setOnClickListener(this);
+        mNav_contact_us.setOnClickListener(this);
 
         mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
@@ -190,7 +171,7 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
                 if (data != null) {
                     boolean isAddressChanged = data.getExtras().getBoolean(commonVariables.KEY_MOBILE_CHANGED);
                     if (isAddressChanged) {
-                        APIs.GetSellerProfile(this, this);
+                        APIs.GetBuyerProfile(this, this);
                     }
                 }
             }
@@ -204,28 +185,34 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
     @Override
     public void onClick(View view) {
         try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
             if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivitySeller.class);
+                Intent intent = new Intent(this, MainActivityBuyer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_my_profile) {
+            } else if (view == mNav_my_orders) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivityBuyer.class));
+                startActivity(new Intent(this, MyOrdersActivityBuyer.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_my_products) {
+            } else if (view == mNav_customer_service) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ProductsActivitySeller.class));
+                startActivity(new Intent(this, CustomerServiceActivityBuyer.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_notification) {
+            } else if (view == mNav_about_us) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, NotificationsActivitySeller.class));
+                startActivity(new Intent(this, AboutUsActivityBuyer.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_change_pass) {
+            } else if (view == mNav_our_policy) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                startActivity(new Intent(this, OurPolicyActivityBuyer.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
+            } else if (view == mNav_contact_us) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, ContactUsActivityBuyer.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username || view == mNav_my_profile) {
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -254,7 +241,7 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
                 builder.show();
 
             } else if (view == mBtn_change_password) {
-                Intent intent = new Intent(this, ChangePasswordActivitySeller.class);
+                Intent intent = new Intent(this, ChangePasswordActivityBuyer.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mSp_country_billing)
@@ -303,7 +290,7 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
                 mSp_address_state_billing.setError("State required");
                 mSp_address_state_billing.requestFocus();
             } else if (commonMethods.knowInternetOn(this)) {
-                APIs.UpdateSellerProfile(this, this, name, email, mobile, city, strPincode, state, strCountryCode);
+                APIs.UpdateBuyerProfile(this, this, name, email, mobile, city, strPincode, state, strCountryCode);
             } else {
                 commonMethods.showInternetAlert(this);
             }
@@ -339,15 +326,15 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
                     if (!strCountryCode.isEmpty()) {
                         mSp_country_billing.setText(listCountry.get(getIndexOf(listCountry, strCountryCode)).getName());
                     }
-                } else if (strAPIName.equalsIgnoreCase("GetSellerProfile")) {
+                } else if (strAPIName.equalsIgnoreCase("GetBuyerProfile")) {
                     JSONObject JOb = jObWhole.optJSONObject("resData");
 
                     setProfile(JOb);
                     SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                    editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, JOb.toString());
+                    editor.putString(commonVariables.KEY_SELLER_PROFILE, JOb.toString());
                     editor.apply();
 
-                } else if (strAPIName.equalsIgnoreCase("UpdateSellerProfile")) {
+                } else if (strAPIName.equalsIgnoreCase("UpdateBuyerProfile")) {
                     int strresId = jObWhole.optInt("resInt");
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -360,7 +347,7 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
                                 overridePendingTransition(0, 0);
                             });
                             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                            editor.putString(commonVariables.KEY_LOGIN_SELLER_PROFILE, jObWhole.optString("resData"));
+                            editor.putString(commonVariables.KEY_SELLER_PROFILE, jObWhole.optString("resData"));
                             editor.apply();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -379,7 +366,7 @@ public class MyProfileActivityBuyer extends BaseActivitySeller implements OnClic
 
     private void setProfile(JSONObject JOb) {
         try {
-            String strFName = JOb.optString("SellerName"), strMobile = JOb.optString("MobileNo"), strEmail = JOb.optString("EmailId"), strCity = JOb.optString("City"), strPincode = JOb.optString("PinCode"), strState = JOb.optString("State");
+            String strFName = JOb.optString("Name"), strMobile = JOb.optString("MobileNo"), strEmail = JOb.optString("EmailId"), strCity = JOb.optString("City"), strPincode = JOb.optString("PinCode"), strState = JOb.optString("State");
             if (!strFName.equalsIgnoreCase("null")) {
                 mEdt_register_first_name.setText(strFName);
             }
