@@ -47,6 +47,7 @@ public class commonVariables {
     public static final String KEY_USER_ID_FOR_OTP = "KEY_USER_ID_FOR_OTP";
     public static final String KEY_IS_FROM_REGISTER = "KEY_IS_FROM_REGISTER";
     public static final String KEY_USER_TYPE = "KEY_USER_TYPE";
+    public static final String KEY_SUIT_OR_FABRIC = "KEY_SUIT_OR_FABRIC";
 
 
     public static String STRING_SERVER_URL_FOR_GET_METHOD = "rkshivshankar.vivaa.co";
@@ -62,9 +63,10 @@ public class commonVariables {
     public static final int REQUEST_CODE_CROP_IMAGE = 3;
     public static int REQUEST_ADD_MOBILE = 4;
     public static final int REQUEST_RECEIVE_MESSAGE = 5;
-    public static final int REQUEST_PASSWORD_CHANGE = 6;
-    public static final int REQUEST_CODE_SEARCH = 7;
-    public static final int REQUEST_ADD_UPDATE_BRAND = 8;
-    public static final int REQUEST_ADD_UPDATE_BRAND_PRODUCT = 9;
-    public static final int REQUEST_ADD_UPDATE_PRODUCT = 10;
+    public static int REQUEST_PASSWORD_CHANGE = 6;
+    public static int REQUEST_CODE_SEARCH = 7;
+    public static int REQUEST_ADD_UPDATE_BRAND = 8;
+    public static int REQUEST_ADD_UPDATE_BRAND_PRODUCT = 9;
+    public static int REQUEST_ADD_UPDATE_PRODUCT = 10;
+    public static int REQUEST_FILTER_PRODUCT = 11;
 }

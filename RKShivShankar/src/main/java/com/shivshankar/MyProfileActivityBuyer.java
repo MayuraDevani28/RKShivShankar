@@ -216,12 +216,12 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(this));
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
+                if (mTv_logout.getText().equals("Login")) {
+                    startActivity(new Intent(this, LoginRegisterActivity.class));
+                    onBackPressed();
+                } else {
+                    commonMethods.logout(this, true);
+                }
             } else if (view == mIv_close) {
                 returnBack();
             } else if (view == mBtn_save_profile) {
@@ -233,13 +233,7 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
 //                overridePendingTransition(0, 0);
 //            }
             else if (view == mBtn_logout) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to logout?");
-                builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logout(MyProfileActivityBuyer.this));
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
-
+                commonMethods.logout(this,true);
             } else if (view == mBtn_change_password) {
                 Intent intent = new Intent(this, ChangePasswordActivityBuyer.class);
                 startActivity(intent);

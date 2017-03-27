@@ -239,7 +239,19 @@ public class commonMethods {
         }
     }
 
-    public static void logout(AppCompatActivity activity) {
+    public static void logout(AppCompatActivity activity, boolean isShowDialog) {
+        if (isShowDialog) {
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
+            builder.setTitle(commonVariables.appname);
+            builder.setMessage("Do you want to logout?");
+            builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logoutCode(activity));
+            builder.setNegativeButton("Cancel", null);
+            builder.show();
+        } else
+            logoutCode(activity);
+    }
+
+    private static void logoutCode(AppCompatActivity activity) {
         SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
         editor.putString(commonVariables.KEY_LOGIN_ID, "0");
         editor.putBoolean(commonVariables.KEY_IS_LOG_IN, false);
@@ -247,8 +259,8 @@ public class commonMethods {
         editor.putString(commonVariables.KEY_BUYER_PROFILE, "");
         editor.putString(commonVariables.KEY_BRAND, "");
         editor.putBoolean(commonVariables.KEY_IS_BRAND, false);
-        editor.putBoolean(commonVariables.KEY_IS_SELLER,false);
-        editor.putBoolean(commonVariables.KEY_IS_SKIPPED_LOGIN_BUYER,false);
+        editor.putBoolean(commonVariables.KEY_IS_SELLER, false);
+        editor.putBoolean(commonVariables.KEY_IS_SKIPPED_LOGIN_BUYER, false);
 //        editor.putString(commonVariables.KEY_ORDER_ID, "0");
         editor.commit();
         Intent intent = new Intent(activity, SplashActivity.class);

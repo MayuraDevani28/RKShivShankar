@@ -96,7 +96,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
             if (!AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
                 findViewById(R.id.v_order).setVisibility(View.GONE);
                 findViewById(R.id.v_prof).setVisibility(View.GONE);
-                mTv_logout.setVisibility(View.GONE);
+                mTv_logout.setText("Login");
                 mNav_my_profile.setVisibility(View.GONE);
                 mNav_my_orders.setVisibility(View.GONE);
             }
