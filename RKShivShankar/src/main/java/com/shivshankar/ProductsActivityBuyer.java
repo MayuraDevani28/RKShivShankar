@@ -343,7 +343,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
             if (view == mIv_filer) {
-
+                startActivity(new Intent(this, FilterActivityBuyer.class));
             } else if (view == mIv_logo_toolbar) {
                 Intent intent = new Intent(this, MainActivityBuyer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

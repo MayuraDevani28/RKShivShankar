@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
-import com.shivshankar.FilterActivity;
+import com.shivshankar.FilterActivityBuyer;
 import com.shivshankar.R;
 import com.shivshankar.classes.FilterAttribute;
 
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 
 public class FilterAttrubuteAdapter extends ArrayAdapter<FilterAttribute> {
-	private FilterActivity activity;
+	private FilterActivityBuyer activity;
 	private CheckedTextView mCb_filter_option;
 	ArrayList<FilterAttribute> listOption = new ArrayList<FilterAttribute>();
 
-	public FilterAttrubuteAdapter(FilterActivity activity, int resource, ArrayList<FilterAttribute> objects) {
+	public FilterAttrubuteAdapter(FilterActivityBuyer activity, int resource, ArrayList<FilterAttribute> objects) {
 		super(activity, resource, objects);
 		this.activity = activity;
 		this.listOption = objects;

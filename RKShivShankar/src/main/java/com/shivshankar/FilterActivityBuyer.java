@@ -29,9 +29,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 @SuppressLint("NewApi")
-public class FilterActivity extends AppCompatActivity implements OnClickListener, OnResult, OnItemClickListener {
+public class FilterActivityBuyer extends AppCompatActivity implements OnClickListener, OnResult, OnItemClickListener {
 
-    private static final String TAG = "TAG FilterActivity";
+    private static final String TAG = "TAG FilterActivityBuyer";
     private TextView mTv_menu_clear, mTv_menu_apply;
 
     private LinearLayout mLl_ocation, mLl_fabric, mLl_color, mLl_price, mLl_discount;

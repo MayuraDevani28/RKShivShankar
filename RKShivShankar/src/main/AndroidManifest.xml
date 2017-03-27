@@ -146,7 +146,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".FilterActivity"
+            android:name=".FilterActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
 
