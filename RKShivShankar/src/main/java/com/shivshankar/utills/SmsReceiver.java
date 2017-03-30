@@ -28,7 +28,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     String messageBody = smsMessage.getMessageBody().toString();
                     String address = smsMessage.getOriginatingAddress();
 
-                    if (messageBody.contains("Ethnic Place Exports") && messageBody.contains("Your OTP")){
+                    if (messageBody.contains("") && messageBody.contains("Your OTP")){
                         try {
                             synchronized (address) {
                                 smsMessageStr = messageBody.split("Your OTP is ")[1];

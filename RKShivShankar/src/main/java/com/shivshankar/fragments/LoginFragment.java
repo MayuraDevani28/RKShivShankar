@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.shivshankar.LoginRegisterActivity;
 import com.shivshankar.MainActivityBuyer;
 import com.shivshankar.MainActivitySeller;
+import com.shivshankar.OTPRegisterActivity;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.utills.AppPreferences;
@@ -50,16 +51,15 @@ import static com.shivshankar.utills.commonVariables.REQUEST_RECEIVE_MESSAGE;
 public class LoginFragment extends Fragment implements View.OnClickListener, OnResult {
 
     private Button btnLogin;
-    public EditText mEdtUsername, mEdtPassword, mEdt_OTP;
+    public EditText mEdtUsername, mEdtPassword;
     TextView mTv_forget;
-    ImageView mIv_resend;
-    LinearLayout mLl_skip, mLl_otp;
+    LinearLayout mLl_skip;
     private String strUserId, stPassword;
     AlertDialog dialog;
     private RadioGroup radioGroup;
     public int stType = 1;
     String regId, strDeviceUUID = commonVariables.uuid;
-    private BroadcastReceiver mReceiver;
+
 
     public LoginFragment() {
     }
@@ -77,10 +77,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
 
     private void init(View v) {
         mEdtUsername = (EditText) v.findViewById(R.id.edt_username);
-        mLl_otp = (LinearLayout) v.findViewById(R.id.ll_otp);
-        mEdt_OTP = (EditText) v.findViewById(R.id.edt_otp);
-        mIv_resend = (ImageView) v.findViewById(R.id.iv_resend);
-        mIv_resend.setOnClickListener(this);
         mEdtPassword = (EditText) v.findViewById(R.id.edt_password);
         mEdtPassword.setOnEditorActionListener((v1, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE) {
@@ -115,10 +111,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mLl_otp.setVisibility(View.GONE);
+
                 mEdtUsername.setError(null);
                 mEdtPassword.setError(null);
-                mEdt_OTP.setError(null);
             }
 
             @Override
@@ -135,13 +130,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                         ((LoginRegisterActivity) getActivity()).setRegisterVisibility(true);
                         ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.VISIBLE);
                         mLl_skip.setVisibility(View.VISIBLE);
-                        mLl_otp.setVisibility(View.GONE);
                     } else if (checkedId == R.id.radioSeller) {
                         stType = 0;
                         ((LoginRegisterActivity) getActivity()).setRegisterVisibility(false);
                         ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.GONE);
                         mLl_skip.setVisibility(View.GONE);
-                        mLl_otp.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -149,16 +142,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             }
         });
 
-        requestPermissionSMSReceive((AppCompatActivity) getActivity());
 
-        SmsReceiver.bindListener(new SmsListener() {
-            @Override
-            public void messageReceived(String messageText) {
-                Log.d("Text", messageText);
-                mEdt_OTP.setText(messageText);
-                mEdt_OTP.setSelection(messageText.length());
-            }
-        });
 
 //        context = getActivity().getApplicationContext();
 //        if (commonMethods.knowInternetOn(getActivity())) {
@@ -173,50 +157,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
 //        }
     }
 
-    @Override
-    public void onResume() {
-        // TODO Auto-generated method stub
-        super.onResume();
 
-        IntentFilter intentFilter = new IntentFilter(
-                "android.intent.action.MAIN");
 
-        mReceiver = new SmsReceiver() {
 
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String msg_for_me = intent.getStringExtra("some_msg");
-                Log.i("TAG", "Received Message: " + msg_for_me);
-
-            }
-        };
-        getActivity().registerReceiver(mReceiver, intentFilter);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getActivity().unregisterReceiver(this.mReceiver);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    private void requestPermissionSMSReceive(AppCompatActivity activity) {
-        if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, android.Manifest.permission.RECEIVE_SMS)) {
-            } else {
-                ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.RECEIVE_SMS}, REQUEST_RECEIVE_MESSAGE);
-            }
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 
     @Override
     public void onClick(View v) {
@@ -225,17 +168,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             login();
         } else if (v == mLl_skip) {
             callBuyerWithoutLogin();
-        } else if (v == mIv_resend) {
-
-            strUserId = mEdtUsername.getText().toString().trim();
-            if (Validation.isEmptyEdittext(mEdtUsername))
-                mEdtUsername.setError("Email/Mobile required");
-            else if (strUserId.contains("@") && !Validation.isValidEmail(strUserId))
-                mEdtUsername.setError("Invalid email");
-            else {
-                APIs.ResendRegistrationOTP((AppCompatActivity) getActivity(), this, stType);
-                mIv_resend.setVisibility(View.GONE);
-            }
         } else if (v == mTv_forget) {
 
             android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(getActivity());
@@ -318,7 +250,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
     }
 
     private void login() {
-        if (!(mLl_otp.getVisibility() == View.VISIBLE)) {
 
             strUserId = mEdtUsername.getText().toString().trim();
             stPassword = mEdtPassword.getText().toString().trim();
@@ -341,21 +272,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                 //FirebaseInstanceId.getInstance().getToken()
                 APIs.SellerBuyerLogin((AppCompatActivity) getActivity(), this, strUserId, stPassword, strDeviceType, strDeviceUUID, strModelName, strOSVersion, regId, stType);
             }
-        } else {
-            String strOTP = mEdt_OTP.getText().toString().trim();
-            mEdt_OTP.setError(null);
-            strUserId = mEdtUsername.getText().toString().trim();
-            if (Validation.isEmptyEdittext(mEdt_OTP)) {
-                mEdt_OTP.setError("Enter OTP");
-                mEdt_OTP.requestFocus();
-            } else if (Validation.isEmptyEdittext(mEdtUsername))
-                mEdtUsername.setError("Email/Mobile is required.");
-            else if (strUserId.contains("@") && !Validation.isValidEmail(strUserId))
-                mEdtUsername.setError("Invalid Email Address.");
-            else {
-                APIs.VerifyOTP((AppCompatActivity) getActivity(), this, strOTP, stType);
-            }
-        }
+
     }
 
     @Override
@@ -364,13 +281,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             if (jobj != null) {
                 String strApiName = jobj.optString("api");
                 String result = jobj.optString("res");
-                if (strApiName.equalsIgnoreCase("ResendRegistrationOTP")) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(result);
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
-                } else if (strApiName.equalsIgnoreCase("SellerBuyerLogin")) {
+                if (strApiName.equalsIgnoreCase("SellerBuyerLogin")) {
                     int resultId = jobj.optInt("resInt");
                     if (resultId == 1) {
                         if (stType == 0) {
@@ -399,7 +310,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                             getActivity().overridePendingTransition(0, 0);
                         }
                     } else if (resultId == 2) {
-                        mLl_otp.setVisibility(View.VISIBLE);
+                        //add by praful
+                        Intent intent = new Intent(getActivity(), OTPRegisterActivity.class);
+                        intent.putExtra(commonVariables.KEY_USER_TYPE, stType);
+                        getActivity().startActivity(intent);
+                        getActivity().overridePendingTransition(0, 0);
+
                     } else {
                         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
                         builder.setTitle(commonVariables.appname);
@@ -407,19 +323,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                         builder.setPositiveButton("Ok", null);
                         builder.show();
                     }
-                } else if (strApiName.equalsIgnoreCase("VerifyOTP")) {
-                    int resultId = jobj.optInt("resInt");
-                    if (resultId == 1) {
-                        mLl_otp.setVisibility(View.GONE);
-                        login();
-                    } else {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage(result);
-                        builder.setPositiveButton("Ok", null);
-                        builder.show();
-                    }
-                } else if (strApiName.equalsIgnoreCase("SellerBuyerForgotPassward")) {
+                }else if (strApiName.equalsIgnoreCase("SellerBuyerForgotPassward")) {
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
                     builder.setTitle(commonVariables.appname);
                     builder.setMessage(result);

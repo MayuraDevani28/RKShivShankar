@@ -46,7 +46,6 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivityBuyer implem
     ImageView mIv_close;
     AlertDialog dialog;
     private String strUserId = "";
-    String otp_message;
     private boolean isVisiblePass_new = false, isVisiblePass_conf = false;
 
     @Override
@@ -63,7 +62,6 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivityBuyer implem
 
         try {
             strUserId = getIntent().getStringExtra(commonVariables.KEY_LOGIN_ID);
-            otp_message = getIntent().getStringExtra(commonVariables.KEY_OTP_MESSAGE);
 
             requestPermissionSMSReceive();
 
@@ -133,7 +131,6 @@ public class ChangePasswordWithOTPActivityBuyer extends BaseActivityBuyer implem
             mTv_resend_verification_code = (TextView) rootView.findViewById(R.id.tv_resend_verification_code);
             mTv_resend_verification_code.setOnClickListener(this);
             mTv_otp_message = (TextView) rootView.findViewById(R.id.tv_otp_message);
-            mTv_otp_message.setText(otp_message);
         } catch (Exception e) {
             e.printStackTrace();
         }

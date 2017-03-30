@@ -197,7 +197,7 @@ public class BaseActivitySeller extends AppCompatActivity {
         }
     }
 
-//test praful patel
+//test praful
     @Override
     public void onBackPressed() {
 

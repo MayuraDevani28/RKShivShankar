@@ -35,6 +35,7 @@
                 android:id="@+id/ll_add_product"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:elevation="2dp"
                 android:background="@drawable/xml_round_app_color"
                 android:gravity="center">
 

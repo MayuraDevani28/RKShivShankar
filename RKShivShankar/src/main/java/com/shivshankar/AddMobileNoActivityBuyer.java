@@ -136,7 +136,6 @@ public class AddMobileNoActivityBuyer extends BaseActivityBuyer implements View.
                         builder.setPositiveButton("Ok", (dialog, which) -> {
                             Intent intent = new Intent(AddMobileNoActivityBuyer.this, OTPMobileNoActivityBuyer.class);
                             intent.putExtra(commonVariables.KEY_MOBILE_NO, mEdt_register_mobile_wholesaler.getText().toString().trim());
-                            intent.putExtra(commonVariables.KEY_OTP_MESSAGE, jObjWhole.optString("resMsg"));
                             startActivityForResult(intent, commonVariables.REQUEST_ADD_MOBILE);
                             overridePendingTransition(0, 0);
                         });

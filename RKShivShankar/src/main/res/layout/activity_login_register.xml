@@ -16,7 +16,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#30cccccc"
+            android:background="#10000000"
             android:orientation="vertical">
 
             <ImageView
@@ -55,5 +55,4 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </LinearLayout>
-
 </LinearLayout>

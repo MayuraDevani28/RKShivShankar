@@ -65,57 +65,7 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_otp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="18dp"
-                    android:visibility="gone"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_otp_message"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textSize="@dimen/text_size_medium"
-                        android:textColor="@color/black"
-                        android:text="@string/otp_verification_code" />
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textColorHint="@color/gray">
-
-                            <EditText
-                                android:id="@+id/edt_otp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/ic_mobile"
-                                android:drawablePadding="10dp"
-                                android:hint="Enter OTP"
-                                android:maxLines="1"
-                                android:textColor="@color/black"
-                                android:textColorHint="@color/black"
-                                android:textSize="@dimen/text_size_medium" />
-
-                        </android.support.design.widget.TextInputLayout>
-
-                        <ImageView
-                            android:id="@+id/iv_resend"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_refresh" />
-                    </LinearLayout>
-                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

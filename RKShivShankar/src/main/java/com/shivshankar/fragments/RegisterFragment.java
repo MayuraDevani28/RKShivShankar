@@ -219,8 +219,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                         editor.apply();
 
                         Intent intent = new Intent(getActivity(), OTPRegisterActivity.class);
-                        intent.putExtra(commonVariables.KEY_OTP_MESSAGE, jobjWhole.optString("resMsg"));
-                        intent.putExtra(commonVariables.KEY_IS_FROM_REGISTER, true);
                         intent.putExtra(commonVariables.KEY_USER_TYPE, stType);
                         getActivity().startActivity(intent);
                         getActivity().overridePendingTransition(0, 0);

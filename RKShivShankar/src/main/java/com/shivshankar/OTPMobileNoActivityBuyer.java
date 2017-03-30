@@ -37,7 +37,6 @@ public class OTPMobileNoActivityBuyer extends BaseActivityBuyer implements View.
     private Button mBtn_submit;
     String strMobileNo;
     public ImageView mIv_close;
-    String otp_message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,6 @@ public class OTPMobileNoActivityBuyer extends BaseActivityBuyer implements View.
             bindViews(rootView);
 
             strMobileNo = getIntent().getStringExtra(commonVariables.KEY_MOBILE_NO);
-            otp_message = getIntent().getStringExtra(commonVariables.KEY_OTP_MESSAGE);
             requestPermissionSMSReceive();
 
             SmsReceiver.bindListener(new SmsListener() {
@@ -107,7 +105,6 @@ public class OTPMobileNoActivityBuyer extends BaseActivityBuyer implements View.
         mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
         mTv_otp_message = (TextView) rootView.findViewById(R.id.tv_otp_message);
-        mTv_otp_message.setText(otp_message);
     }
 
     @Override

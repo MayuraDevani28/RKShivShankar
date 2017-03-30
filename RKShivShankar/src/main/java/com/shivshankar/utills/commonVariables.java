@@ -19,7 +19,6 @@ public class commonVariables {
     public static final String KEY_IS_BRAND = "KEY_IS_BRAND";
     public static final String KEY_MOBILE_CHANGED = "KEY_MOBILE_CHANGED";
     public static final String KEY_MOBILE_NO = "KEY_MOBILE_NO";
-    public static final String KEY_OTP_MESSAGE = "KEY_OTP_MESSAGE";
     public static final String KEY_SELLER_PROFILE = "KEY_SELLER_PROFILE";
     public static final String KEY_PASSWORD_CHANGED = "KEY_PASSWORD_CHANGED";
     public static final String KEY_CACHE_EMAIL = "KEY_CACHE_EMAIL";
@@ -45,7 +44,6 @@ public class commonVariables {
     public static final String KEY_CATEGORY = "KEY_CATEGORY";
     public static final String KEY_BUYER_PROFILE = "KEY_BUYER_PROFILE";
     public static final String KEY_USER_ID_FOR_OTP = "KEY_USER_ID_FOR_OTP";
-    public static final String KEY_IS_FROM_REGISTER = "KEY_IS_FROM_REGISTER";
     public static final String KEY_USER_TYPE = "KEY_USER_TYPE";
     public static final String KEY_SUIT_OR_FABRIC = "KEY_SUIT_OR_FABRIC";
 
