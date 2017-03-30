@@ -30,8 +30,8 @@ public class commonVariables {
     public static final String INTENT_EXTRA_KEY_FILTER_CAT = "INTENT_EXTRA_KEY_FILTER_CAT";
     public static final String INTENT_EXTRA_KEY_FILTER_PRICE = "INTENT_EXTRA_KEY_FILTER_PRICE";
     public static final String INTENT_EXTRA_KEY_FILTER_FABRIC = "INTENT_EXTRA_KEY_FILTER_FABRIC";
+    public static final String INTENT_EXTRA_KEY_FILTER_SORT = "INTENT_EXTRA_KEY_FILTER_SORT";
 
-    public static final String INTENT_EXTRA_SORT_DATA = "INTENT_EXTRA_SORT_DATA";
     public static final String KEY_SEARCH_STR = "KEY_SEARCH_STR";
     public static final String KEY_LAST_SORT_BY = "KEY_LAST_SORT_BY";
     public static final java.lang.String KEY_FILTER_DATA = "KEY_FILTER_DATA";

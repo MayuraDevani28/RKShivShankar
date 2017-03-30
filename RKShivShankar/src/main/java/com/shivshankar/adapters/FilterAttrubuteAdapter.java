@@ -1,13 +1,10 @@
 package com.shivshankar.adapters;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
-import android.widget.ListView;
 
 import com.shivshankar.FilterActivityBuyer;
 import com.shivshankar.R;
@@ -16,78 +13,95 @@ import com.shivshankar.classes.FilterAttribute;
 import java.util.ArrayList;
 
 
-public class FilterAttrubuteAdapter extends ArrayAdapter<FilterAttribute> {
-	private FilterActivityBuyer activity;
-	private CheckedTextView mCb_filter_option;
-	ArrayList<FilterAttribute> listOption = new ArrayList<FilterAttribute>();
+public class FilterAttrubuteAdapter extends RecyclerView.Adapter<FilterAttrubuteAdapter.MyViewHolder> {
+    private FilterActivityBuyer activity;
+    ArrayList<FilterAttribute> listOption = new ArrayList<FilterAttribute>();
+    boolean isSort;
 
-	public FilterAttrubuteAdapter(FilterActivityBuyer activity, int resource, ArrayList<FilterAttribute> objects) {
-		super(activity, resource, objects);
-		this.activity = activity;
-		this.listOption = objects;
-	}
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private CheckedTextView mCb_filter_option;
 
-	@SuppressLint("ViewHolder")
-	@Override
-	public View getView(int pos, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-		convertView = inflater.inflate(R.layout.adapter_row_checkbox, parent, false);
-		try {
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            try {
+                mCb_filter_option = (CheckedTextView) itemView.findViewById(R.id.cb_filter_option);
+                mCb_filter_option.setOnClickListener(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-			convertView.setTag(R.string.position, pos);
+        @Override
+        public void onClick(View view) {
+            try {
+                int position = getAdapterPosition();
+                if (isSort) {
+                    for (int i = 0; i < listOption.size(); i++) {
+                        if (i == position)
+                            setcurrent(i);
+                        else
+                            listOption.get(i).setSelected(false);
+                    }
+                } else
+                    setcurrent(position);
+                notifyDataSetChanged();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-			mCb_filter_option = (CheckedTextView) convertView.findViewById(R.id.cb_filter_option);
-			mCb_filter_option.setTag(R.string.position, pos);
-			mCb_filter_option.setText(listOption.get(pos).getName() + " (" + listOption.get(pos).getCount() + ")");
+        private void setcurrent(int position) {
+            if (listOption.get(position).isSelected()) {
+                listOption.get(position).setSelected(false);
+            } else {
+                listOption.get(position).setSelected(true);
+            }
+        }
+    }
 
-			if (listOption.get(pos).isSelected()) {
-				mCb_filter_option.setChecked(true);
-				((ListView) parent).setItemChecked(pos, true);
+    public String getSelectedItems() {
+        String sel = "";
+        for (int i = 0; i < listOption.size(); i++) {
+            FilterAttribute item = listOption.get(i);
+            if (item.isSelected())
+                sel = sel + item.getid() + ",";
+        }
+        if (!sel.isEmpty())
+            sel = sel.substring(0, sel.length() - 1);
+        return sel;
+    }
 
-			} else {
-				mCb_filter_option.setChecked(false);
-				((ListView) parent).setItemChecked(pos, false);
-			}
+    @Override
+    public FilterAttrubuteAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_row_checkbox, parent, false);
+        return new FilterAttrubuteAdapter.MyViewHolder(itemView);
+    }
 
-			// mCb_filter_option.setOnClickListener(new OnClickListener() {
-			//
-			// @Override
-			// public void onClick(View v) {
-			//
-			// int pos =
-			// Integer.parseInt(v.getTag(R.string.position).toString());
-			// CheckedTextView ctv = (CheckedTextView) v;
-			//
-			// if (listOption.get(pos).isSelected()) {
-			// ctv.setChecked(false);
-			// listOption.get(pos).setSelected(false);
-			// } else {
-			// ctv.setChecked(true);
-			// listOption.get(pos).setSelected(true);
-			// }
-			//
-			// if (!strOption.contains(listOption.get(pos).getName())) {
-			// strOption = strOption + "," + listOption.get(pos).getName();
-			// if (activity.arryAttrbs != null)
-			// if (activity.arryAttrbs.indexOf(listOption.get(pos).getName()) ==
-			// -1)
-			// activity.arryAttrbs.add(listOption.get(pos).getName());
-			// } else {
-			// String st = listOption.get(pos).getName();
-			// if (strOption.contains(st + ","))
-			// st = st + ",";
-			// strOption = strOption.replace(st, "");
-			// if (activity.arryAttrbs != null)
-			// if (activity.arryAttrbs.indexOf(listOption.get(pos).getName()) !=
-			// -1)
-			// activity.arryAttrbs.remove(activity.arryAttrbs.indexOf(listOption.get(pos).getName()));
-			// }
-			// }
-			// });
+    @Override
+    public void onBindViewHolder(final FilterAttrubuteAdapter.MyViewHolder holder, int position) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return convertView;
-	}
+        try {
+            holder.mCb_filter_option.setText(listOption.get(position).getname());//+ " (" + listOption.get(position).getCount() + ")");
+            if (listOption.get(position).isSelected()) {
+                holder.mCb_filter_option.setChecked(true);
+            } else {
+                holder.mCb_filter_option.setChecked(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return listOption.size();
+    }
+
+    public FilterAttrubuteAdapter(FilterActivityBuyer activity, ArrayList<FilterAttribute> objects, boolean isSort) {
+        this.activity = activity;
+        this.listOption = objects;
+        this.isSort = isSort;
+    }
+
 }

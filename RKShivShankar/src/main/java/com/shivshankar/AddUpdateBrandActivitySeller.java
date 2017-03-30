@@ -299,6 +299,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                     int strresId = job.optInt("resInt");
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
                     builder.setTitle(commonVariables.appname);
+                    builder.setCancelable(false);
                     builder.setMessage(job.optString("res"));
                     if (strresId == 1) {
                         try {

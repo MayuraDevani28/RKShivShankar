@@ -43,4 +43,5 @@
         <item>@color/ran_darkred</item>
     </integer-array>
     <string name="title_activity_customer_service_buyer">CustomerServiceActivityBuyer</string>
+    <string name="filter_key">filter_key</string>
 </resources>
