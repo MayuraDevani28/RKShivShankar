@@ -691,7 +691,7 @@ public class APIs {
 
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("MobileAPI/BuyerChangePassword")
+                .path("MobileAPI/GetProductListFilters_Buyer")
                 .appendQueryParameter("brandId", brandId)
                 .appendQueryParameter("fabricType", strFabricType)
                 .appendQueryParameter("fabricOrSuitCatId", suit_or_fab + "")

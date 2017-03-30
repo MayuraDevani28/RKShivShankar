@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.shivshankar.ServerCall.APIs;
-import com.shivshankar.adapters.ProductsAdapterSeller;
+import com.shivshankar.adapters.ProductsAdapterBuyer;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.utills.AppPreferences;
@@ -49,17 +49,14 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     LottieAnimationView animationView;
     public ImageView mIv_close;
 
-    int startFrom = 0;
     Boolean isLogedIn = false;
-    String strcategoryIds = "", srtpriceRange = "", strfabricIds = "", strSortBy = "", total = "";
+    String strCategoryIds = "", srtPriceRange = "", strFabricIds = "", strSortBy = "";
 
-    private static final int SORT_RESULT = 9, FILTER_RESULT = 10;
-    ProductsAdapterSeller adapter;
+    ProductsAdapterBuyer adapter;
     ArrayList<ProductItem> listArray = new ArrayList<ProductItem>();
-    String strSearch = "", brandId = "", strFabricType = "";
-    boolean cameFromFilter = false;
+    String strSearch = "", brandId = "", strFabricType = "", total = "";
     Resources res;
-    int pageNo = 1, pageSize = 50;
+    int pageNo = 1;
     boolean loading, isFirstScrollDone = false;
 
 
@@ -78,25 +75,12 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 brandId = category.getBrandId();
                 mTv_title.setText(WordUtils.capitalizeFully(category.getBrandName()));
             }
-            strcategoryIds = getIntent().getStringExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_CAT);
-            if (strcategoryIds == null)
-                strcategoryIds = "";
-            strfabricIds = getIntent().getStringExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_FABRIC);
-            if (strfabricIds == null)
-                strfabricIds = "";
-            srtpriceRange = getIntent().getStringExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_PRICE);
-            if (srtpriceRange == null)
-                srtpriceRange = "";
-            String strsortBy = getIntent().getStringExtra(commonVariables.INTENT_EXTRA_SORT_DATA);
-            if (strsortBy != null && !strsortBy.equalsIgnoreCase(""))
-                strSortBy = strsortBy;
-            else
-                strSortBy = "";
+
             strSearch = getIntent().getStringExtra(commonVariables.KEY_SEARCH_STR);
             if (strSearch == null)
                 strSearch = "";
 
-            APIs.GetProductList_Suit_Buyer(this, this, brandId, pageNo, strcategoryIds, srtpriceRange, strfabricIds, strSortBy, strFabricType);
+            APIs.GetProductList_Suit_Buyer(this, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
 
             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
             editor.putString(commonVariables.KEY_LAST_SORT_BY, strSortBy);
@@ -134,7 +118,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.gv_items);
             mRv_items.setHasFixedSize(true);
-//            mRv_items.setNestedScrollingEnabled(false);
 
             int i = 2;
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -164,23 +147,12 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                         if (dy > 0) {
                             int totalItemCount = mLayoutManager.getItemCount();
                             if (loading) {
-                                if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 30)) {
+                                if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 10)) {
                                     loading = false;
-                                    try {
-                                        startFrom = startFrom + pageSize;
-                                        APIs.GetProductList_Suit_Buyer(null, ProductsActivityBuyer.this, brandId, pageNo, strcategoryIds, srtpriceRange, strfabricIds, strSortBy, strFabricType);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    APIs.GetProductList_Suit_Buyer(null, ProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
                                 }
                             }
                         }
-//                        else {
-//                            if (strSearch.isEmpty()) {
-//                                mCv_bottom_menu.setVisibility(View.VISIBLE);
-//                            } else {
-//                            }
-//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -190,7 +162,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             mBtn_add_now = (Button) rootView.findViewById(R.id.btn_add_now);
             mBtn_add_now.setOnClickListener(this);
             mTv_no_data_found = (TextView) rootView.findViewById(R.id.tv_no_data_found);
-            mTv_no_data_found.setVisibility(View.GONE);
             mTv_title.setOnClickListener(this);
 
             mTv_count_items = (TextView) rootView.findViewById(R.id.tv_no_items);
@@ -276,37 +247,26 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             mTv_count_items.setText("");
-            if (requestCode == SORT_RESULT && resultCode == Activity.RESULT_OK && data != null) {
-                String strSortByNew = data.getExtras().getString(commonVariables.INTENT_EXTRA_SORT_DATA);
-                if (strSortBy != null && strSortByNew != null) {
-                    if (!strSortBy.equals(strSortByNew)) {
-                        listArray.clear();
-                        pageNo = 1;
-                        strSortBy = strSortByNew;
-                        APIs.GetProductList_Suit_Buyer(null, this, brandId, pageNo, strcategoryIds, srtpriceRange, strfabricIds, strSortBy, strFabricType);
-                    }
-                }
-            } else if (requestCode == FILTER_RESULT && resultCode == Activity.RESULT_OK && data != null) {
-                String filter = data.getExtras().getString(commonVariables.KEY_FILTER_DATA);
-//                if (strFilter != null && filter != null) {
-//                    if (!strFilter.equals(filter)) {
+            if (requestCode == commonVariables.REQUEST_FILTER_PRODUCT && resultCode == Activity.RESULT_OK && data != null) {
+
+
+                strCategoryIds = data.getExtras().getString(commonVariables.INTENT_EXTRA_KEY_FILTER_CAT);
+                if (strCategoryIds == null)
+                    strCategoryIds = "";
+                strFabricIds = data.getExtras().getString(commonVariables.INTENT_EXTRA_KEY_FILTER_FABRIC);
+                if (strFabricIds == null)
+                    strFabricIds = "";
+                srtPriceRange = data.getExtras().getString(commonVariables.INTENT_EXTRA_KEY_FILTER_PRICE);
+                if (srtPriceRange == null)
+                    srtPriceRange = "";
+                strSortBy = data.getExtras().getString(commonVariables.INTENT_EXTRA_KEY_FILTER_SORT);
+                if (strSortBy == null)
+                    strSortBy = "";
+
                 listArray.clear();
                 adapter.notifyDataSetChanged();
                 pageNo = 1;
-//                        strFilter = filter;
-                APIs.GetProductList_Suit_Buyer(null, this, brandId, pageNo, strcategoryIds, srtpriceRange, strfabricIds, strSortBy, strFabricType);
-//                    }
-//                }
-            } else if (requestCode == commonVariables.REQUEST_CODE_SEARCH && resultCode == RESULT_OK && data != null) {
-                if (data != null) {
-                    String strSearch = data.getExtras().getString(commonVariables.INTENT_EXTRA_SEARCH_STRING);
-                    if (!strSearch.isEmpty()) {
-                        Intent intent = new Intent(this, ProductsActivityBuyer.class);
-                        intent.putExtra(commonVariables.KEY_SEARCH_STR, strSearch);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                    }
-                }
+                APIs.GetProductList_Suit_Buyer(null, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -318,17 +278,17 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
         try {
             if (listArray.size() == 0) {
                 mRv_items.setVisibility(View.GONE);
-                mTv_no_data_found.setVisibility(View.VISIBLE);
+                mLl_no_data_found.setVisibility(View.VISIBLE);
                 String strMessage = "Uhh! We you have not added any product yet. Want to add now ?";
                 if (!strSearch.isEmpty())
                     strMessage = "<font color=\"#000\">" + "No results found for \"" + strSearch + "\"" + "</font>" + "<br />Please check the spelling or type any other keyword to search";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));
                 startAnim();
             } else {
-                mTv_no_data_found.setVisibility(View.GONE);
+                mLl_no_data_found.setVisibility(View.GONE);
                 mRv_items.setVisibility(View.VISIBLE);
                 mFl_whole.setVisibility(View.VISIBLE);
-                adapter = new ProductsAdapterSeller(this, listArray);
+                adapter = new ProductsAdapterBuyer(this, listArray);
                 mRv_items.setAdapter(adapter);
             }
         } catch (Exception e) {
@@ -347,6 +307,14 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 intent.putExtra(commonVariables.KEY_FABRIC_TYPE, strFabricType);
                 intent.putExtra(commonVariables.KEY_BRAND, brandId);
                 intent.putExtra(commonVariables.KEY_SUIT_OR_FABRIC, 1);
+                if (!strSortBy.isEmpty())
+                    intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_SORT, strSortBy);
+                if (!strFabricIds.isEmpty())
+                    intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_FABRIC, strFabricIds);
+                if (!strCategoryIds.isEmpty())
+                    intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_CAT, strCategoryIds);
+                if (!srtPriceRange.isEmpty())
+                    intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_PRICE, srtPriceRange);
                 startActivityForResult(intent, commonVariables.REQUEST_FILTER_PRODUCT);
                 overridePendingTransition(R.anim.slide_up, R.anim.hold);
             } else if (view == mIv_logo_toolbar) {
@@ -399,20 +367,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             }
-//            if (v == mTv_filter) {
-//                Intent intent = new Intent(this, FiltersActivity.class);
-//                intent.putExtra(commonVariables.KEY_FILTER_DATA, strFilter);
-//                intent.putExtra(commonVariables.KEY_CATEGORY_ID, strCategory);
-//                startActivityForResult(intent, FILTER_RESULT);
-//                overridePendingTransition(R.anim.fade_in_fast, R.anim.fade_out_fast);
-////                fragment = new FiltersActivity(catName, strFilter);
-////                FragmentManager fragmentManager = getSupportFragmentManager();
-////                fragmentManager.beginTransaction().add(R.id.container, fragment).addToBackStack(null).commit();
-//            } else if (v == mTv_sort) {
-//                Intent intent = new Intent(this, SortActivity.class);
-//                startActivityForResult(intent, SORT_RESULT);
-//                overridePendingTransition(R.anim.fade_in_fast, R.anim.fade_out_fast);
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -421,7 +375,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     @Override
     public void onResume() {
         try {
-//            commonMethods.setCartFromPreference(mTv_cart_count);
             invalidateOptionsMenu();
             isLogedIn = AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false);
             if (adapter != null)
@@ -462,9 +415,11 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                             listArray.add(new ProductItem(jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("OfferPrice"), jObjItem.optString("ImageName"), "", "", "", "", "", "", "", "", "", "", "", "", "", jObjItem.optInt("MinOrderQty"), false, false, null));
                         }
                     }
-                    if (pageNo == 1)
+                    if (pageNo == 1) {
+                        if (jarray == null || jarray.length() == 0)
+                            listArray.clear();
                         setListAdapter(listArray);
-                    else {
+                    } else {
                         if (listArray.size() != 0) {
                             mLl_no_data_found.setVisibility(View.GONE);
                             mRv_items.setVisibility(View.VISIBLE);
@@ -473,7 +428,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                         }
                     }
 
-                    if (job.optInt("Total") > listArray.size())
+                    if (job.optInt("totalProductCount") > listArray.size())
                         loading = true;
                 }
             } else {

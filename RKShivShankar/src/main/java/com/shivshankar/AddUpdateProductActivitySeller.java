@@ -365,7 +365,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this,true);
+                commonMethods.logout(this, true);
             } else if (view == mIv_close) {
                 onBackPressed();
             } else if (view == mBtn_submit) {
@@ -704,6 +704,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                     int strresId = job.optInt("resInt");
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
                     builder.setTitle(commonVariables.appname);
+                    builder.setCancelable(false);
                     builder.setMessage(job.optString("res"));
                     if (strresId == 1) {
                         try {

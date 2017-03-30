@@ -2,30 +2,30 @@ package com.shivshankar.classes;
 
 public class FilterAttribute {
 
-	String name, count;
+	String id, name;
 	boolean isSelected = false;
 
-	public FilterAttribute(String name, String string, boolean isSelected) {
+	public FilterAttribute(String id, String name, boolean isSelected) {
 		super();
+		this.id = id;
 		this.name = name;
-		this.count = string;
 		this.isSelected = isSelected;
 	}
 
-	public String getCount() {
-		return count;
-	}
-
-	public void setCount(String count) {
-		this.count = count;
-	}
-
-	public String getName() {
+	public String getname() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setname(String count) {
 		this.name = name;
+	}
+
+	public String getid() {
+		return id;
+	}
+
+	public void setid(String name) {
+		this.id = name;
 	}
 
 	public boolean isSelected() {

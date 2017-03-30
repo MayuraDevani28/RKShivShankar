@@ -150,7 +150,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_noti_count);
-                    startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivitySeller.class));
+                    startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivityBuyer.class));
                     overridePendingTransition(0, 0);
                 }
             };
@@ -165,7 +165,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_cart_count);
-                    startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivitySeller.class));
+                    startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivityBuyer.class));
                     overridePendingTransition(0, 0);
                 }
             };
