@@ -176,36 +176,6 @@
                         android:layout_height="1dp"
                         android:background="@color/colorPrimaryDark" />
 
-                    <LinearLayout
-                        android:id="@+id/nav_customer_service"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="10dp">
-
-                        <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="wrap_content"
-                            android:padding="5dp"
-                            android:src="@drawable/ic_cust_service"
-                            android:tint="@color/white" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="15dp"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:padding="5dp"
-                            android:text="Customer Service"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_small" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/colorPrimaryDark" />
 
                     <LinearLayout
                         android:id="@+id/nav_our_policy"

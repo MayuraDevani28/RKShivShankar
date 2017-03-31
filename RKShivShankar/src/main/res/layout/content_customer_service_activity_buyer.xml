@@ -11,6 +11,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.shivshankar.CustomerServiceActivityBuyer"
-    tools:showIn="@layout/activity_customer_service_buyer">
+    tools:showIn="@layout/activity_cms_call_data">
 
 </RelativeLayout>

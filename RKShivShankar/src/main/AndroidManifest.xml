@@ -118,20 +118,16 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CustomerServiceActivityBuyer"
+            android:name=".CMSListingActivityBuyer"
             android:label="@string/title_activity_customer_service_buyer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OurPolicyActivityBuyer"
-            android:label="@string/title_activity_customer_service_buyer"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".AboutUsActivityBuyer"
+            android:name=".CMSDisplayActivityBuyer"
             android:label="@string/title_activity_customer_service_buyer"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".ContactUsActivityBuyer"
+            android:name=".CMSCallandDisplayActivityBuyer"
             android:label="@string/title_activity_customer_service_buyer"
             android:theme="@style/AppTheme.NoActionBar" />
 
