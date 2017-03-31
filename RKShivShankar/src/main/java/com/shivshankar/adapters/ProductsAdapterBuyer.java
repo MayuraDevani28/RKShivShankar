@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -40,17 +41,23 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
 
         private ImageView mIv_product_image;
         private TextView mTv_product_name;
+        RelativeLayout mLl_whole, mRv_checked;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mTv_product_name = (TextView) itemView.findViewById(R.id.tv_product_name);
             mIv_product_image = (ImageView) itemView.findViewById(R.id.iv_product_image);
+            mLl_whole = (RelativeLayout) itemView.findViewById(R.id.ll_whole);
+            mLl_whole.setOnClickListener(this);
+            mRv_checked = (RelativeLayout) itemView.findViewById(R.id.rv_checked);
+            mRv_checked.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             posit = getAdapterPosition();
             ProductItem product = list.get(posit);
+            mRv_checked.setVisibility(View.VISIBLE);
         }
     }
 

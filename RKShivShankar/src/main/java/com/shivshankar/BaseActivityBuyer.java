@@ -32,7 +32,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
     DrawerLayout drawer;
     SwipeRefreshLayout swipeRefreshLayout;
     CoordinatorLayout main_content;
-    LinearLayout mNav_my_profile, mNav_my_orders, mNav_customer_service, mNav_about_us, mNav_our_policy, mNav_contact_us, mLl_close;
+    LinearLayout mNav_my_profile, mNav_my_orders, mNav_about_us, mNav_our_policy, mNav_contact_us, mLl_close;
 
     ImageView mIv_logo_nav, mIv_logo_toolbar;
     TextView mTv_noti_count, mTv_cart_count, mTv_username, mTv_logout;
@@ -82,7 +82,6 @@ public class BaseActivityBuyer extends AppCompatActivity {
 
             mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
             mNav_my_orders = (LinearLayout) findViewById(R.id.nav_my_orders);
-            mNav_customer_service = (LinearLayout) findViewById(R.id.nav_customer_service);
             mNav_about_us = (LinearLayout) findViewById(R.id.nav_about_us);
             mNav_our_policy = (LinearLayout) findViewById(R.id.nav_our_policy);
             mNav_contact_us = (LinearLayout) findViewById(R.id.nav_contact_us);

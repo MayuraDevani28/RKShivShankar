@@ -25,6 +25,7 @@ import com.shivshankar.classes.Suggestion;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
+import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,7 +89,6 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
 
             mNav_my_profile.setOnClickListener(this);
             mNav_my_orders.setOnClickListener(this);
-            mNav_customer_service.setOnClickListener(this);
             mNav_about_us.setOnClickListener(this);
             mNav_our_policy.setOnClickListener(this);
             mNav_contact_us.setOnClickListener(this);
@@ -110,21 +110,24 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, MyOrdersActivityBuyer.class));
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_customer_service) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, CustomerServiceActivityBuyer.class));
-                overridePendingTransition(0, 0);
             } else if (view == mNav_about_us) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, AboutUsActivityBuyer.class));
+                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
+                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
+                startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mNav_our_policy) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, OurPolicyActivityBuyer.class));
+                Intent intent = new Intent(this, CMSListingActivityBuyer.class);
+                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
+                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
+                startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mNav_contact_us) {
                 drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ContactUsActivityBuyer.class));
+                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
+                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
+                startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);

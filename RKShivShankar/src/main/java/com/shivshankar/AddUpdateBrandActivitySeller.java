@@ -201,11 +201,14 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this,true);
+                commonMethods.logout(this, true);
             } else if (view == mIv_close) {
                 onBackPressed();
             } else if (view == mBtn_submit) {
-                file = ImagePickerActivity.mFileTemp;
+                if (!(item.getBrandId() == null || item.getBrandId().isEmpty()))
+                    file = null;
+                else
+                    file = ImagePickerActivity.mFileTemp;
                 String strBrandName = mEdt_brand_name.getText().toString().trim();
                 if (strBrandName.isEmpty()) {
                     mEdt_brand_name.setError("Brand name required");

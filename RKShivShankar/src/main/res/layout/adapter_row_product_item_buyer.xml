@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_whole"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -7,6 +8,20 @@
     android:background="@color/white"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/rv_checked"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_transparent"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_checked" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/iv_product_image"

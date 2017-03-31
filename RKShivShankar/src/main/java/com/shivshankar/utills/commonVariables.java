@@ -46,6 +46,8 @@ public class commonVariables {
     public static final String KEY_USER_ID_FOR_OTP = "KEY_USER_ID_FOR_OTP";
     public static final String KEY_USER_TYPE = "KEY_USER_TYPE";
     public static final String KEY_SUIT_OR_FABRIC = "KEY_SUIT_OR_FABRIC";
+    public static final String INTENT_EXTRA_PAGE_NAME = "INTENT_EXTRA_PAGE_NAME";
+    public static final String INTENT_EXTRA_PAGE = "INTENT_EXTRA_PAGE";
 
 
     public static String STRING_SERVER_URL_FOR_GET_METHOD = "rkshivshankar.vivaa.co";
