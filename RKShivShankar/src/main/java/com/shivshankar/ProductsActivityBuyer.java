@@ -414,7 +414,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                     if (jarray != null) {
                         for (int i = 0; i < jarray.length(); i++) {
                             JSONObject jObjItem = jarray.optJSONObject(i);
-                            listArray.add(new ProductItem(jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("OfferPrice"), jObjItem.optString("ImageName"), "", "", "", "", "", "", "", "", "", "", "", "", "", jObjItem.optInt("MinOrderQty"), false, false, null));
+                            listArray.add(new ProductItem(jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("OfferPrice"), jObjItem.optString("ImageName"), "", "", "", "", "", "", "", "", "", "", "", "", "", jObjItem.optInt("MinOrderQty"), false, false, null,true));
                         }
                     }
                     if (pageNo == 1) {

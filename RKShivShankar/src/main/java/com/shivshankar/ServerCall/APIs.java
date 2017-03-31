@@ -702,6 +702,21 @@ public class APIs {
     }
 
 
+    public static void ProductActiveInactive(AppCompatActivity activity, OnResult onresult, String productId, boolean isActive) {
+
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/ProductActiveInactive")
+                .appendQueryParameter("productId", productId+"")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .appendQueryParameter("isActive", isActive+"")
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+
+    }
+
+
     public static void GetPolicies(AppCompatActivity activity, OnResult onresult, String api) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/" + api)

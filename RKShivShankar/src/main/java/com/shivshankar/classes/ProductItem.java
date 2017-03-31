@@ -8,10 +8,10 @@ public class ProductItem implements Serializable {
 
     String ProductId, ProductCode, OfferPrice, ImageName, FabricType, TopFabricId, TopFabricName, BottomFabricId, BottomFabricName, DupattaFabricId, DupattaFabricName, FabricId, FabricName, SellerId, SellerName, CategoryId, CategoryName;
     int MinOrderQty;
-    boolean isExpanded, IsAllOver;
+    boolean isExpanded, IsAllOver,IsActive;
     Brand brand;
 
-    public ProductItem(String productId, String productCode, String offerPrice, String imageName, String fabricType, String topFabricId, String topFabricName, String bottomFabricId, String bottomFabricName, String dupattaFabricId, String dupattaFabricName, String fabricId, String fabricName, String sellerId, String sellerName, String categoryId, String categoryName, int minOrderQty, boolean isExpanded, boolean isAllOver, Brand brand) {
+    public ProductItem(String productId, String productCode, String offerPrice, String imageName, String fabricType, String topFabricId, String topFabricName, String bottomFabricId, String bottomFabricName, String dupattaFabricId, String dupattaFabricName, String fabricId, String fabricName, String sellerId, String sellerName, String categoryId, String categoryName, int minOrderQty, boolean isExpanded, boolean isAllOver, Brand brand,boolean IsActive) {
         ProductId = productId;
         ProductCode = productCode;
         OfferPrice = offerPrice;
@@ -33,6 +33,7 @@ public class ProductItem implements Serializable {
         this.isExpanded = isExpanded;
         IsAllOver = isAllOver;
         this.brand = brand;
+        this.IsActive = IsActive;
     }
 
     public String getProductId() {
@@ -203,4 +204,11 @@ public class ProductItem implements Serializable {
         CategoryName = categoryName;
     }
 
+    public boolean isActive() {
+        return IsActive;
+    }
+
+    public void setActive(boolean active) {
+        IsActive = active;
+    }
 }

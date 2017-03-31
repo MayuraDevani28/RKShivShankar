@@ -1,7 +1,9 @@
 package com.shivshankar.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +42,7 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
     private final AppCompatActivity activity;
     private final ArrayList<ProductItem> list;
     private static int posit;
+    boolean isActive;
 
     public ProductsAdapterSeller(AppCompatActivity activity, ArrayList<ProductItem> list) {
         this.activity = activity;
@@ -80,7 +83,24 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
 
                 activity.startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_PRODUCT);
                 activity.overridePendingTransition(0, 0);
-            } else if (view == mFb_delete) {
+            } else if (view == mFb_eye) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle(commonVariables.appname);
+                if(list.get(posit).isActive()){
+                    isActive = false;
+                    builder.setMessage("Do you want to hide this product?");
+                    builder.setPositiveButton("Yes", (dialog, which) ->
+                            APIs.ProductActiveInactive(activity, ProductsAdapterSeller.this, product.getProductId(),isActive));
+                }
+                else {
+                    isActive = true;
+                    builder.setMessage("Do you want to show this product?");
+                    builder.setPositiveButton("Yes", (dialog, which) ->
+                            APIs.ProductActiveInactive(activity, ProductsAdapterSeller.this, product.getProductId(),isActive));
+                }
+                builder.setNegativeButton("No", null);
+                builder.show();
+            }else if (view == mFb_delete) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle(commonVariables.appname);
                 builder.setMessage("Do you want to delete this product?");
@@ -110,6 +130,14 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(item.isActive()){
+            holder.mFb_eye.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_eye_black));
+        }
+        else {
+
+            holder.mFb_eye.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_eye_off_black_24dp));
+
         }
         holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
         String strImageURL = item.getImageName();
@@ -141,6 +169,23 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
                                 ((ProductsActivitySeller) activity).setListAdapter(list);
                             } else
                                 notifyDataSetChanged();
+                        });
+                    } else {
+                        builder.setPositiveButton("Ok", null);
+                    }
+                    builder.show();
+                }
+                if (strApiName.equalsIgnoreCase("ProductActiveInactive")) {
+                    int strresId = jobjWhole.optInt("resInt");
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
+                    builder.setTitle(commonVariables.appname);
+                    builder.setMessage(jobjWhole.optString("res"));
+                    if (strresId == 1) {
+                        builder.setPositiveButton("Ok", (dialog, which) -> {
+                                list.set(posit,new ProductItem(list.get(posit).getProductId(), list.get(posit).getProductCode(), list.get(posit).getOfferPrice(), list.get(posit).getImageName(), "", "", "", "", "", "", "", "", "", "", "", "", "", list.get(posit).getMinOrderQty(), false, false, null,isActive));
+                               // ((ProductsActivitySeller) activity).setListAdapter(list);
+                                notifyDataSetChanged();
+
                         });
                     } else {
                         builder.setPositiveButton("Ok", null);
