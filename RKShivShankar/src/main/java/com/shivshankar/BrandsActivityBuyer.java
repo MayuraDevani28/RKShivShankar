@@ -11,6 +11,7 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,6 +58,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
+        rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
         try {
             Gson gson = new Gson();
             String json = getIntent().getStringExtra(commonVariables.KEY_CATEGORY);

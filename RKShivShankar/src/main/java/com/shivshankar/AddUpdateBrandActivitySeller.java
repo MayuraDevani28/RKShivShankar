@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,6 +55,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
             super.onCreate(savedInstanceState);
             View rootView = getLayoutInflater().inflate(R.layout.activity_add_brand_seller, frameLayout);
+            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
             bindViews(rootView);
 
             Gson gson = new Gson();

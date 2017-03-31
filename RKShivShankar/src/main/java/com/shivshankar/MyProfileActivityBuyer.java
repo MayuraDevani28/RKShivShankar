@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,6 +70,7 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_my_profile_seller, frameLayout);
+            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
             bindViews(rootView);
 
             try {

@@ -11,6 +11,7 @@ import android.text.Html;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -47,6 +48,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
         super.onCreate(savedInstanceState);
         try {
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_buyer, frameLayout);
+            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
             bindViews(rootView);
 
             setupFloatingSearch();
