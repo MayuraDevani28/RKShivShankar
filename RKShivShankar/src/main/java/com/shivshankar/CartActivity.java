@@ -87,7 +87,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 //            toggle.syncState();
 
             APIs.GetCartList_Suit_Buyer(this, this);
-            APIs.GetOrderSummary_Suit(this, this);
+            APIs.GetOrderSummary_Suit(null, this);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -50,7 +50,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
         super.onCreate(savedInstanceState);
         try {
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_buyer, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             setupFloatingSearch();
@@ -106,7 +106,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
             if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivitySeller.class);
+                Intent intent = new Intent(this, MainActivityBuyer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
