@@ -76,7 +76,6 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 //                e.printStackTrace();
 //            }
 
-//            new ServerSMS().execute();
 //            try {
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 //                    swipeRefreshLayout.setProgressViewOffset(false, 0, 200);
@@ -269,7 +268,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this,true);
+                commonMethods.logout(this, true);
             }
 
         } catch (Exception e) {
@@ -320,42 +319,4 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
             e.printStackTrace();
         }
     }
-
-   /* public class ServerSMS extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            return sendSms();
-        }
-    }
-    public String sendSms() {
-        try {
-            // Construct data
-            String user = "username=" + "zalakdoors@gmail.com";
-            String hash = "&hash=" + "1c9dcb84aff3c39f6112e51dd75da09553d2dfbfa6e600277b8331ce8d586cad";
-            String message = "&message=" + "This is your message";
-            String sender = "&sender=" + "TXTLCL";
-            String numbers = "&numbers=" + "917572807928";
-
-            // Send data
-            HttpURLConnection conn = (HttpURLConnection) new URL("http://api.textlocal.in/send/?").openConnection();
-            String data = user + hash + numbers + message + sender;
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
-            conn.getOutputStream().write(data.getBytes("UTF-8"));
-            final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            final StringBuffer stringBuffer = new StringBuffer();
-            String line;
-            while ((line = rd.readLine()) != null) {
-                stringBuffer.append(line);
-            }
-            rd.close();
-            Log.v("TAGRK", "RESPONSE: " + stringBuffer.toString());
-            return stringBuffer.toString();
-        } catch (Exception e) {
-            System.out.println("Error SMS " + e);
-            return "Error " + e;
-        }
-    }*/
-
 }

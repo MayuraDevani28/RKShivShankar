@@ -90,21 +90,27 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
                     @Override
                     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                         try {
-                            String stType = "";
-                            if (checkedId == R.id.radioDyed) {
-                                stType = "dyed";
-                            } else if (checkedId == R.id.radioPrinted) {
-                                stType = "printed";
+                            if (checkedId != -1) {
+                                String stType = "";
+                                if (checkedId == R.id.radioDyed) {
+                                    stType = "dyed";
+                                } else if (checkedId == R.id.radioPrinted) {
+                                    stType = "printed";
+                                }
+                                Intent intent = new Intent(activity, BrandsActivityBuyer.class);
+                                intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
+                                Gson gson = new Gson();
+                                Brand item = list.get(getLayoutPosition());
+                                String json = gson.toJson(item);
+
+                                intent.putExtra(commonVariables.KEY_CATEGORY, json);
+
+                                activity.startActivity(intent);
+                                activity.overridePendingTransition(0, 0);
+//                                radioGroup.clearCheck();
+//                                mRadioGroup.setVisibility(View.GONE);
+//                                mIv_down.setRotation(0);
                             }
-                            Intent intent = new Intent(activity, BrandsActivityBuyer.class);
-                            intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
-                            Gson gson = new Gson();
-                            Brand item = list.get(getLayoutPosition());
-                            String json = gson.toJson(item);
-
-                            intent.putExtra(commonVariables.KEY_CATEGORY, json);
-
-                            activity.startActivity(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

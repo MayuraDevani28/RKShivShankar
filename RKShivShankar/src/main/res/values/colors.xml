@@ -18,6 +18,7 @@
     <color name="gray_transparent">#E1E2E2</color>
     <color name="black">@android:color/black</color>
     <color name="black_transparent">#cc0a0a0a</color>
+    <color name="black_transparent_light">#5e0a0a0a</color>
     <color name="text_color_hint">@color/gray</color>
     <color name="red">#BA1B12</color>
     <color name="yellow">#E2CC52</color>

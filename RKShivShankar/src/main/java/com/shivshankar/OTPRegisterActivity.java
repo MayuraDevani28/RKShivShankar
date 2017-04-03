@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.SmsListener;
 import com.shivshankar.utills.SmsReceiver;
-import com.shivshankar.utills.Validation;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONObject;
@@ -35,15 +33,13 @@ import static com.shivshankar.utills.commonVariables.REQUEST_RECEIVE_MESSAGE;
 
 
 public class OTPRegisterActivity extends AppCompatActivity implements View.OnClickListener, OnResult {
-   // private EditText mEdt_OTP;
+    // private EditText mEdt_OTP;
     private TextView mTv_resend_verification_code, mTv_otp_message;
     private ImageView mBtn_submit;
     public ImageView mIv_close;
     int stType;
-    private EditText one;
-    private EditText two;
-    private EditText three;
-    private EditText four;
+    private EditText one, two, three, four;
+    boolean isForLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +53,7 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
                 window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             }
             stType = getIntent().getIntExtra(commonVariables.KEY_USER_TYPE, 0);
+            isForLogin = getIntent().getBooleanExtra(commonVariables.KEY_FOR_LOGIN, false);
             bindViews();
             requestPermissionSMSReceive();
 
@@ -67,10 +64,10 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
                     //String str = "9465";
                     String str = messageText;
                     char[] cArray = str.toCharArray();
-                    one.setText(""+cArray[0]);
-                    two.setText(""+cArray[1]);
-                    three.setText(""+cArray[2]);
-                    four.setText(""+cArray[3]);
+                    one.setText("" + cArray[0]);
+                    two.setText("" + cArray[1]);
+                    three.setText("" + cArray[2]);
+                    four.setText("" + cArray[3]);
                 }
             });
         } catch (Exception e) {
@@ -101,10 +98,10 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void bindViews() {
-        one = (EditText)findViewById(R.id.tv1);
-        two = (EditText)findViewById(R.id.tv2);
-        three = (EditText)findViewById(R.id.tv3);
-        four = (EditText)findViewById(R.id.tv4);
+        one = (EditText) findViewById(R.id.tv1);
+        two = (EditText) findViewById(R.id.tv2);
+        three = (EditText) findViewById(R.id.tv3);
+        four = (EditText) findViewById(R.id.tv4);
         mTv_resend_verification_code = (TextView) findViewById(R.id.tv_resend_verification_code);
         mTv_resend_verification_code.setOnClickListener(this);
         mBtn_submit = (ImageView) findViewById(R.id.btn_submit);
@@ -116,117 +113,73 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
 
         one.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(one.getText().toString().length()==1)
-                {
-
+                if (one.getText().toString().length() == 1) {
                     one.clearFocus();
                     two.requestFocus();
                     two.setCursorVisible(true);
-
                 }
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
-
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             public void afterTextChanged(Editable s) {
-
-
             }
         });
 
         two.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(two.getText().toString().length()==1)
-                {
-
+                if (two.getText().toString().length() == 1) {
                     two.clearFocus();
                     three.requestFocus();
                     three.setCursorVisible(true);
-
                 }
-                if(s.toString().trim().length() == 0){
+                if (s.toString().trim().length() == 0) {
                     one.requestFocus();
                     one.setSelection(one.getText().toString().length());
                 }
-
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
-
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             public void afterTextChanged(Editable s) {
-
-
             }
         });
         three.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(three.getText().toString().length()==1)
-                {
-
+                if (three.getText().toString().length() == 1) {
                     three.clearFocus();
                     four.requestFocus();
                     four.setCursorVisible(true);
 
                 }
-                if(s.toString().trim().length() == 0){
+                if (s.toString().trim().length() == 0) {
                     two.requestFocus();
                     two.setSelection(two.getText().toString().length());
                 }
-
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
-
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             public void afterTextChanged(Editable s) {
-
-
             }
         });
         four.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(four.getText().toString().length()==1)
-                {
-
-                    //four.clearFocus();
-
+                if (four.getText().toString().length() == 1) {
                 }
-                if(s.toString().trim().length() == 0){
+                if (s.toString().trim().length() == 0) {
                     three.requestFocus();
                     three.setSelection(three.getText().toString().length());
                 }
-
-
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-
-
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             public void afterTextChanged(Editable s) {
-
-
             }
         });
     }
@@ -237,7 +190,7 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
             finish();
             overridePendingTransition(0, 0);
         } else if (v == mBtn_submit) {
-            String strOTP = one.getText().toString().trim()+two.getText().toString().trim()+three.getText().toString().trim()+four.getText().toString().trim();
+            String strOTP = one.getText().toString().trim() + two.getText().toString().trim() + three.getText().toString().trim() + four.getText().toString().trim();
             if (strOTP.length() < 4) {
                 Toast.makeText(this, "Please enter four digit otp.", Toast.LENGTH_SHORT).show();
             } else
@@ -268,19 +221,33 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
                         editor.putString(commonVariables.KEY_LOGIN_ID, jobjWhole.optString("loginId"));
                         editor.putBoolean(commonVariables.KEY_IS_LOG_IN, true);
 
-                        Intent intent;
                         if (stType == 0) {
                             editor.putBoolean(commonVariables.KEY_IS_SELLER, true);
                             editor.putString(commonVariables.KEY_SELLER_PROFILE, jobjWhole.optJSONObject("resData").toString());
-                            intent = new Intent(this, MainActivitySeller.class);
                         } else {
                             editor.putBoolean(commonVariables.KEY_IS_SELLER, false);
                             editor.putString(commonVariables.KEY_BUYER_PROFILE, jobjWhole.optJSONObject("resData").toString());
-                            intent = new Intent(this, MainActivityBuyer.class);
                         }
                         editor.apply();
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+
+
+                        if (isForLogin) {
+                            Intent output = new Intent();
+                            output.putExtra(commonVariables.KEY_IS_LOG_IN, true);
+                            setResult(RESULT_OK, output);
+                        } else {
+                            Intent intent;
+                            if (stType == 0) {
+                                intent = new Intent(this, MainActivitySeller.class);
+                                startActivity(intent);
+                            } else {
+                                intent = new Intent(this, MainActivityBuyer.class);
+                                startActivity(intent);
+                            }
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
+
                         finish();
                         overridePendingTransition(0, 0);
 

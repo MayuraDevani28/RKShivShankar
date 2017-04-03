@@ -24,6 +24,8 @@ import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
+import static com.shivshankar.utills.AppPreferences.getPrefs;
+
 
 public class BaseActivityBuyer extends AppCompatActivity {
 
@@ -36,7 +38,6 @@ public class BaseActivityBuyer extends AppCompatActivity {
 
     ImageView mIv_logo_nav, mIv_logo_toolbar;
     TextView mTv_noti_count, mTv_cart_count, mTv_username, mTv_logout;
-    View v_order, v_prof;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
 
 
             swipeRefreshLayout.setEnabled(false);
-
+            setCartAndNotiCount();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,8 +72,6 @@ public class BaseActivityBuyer extends AppCompatActivity {
 
     private void bindViews() {
         try {
-
-
             frameLayout = (FrameLayout) findViewById(R.id.container);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -92,7 +91,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
             mTv_logout = (TextView) findViewById(R.id.tv_logout);
             mLl_close = (LinearLayout) findViewById(R.id.ll_close);
 
-            if (!AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
+            if (!getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
                 findViewById(R.id.v_order).setVisibility(View.GONE);
                 findViewById(R.id.v_prof).setVisibility(View.GONE);
                 mTv_logout.setText("Login");
@@ -130,9 +129,14 @@ public class BaseActivityBuyer extends AppCompatActivity {
             if (mTv_cart_count != null && !commonMethods.isOnline(this)) {
                 Snackbar.make(mTv_cart_count, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
+            setCartAndNotiCount();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setCartAndNotiCount() {
+        updateHotCount(mTv_cart_count, AppPreferences.getPrefs().getInt(commonVariables.CART_COUNT, 0));
     }
 
     @Override
@@ -140,30 +144,24 @@ public class BaseActivityBuyer extends AppCompatActivity {
         try {
             MenuInflater menuInflater = getMenuInflater();
             menuInflater.inflate(R.menu.main_buyer, menu);
-            final View menu_layout = menu.findItem(R.id.action_notifications).getActionView();
-            mTv_noti_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
-
-            updateHotCount(mTv_noti_count, 3);
-            commonMethods.cartCountAnimation(this, mTv_noti_count);
-            new BaseActivitySeller.MyMenuItemStuffListener(menu_layout, "Show hot message") {
+            final View menu_layout = menu.findItem(R.id.action_cart).getActionView();
+            ((ImageView) menu_layout.findViewById(R.id.iv_icon)).setImageResource(R.drawable.ic_cart);
+            mTv_cart_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
+            new BaseActivitySeller.MyMenuItemStuffListener(menu_layout, "") {
                 @Override
                 public void onClick(View view) {
-                    commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_noti_count);
-                    startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivityBuyer.class));
+                    commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_cart_count);
+                    startActivity(new Intent(BaseActivityBuyer.this, CartActivity.class));
                     overridePendingTransition(0, 0);
                 }
             };
 
             final View cart_layout = menu.findItem(R.id.action_notifications).getActionView();
-            ((ImageView) cart_layout.findViewById(R.id.iv_icon)).setImageResource(R.drawable.ic_cart);
-            mTv_cart_count = (TextView) cart_layout.findViewById(R.id.tv_cart_count);
-
-//            updateHotCount(mTv_cart_count, 3);
-//            commonMethods.cartCountAnimation(this, mTv_cart_count);
-            new BaseActivitySeller.MyMenuItemStuffListener(cart_layout, "Show hot message") {
+            mTv_noti_count = (TextView) cart_layout.findViewById(R.id.tv_cart_count);
+            new BaseActivitySeller.MyMenuItemStuffListener(cart_layout, "") {
                 @Override
                 public void onClick(View view) {
-                    commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_cart_count);
+                    commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_noti_count);
                     startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivityBuyer.class));
                     overridePendingTransition(0, 0);
                 }
@@ -186,6 +184,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
                         if (count > 0) {
                             mTv_cart_count.setVisibility(View.VISIBLE);
                             mTv_cart_count.setText(count + "");
+//                            commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_cart_count);
                         } else
                             mTv_cart_count.setVisibility(View.GONE);
                     } catch (Exception e) {

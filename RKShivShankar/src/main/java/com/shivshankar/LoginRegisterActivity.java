@@ -17,10 +17,10 @@ import com.shivshankar.adapters.ViewPagerAdapter;
 import com.shivshankar.fragments.LoginFragment;
 import com.shivshankar.fragments.RegisterFragment;
 import com.shivshankar.utills.ExceptionHandler;
+import com.shivshankar.utills.commonVariables;
 
 @SuppressLint("NewApi")
 public class LoginRegisterActivity extends AppCompatActivity implements View.OnClickListener {
-
 
     public ViewPager viewPager;
     private TabLayout tabLayout;
@@ -28,6 +28,7 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
     private RegisterFragment registerFragment;
     ViewPagerAdapter pagerAdapter;
     public ImageView mIv_close;
+    public boolean isForLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +39,9 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
                 Window window = this.getWindow();
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.setStatusBarColor(ContextCompat.getColor(this,R.color.colorPrimaryDark));
+                window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
             }
+            isForLogin = getIntent().getBooleanExtra(commonVariables.KEY_FOR_LOGIN, false);
             setContentView(R.layout.activity_login_register);
             bindViews();
         } catch (Exception e) {

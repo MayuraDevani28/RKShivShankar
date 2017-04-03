@@ -44,28 +44,44 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="18dp"
-                    android:textColorHint="@color/gray">
+                    android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/edt_password"
-                        android:layout_width="match_parent"
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_password_app_col"
-                        android:drawablePadding="10dp"
-                        android:hint="Password"
-                        android:imeOptions="actionGo"
-                        android:inputType="textPassword"
-                        android:lines="1"
-                        android:maxLines="1"
-                        android:textSize="@dimen/text_size_small" />
+                        android:layout_weight="1"
+                        android:textColorHint="@color/gray">
 
-                </android.support.design.widget.TextInputLayout>
+                        <EditText
+                            android:id="@+id/edt_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_password_app_col"
+                            android:drawablePadding="10dp"
+                            android:hint="Password"
+                            android:imeOptions="actionGo"
+                            android:inputType="textPassword"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/black"
+                            android:textSize="@dimen/text_size_small" />
 
+                    </android.support.design.widget.TextInputLayout>
 
+                    <ImageView
+                        android:id="@+id/iv_eye"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="3dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_eye" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -94,11 +110,11 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
-                        android:button="@null"
-                        android:drawablePadding="10dp"
                         android:background="@drawable/rbtn_selector"
-                        android:drawableLeft="@drawable/rbtn_selector_green"
+                        android:button="@null"
                         android:checked="true"
+                        android:drawableLeft="@drawable/rbtn_selector_green"
+                        android:drawablePadding="10dp"
                         android:gravity="left|center_vertical"
                         android:padding="5dp"
                         android:text="Buyer"
@@ -110,10 +126,10 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
-                        android:button="@null"
-                        android:drawablePadding="10dp"
                         android:background="@drawable/rbtn_selector"
+                        android:button="@null"
                         android:drawableLeft="@drawable/rbtn_selector_green"
+                        android:drawablePadding="10dp"
                         android:gravity="left|center_vertical"
                         android:padding="5dp"
                         android:text="Seller"

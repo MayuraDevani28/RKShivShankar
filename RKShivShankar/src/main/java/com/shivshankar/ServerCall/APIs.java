@@ -19,6 +19,8 @@ import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.OnResultString;
 import com.shivshankar.utills.commonVariables;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -78,7 +80,7 @@ public class APIs {
         }
     }
 
-    public static void callPostAPI(AppCompatActivity activity, OnResult onresult, String url, Map<String, String> params) {
+    public static void callPostAPI(AppCompatActivity activity, OnResult onresult, String url, Map<String, String> params, JSONObject param) {
 
         try {
             Log.d("TAGRK", url + "\n" + params.toString());
@@ -87,6 +89,8 @@ public class APIs {
                 mView.show(activity.getSupportFragmentManager(), "load");
             }
             JSONObject parameters = new JSONObject(params);
+            if (param != null)
+                parameters = param;
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                     url, parameters,
                     response -> {
@@ -434,7 +438,7 @@ public class APIs {
         params.put("state", State);
         params.put("countrycode", strCountryCode);
 
-        APIs.callPostAPI(activity, onresult, query, params);
+        APIs.callPostAPI(activity, onresult, query, params, null);
     }
 
     public static void SellerChangePassword(AppCompatActivity activity, OnResult onresult, String strPassword, String strNewPassword) {
@@ -671,7 +675,7 @@ public class APIs {
         params.put("state", State);
         params.put("countrycode", strCountryCode);
 
-        APIs.callPostAPI(activity, onresult, query, params);
+        APIs.callPostAPI(activity, onresult, query, params, null);
     }
 
 
@@ -707,9 +711,9 @@ public class APIs {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/ProductActiveInactive")
-                .appendQueryParameter("productId", productId+"")
+                .appendQueryParameter("productId", productId + "")
                 .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
-                .appendQueryParameter("isActive", isActive+"")
+                .appendQueryParameter("isActive", isActive + "")
                 .build();
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
@@ -734,45 +738,72 @@ public class APIs {
 
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
-
     }
 
-//    public static void callMultipartAPI(AppCompatActivity activity, OnResult onresult, String url, Map<String, String> params, File file, ImageView mAvatarImage) {
-//
-//        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, response -> {
-//            String resultResponse = new String(response.data);
-//            Log.d("TAGRK", resultResponse.toString());
-//        }, error -> {
-//            error.printStackTrace();
-//            if (error.networkResponse != null && error.networkResponse.data != null) {
-//                VolleyError error1 = new VolleyError(new String(error.networkResponse.data));
-//                Log.v("TAGRK", "Error: " + error1.toString());
-//            }
-//        }) {
-//            @Override
-//            protected Map<String, String> getParams() {
-//                return params;
-//            }
-//
-//            @Override
-//            protected Map<String, DataPart> getByteData() {
-//                Map<String, DataPart> params = new HashMap<>();
-//                // file name could found file base or direct access from real path
-//                // for now just get bitmap data from ImageView
-//                params.put("ImageFile", new DataPart("file.jpg", getFileDataFromDrawable(activity.getBaseContext(), mAvatarImage.getDrawable()), "image/jpeg"));
-//
-//                return params;
-//            }
-//        };
-//        App.getInstance().addToRequestQueue(multipartRequest);
-//    }
-//
-//    public static byte[] getFileDataFromDrawable(Context context, Drawable drawable) {
-//        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
-//        return byteArrayOutputStream.toByteArray();
-//    }
+    public static void AddProductToCart_Suit_Buyer(AppCompatActivity activity, OnResult onresult, JSONArray jarray) {
 
+        String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/AddProductToCart_Suit_Buyer";
+
+        try {
+            JSONObject jo = new JSONObject();
+            jo.put("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("lstProduct", jarray);
+
+            JSONObject jobj = new JSONObject();
+            jobj.put("mdlSuitCart", jo);
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("mdlSuitCart", jo.toString());
+            APIs.callPostAPI(activity, onresult, query, params, jobj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void GetCartList_Suit_Buyer(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetCartList_Suit_Buyer")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+
+    public static void RemoveCartProduct(AppCompatActivity activity, OnResult onresult, String productId) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/RemoveCartProduct")
+                .appendQueryParameter("productId", productId)
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+
+    public static void Update_Cart_Suit(AppCompatActivity activity, OnResult onresult, String cartId, String qty) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/Update_Cart_Suit")
+                .appendQueryParameter("CartId", cartId)
+                .appendQueryParameter("Qty", qty)
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+
+    public static void GetOrderSummary_Suit(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetOrderSummary_Suit")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
 
 }

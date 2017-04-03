@@ -94,7 +94,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // find which radio button is selected
                 if (checkedId == R.id.radioBuyer) {
                     stType = 1;
                     mLl_firm.setVisibility(View.GONE);
@@ -122,6 +121,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 isVisiblePass = true;
                 editComment.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             }
+            editComment.setSelection(editComment.getText().toString().length());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -150,9 +150,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 String password = mEdt_register_password.getText().toString().trim();
                 String city = mEdt_register_city.getText().toString().trim();
                 String company = mEdt_register_company.getText().toString().trim();
-                int subscribe = 1;
                 mEdt_register_first_name.setError(null);
-//                mEdt_register_last_name.setError(null);
                 mEdt_register_email.setError(null);
                 mEdt_register_password.setError(null);
                 mEdt_register_mobile.setError(null);
@@ -192,7 +190,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 } else if (commonMethods.knowInternetOn(getActivity())) {
                     SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                     editor.putString(commonVariables.KEY_CACHE_EMAIL, email);
-//                    editor.putString(commonVariables.KEY_CACHE_PASS, password);
                     editor.apply();
                     APIs.SellerBuyerRegister((AppCompatActivity) getActivity(), this, name, email, password, mobile, city, company, strDeviceUUID, regId, stType);
                 } else {
@@ -220,6 +217,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
                         Intent intent = new Intent(getActivity(), OTPRegisterActivity.class);
                         intent.putExtra(commonVariables.KEY_USER_TYPE, stType);
+                        intent.putExtra(commonVariables.KEY_FOR_LOGIN, ((LoginRegisterActivity) getActivity()).isForLogin);
                         getActivity().startActivity(intent);
                         getActivity().overridePendingTransition(0, 0);
 
@@ -238,18 +236,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-//                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                                    intent.putExtra(commonVariables.REGISTER_EMAIL, mEdt_register_email.getText().toString().trim());
-//                                    intent.putExtra(commonVariables.REGISTER_F_L_NAME, mEdt_register_first_name.getText().toString().trim());
-//                                    intent.putExtra(commonVariables.REGISTER_MOBILE, mEdt_register_mobile.getText().toString().trim());
-//                                    intent.putExtra(commonVariables.REGISTER_FIRM, mEdt_register_company.getText().toString().trim());
-//                                    intent.putExtra(commonVariables.REGISTER_CITY, mEdt_register_city.getText().toString().trim());
-//                                    if (finalResult.toUpperCase().contains("MOBILE"))
-//                                        strLoginEmail = mEdt_register_mobile.getText().toString().trim();
-//                                    intent.putExtra(commonVariables.LOGIN_EMAIL, strLoginEmail);
-//                                    startActivity(intent);
-//                                    finish();
-//                                    overridePendingTransition(R.anim.fade_in_fast, R.anim.fade_out_fast);
                                 }
                             });
                             builder.setNegativeButton("Cancel", null);

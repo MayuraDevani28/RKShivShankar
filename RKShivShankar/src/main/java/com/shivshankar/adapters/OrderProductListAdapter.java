@@ -47,17 +47,6 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
 //            holder.mTv_quantity.setText(item.getCatalogItem().getQuantity() + "");
 //            holder.mTv_sub_total.setText(strCurrencyName + " " + item.getCatalogItem().getMarketPrice());
 //            holder.mTv_product_price.setText(strCurrencyName + " " + item.getPrice());
-            String size = item.getSizevalue();
-            if (size != null && !size.equals("") && !size.equalsIgnoreCase("0")) {
-                holder.mLl_size.setVisibility(View.VISIBLE);
-                holder.mTv_product_size.setText(size);
-            } else
-                holder.mLl_size.setVisibility(View.GONE);
-
-            if (item.isCatalogItem())
-                holder.mTv_product_code_label.setText("Catalog code");
-            else
-                holder.mTv_product_code_label.setText("Product code");
 //            String strImageURL = item.getCatalogItem().getImage_url();
 //            if ((strImageURL != null) && (!strImageURL.equals("")))
 //                imageLoader.DisplayImage(strImageURL, mIv_product_image, mPbar_product);
