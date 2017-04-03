@@ -43,7 +43,6 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
     private final AppCompatActivity activity;
     private final ArrayList<ProductItem> list;
     private static int posit;
-    private OkHttpClient okHttpClient;
     private Dialog dialog;
     private GlideBuilder builder;
 
@@ -62,7 +61,6 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            okHttpClient = new OkHttpClient();
             mTv_product_name = (TextView) itemView.findViewById(R.id.tv_product_name);
             mIv_product_image = (ImageView) itemView.findViewById(R.id.iv_product_image);
             mLl_whole = (RelativeLayout) itemView.findViewById(R.id.ll_whole);
