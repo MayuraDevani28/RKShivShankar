@@ -155,6 +155,15 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".viewpager.ViewPagerActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <meta-data
+            android:name=".MyGlideModule"
+            android:value="OkHttpGlideModule" />
     </application>
 
 </manifest>

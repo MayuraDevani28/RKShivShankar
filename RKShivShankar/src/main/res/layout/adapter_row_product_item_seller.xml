@@ -39,6 +39,7 @@
         android:layout_alignParentTop="true"
         android:layout_gravity="right|center_vertical"
         android:layout_marginBottom="5dp"
+        fab:menu_labels_style="@style/MenuLabelsStyle"
         fab:menu_backgroundColor="@android:color/transparent"
         fab:menu_buttonSpacing="-10dp"
         fab:menu_colorNormal="@color/colorPrimary"
