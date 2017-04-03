@@ -196,7 +196,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         ImageView close = (ImageView) view.findViewById(R.id.iv_close);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
         String[] Images = {imageName};
-        Glide.with(activity).load(imageName).placeholder(R.color.gray_bg).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.1f).into(imageView);
+        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(imageView);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

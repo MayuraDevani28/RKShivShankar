@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
@@ -93,7 +92,6 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     private void bindViews(View rootView) {
 
         try {
-            main_content.setBackgroundResource(R.color.white);
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setOnClickListener(this);
             mIv_logo_nav.setOnClickListener(this);

@@ -167,7 +167,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
-            android:name="utills.MyGlideModule"
+            android:name="com.shivshankar.utills.MyGlideModule"
             android:value="OkHttpGlideModule" />
     </application>
 

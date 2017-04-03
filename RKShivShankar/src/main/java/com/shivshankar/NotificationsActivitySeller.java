@@ -1,5 +1,6 @@
 package com.shivshankar;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,9 +15,11 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.NotificationListAdapter;
 import com.shivshankar.classes.NavigationItem;
@@ -36,13 +39,14 @@ import java.util.List;
 
 public class NotificationsActivitySeller extends BaseActivitySeller implements OnResult, View.OnClickListener, AdapterView.OnItemClickListener {
     ListView mLv_notification;
-    TextView mTv_no_data_found;
 
     NotificationListAdapter mAdapter;
     List<NavigationItem> listNavigationItems = new ArrayList<NavigationItem>();
     ImageView mIv_close;
     boolean unDoClicked = false;
     CoordinatorLayout coordinatorLayout;
+    LottieAnimationView animationView2, animationView;
+    private LinearLayout mLl_no_data_found;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +117,9 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
             mIv_close.setOnClickListener(this);
             mLv_notification = (ListView) rootView.findViewById(R.id.ll_notification);
             mLv_notification.setOnItemClickListener(this);
-            mTv_no_data_found = (TextView) rootView.findViewById(R.id.tv_no_data_found);
+            mLl_no_data_found = (LinearLayout) rootView.findViewById(R.id.ll_no_data_found);
+            animationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
+            animationView2 = (LottieAnimationView) rootView.findViewById(R.id.animation_view2);
 //        swipeRefreshLayout = (SwipeRefreshLayout)  rootView.findViewById(R.id.swipe_refresh_layout);
 //        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light, android.R.color.holo_purple, android.R.color.holo_blue_light);
 //        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -198,7 +204,74 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
             e.printStackTrace();
         }
     }
+    private void startAnim() {
+        animationView.setProgress(0f);
+        animationView.playAnimation();
+        animationView.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
 
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationView2.setProgress(0f);
+                animationView2.playAnimation();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        animationView2.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animationView.setProgress(0f);
+                animationView.playAnimation();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        try {
+            finishAnim();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void finishAnim() {
+        try {
+            animationView.cancelAnimation();
+            animationView2.cancelAnimation();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void setNotificationAdapter(List<NavigationItem> listNavigationItems) {
         mAdapter = new NotificationListAdapter(this, R.layout.adapter_row_notification, listNavigationItems);
         mLv_notification.setAdapter(mAdapter);
@@ -225,14 +298,16 @@ public class NotificationsActivitySeller extends BaseActivitySeller implements O
                         }
                     } else {
                         mLv_notification.setVisibility(View.GONE);
-                        mTv_no_data_found.setVisibility(View.VISIBLE);
+                        mLl_no_data_found.setVisibility(View.VISIBLE);
+                        startAnim();
                     }
                 } else if (strApiName.equalsIgnoreCase("RemoveNotifications")) {
                     unDoClicked = false;
                 }
             } else {
                 mLv_notification.setVisibility(View.GONE);
-                mTv_no_data_found.setVisibility(View.VISIBLE);
+                mLl_no_data_found.setVisibility(View.VISIBLE);
+                startAnim();
             }
         } catch (Exception e) {
             e.printStackTrace();

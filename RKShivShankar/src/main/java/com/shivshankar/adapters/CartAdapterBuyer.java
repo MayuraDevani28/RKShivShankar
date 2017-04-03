@@ -46,7 +46,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, TextWatcher {
-
+        boolean isChanging = false;
         private ImageView mIv_product_image, mIv_delete;
         private TextView mTv_product_code, mTv_price, mTv_total, mBtn_update;
         EditText mTv_qty;
@@ -97,15 +97,20 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+            isChanging = true;
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (!editable.toString().equals(list.get(getAdapterPosition()).getCartQuantity())) {
-                mBtn_update.setVisibility(View.VISIBLE);
-            } else
-                mBtn_update.setVisibility(View.INVISIBLE);
+            try {
+                if (isChanging && !editable.toString().trim().isEmpty() && Integer.parseInt(editable.toString().trim()) != list.get(getAdapterPosition()).getCartQuantity()) {
+                    mBtn_update.setVisibility(View.VISIBLE);
+                } else
+                    mBtn_update.setVisibility(View.INVISIBLE);
+                isChanging = false;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -127,7 +132,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
 
             String strImageURL = item.getImageName();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).approximate().dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.1f).into(holder.mIv_product_image);
+                Glide.with(activity).load(strImageURL).asBitmap().approximate().dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(holder.mIv_product_image);
             }
 
         } catch (Exception e) {
@@ -171,8 +176,8 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     builder.setMessage(jobjWhole.optString("res"));
                     if (strresId == 1) {
                         builder.setPositiveButton("Ok", (dialog, which) -> {
-                            list.get(posit).setCartQuantity(8);
-                            list.get(posit).setTotalAmount("8888");
+                            list.get(posit).setCartQuantity(jobjWhole.optJSONObject("resData").optInt("CartQuantity"));
+                            list.get(posit).setTotalAmount(jobjWhole.optJSONObject("resData").optString("TotalPrice"));
                             notifyDataSetChanged();
                         });
                     } else {
@@ -180,6 +185,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     }
                     builder.show();
                 }
+                APIs.GetOrderSummary_Suit(null, (CartActivity) activity);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -102,7 +102,7 @@
                     android:padding="10dp"
                     android:text="NEXT"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_large"
+                    android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold" />
 
                 <ImageView

@@ -49,6 +49,9 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView mRv_items;
     LottieAnimationView animationView2, animationView;
 
+    private LinearLayout mLl_order_summary, mLl_confirm_order, mLl_shipping;
+    private TextView mTv_subtotal, mTv_shipping, mTv_grand_total;
+
     LinearLayout mNav_my_profile, mNav_my_orders, mNav_about_us, mNav_our_policy, mNav_contact_us, mLl_close;
     Toolbar toolbar;
     DrawerLayout drawer;
@@ -76,15 +79,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             getSupportActionBar().setLogo(null);
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-
-//            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//            toggle.setDrawerIndicatorEnabled(false);
-//            toolbar.setNavigationIcon(R.drawable.ic_menu);
-//            toolbar.setNavigationOnClickListener(view -> drawer.openDrawer(GravityCompat.START));
-//            drawer.addDrawerListener(toggle);
-//            toggle.syncState();
 
             APIs.GetCartList_Suit_Buyer(this, this);
             APIs.GetOrderSummary_Suit(null, this);
@@ -152,10 +146,17 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             mBtn_add_now.setOnClickListener(this);
             mTv_no_data_found = (TextView) findViewById(R.id.tv_no_data_found);
 
-//            mTv_count_items = (TextView) findViewById(R.id.tv_no_items);
             mLl_no_data_found = (LinearLayout) findViewById(R.id.ll_no_data_found);
             animationView = (LottieAnimationView) findViewById(R.id.animation_view);
             animationView2 = (LottieAnimationView) findViewById(R.id.animation_view2);
+
+            mLl_order_summary = (LinearLayout) findViewById(R.id.ll_order_summary);
+            mTv_subtotal = (TextView) findViewById(R.id.tv_subtotal);
+            mTv_shipping = (TextView) findViewById(R.id.tv_shipping);
+            mTv_grand_total = (TextView) findViewById(R.id.tv_grand_total);
+            mLl_confirm_order = (LinearLayout) findViewById(R.id.ll_confirm_order);
+            mLl_confirm_order.setOnClickListener(this);
+            mLl_shipping = (LinearLayout) findViewById(R.id.ll_shipping);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -349,8 +350,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
                     JSONObject job = jobjWhole.optJSONObject("resData");
                     JSONArray jarray = job.optJSONArray("lstCartItems");
-//                    mTv_count_items.setVisibility(View.VISIBLE);
-//                    mTv_count_items.setText(" (" + job.optString("totalProductCount") + " items)");
                     if (jarray != null) {
                         for (int i = 0; i < jarray.length(); i++) {
                             JSONObject jObjItem = jarray.optJSONObject(i);
@@ -362,7 +361,15 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                         listArray.clear();
                     setListAdapter(listArray);
                 } else if (strApiName.equalsIgnoreCase("GetOrderSummary_Suit")) {
-
+                    mLl_order_summary.setVisibility(View.VISIBLE);
+                    JSONObject jo = jobjWhole.optJSONObject("resData");
+                    mTv_grand_total.setText(jo.optString("TotalAmount"));
+                    if (Integer.parseInt(jo.optString("ShippingCharge")) != 0) {
+                        mLl_shipping.setVisibility(View.VISIBLE);
+                        mTv_shipping.setText(jo.optString("ShippingCharge"));
+                    } else
+                        mLl_shipping.setVisibility(View.GONE);
+                    mTv_subtotal.setText(jo.optString("SubTotal"));
                 }
             } else {
                 setListAdapter(listArray);
