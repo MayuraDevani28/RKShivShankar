@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +53,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         super.onCreate(savedInstanceState);
         try {
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_seller, frameLayout);
+            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
             bindViews(rootView);
 
             Gson gson = new Gson();

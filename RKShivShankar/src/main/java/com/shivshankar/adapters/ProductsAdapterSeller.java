@@ -3,6 +3,7 @@ package com.shivshankar.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /*
  * Created by Mayura Devani 09-02-2015
@@ -62,7 +64,7 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
             mTv_product_name = (TextView) itemView.findViewById(R.id.tv_product_name);
             mIv_product_image = (ImageView) itemView.findViewById(R.id.iv_product_image);
             mMultiple_actions_left = (FloatingActionMenu) itemView.findViewById(R.id.multiple_actions_left);
-            mMultiple_actions_left.setIconAnimated(false);
+            mMultiple_actions_left.setIconAnimated(true);
             mFb_edit = (FloatingActionButton) itemView.findViewById(R.id.fb_edit);
             mFb_eye = (FloatingActionButton) itemView.findViewById(R.id.fb_eye);
             mFb_delete = (FloatingActionButton) itemView.findViewById(R.id.fb_delete);
@@ -121,6 +123,7 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final ProductItem item = list.get(position);
+
         try {
             holder.mTv_product_name.setSelected(true);
             if (item.isExpanded()) {
@@ -142,7 +145,7 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
         holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
         String strImageURL = item.getImageName();
         if ((strImageURL != null) && (!strImageURL.equals(""))) {
-            Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).dontAnimate().diskCacheStrategy( DiskCacheStrategy.SOURCE ).error(R.drawable.no_img).thumbnail(0.1f).into(holder.mIv_product_image);
+            Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).approximate().dontAnimate().diskCacheStrategy( DiskCacheStrategy.SOURCE ).thumbnail(0.01f).into(holder.mIv_product_image);
         }
     }
 

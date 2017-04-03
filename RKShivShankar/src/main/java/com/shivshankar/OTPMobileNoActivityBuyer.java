@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,6 +50,7 @@ public class OTPMobileNoActivityBuyer extends BaseActivityBuyer implements View.
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_otp_mobile_seller, frameLayout);
+            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
             bindViews(rootView);
 
             strMobileNo = getIntent().getStringExtra(commonVariables.KEY_MOBILE_NO);

@@ -12,7 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,6 +75,8 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
+        rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+
 
         try {
             res = getResources();

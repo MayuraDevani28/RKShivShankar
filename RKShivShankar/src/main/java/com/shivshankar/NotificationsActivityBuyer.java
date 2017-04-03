@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -57,6 +58,7 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             View rootView = getLayoutInflater().inflate(R.layout.activity_notification_seller, frameLayout);
+            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
             bindViews(rootView);
 
             APIs.callGetNotificationsAPI(this, this);

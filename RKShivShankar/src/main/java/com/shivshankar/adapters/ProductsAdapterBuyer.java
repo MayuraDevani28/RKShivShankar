@@ -4,19 +4,15 @@ import android.annotation.SuppressLint;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.shivshankar.ProductsActivityBuyer;
 import com.shivshankar.ProductsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.classes.ProductItem;
@@ -52,6 +48,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private final TextView mTv_product_info;
         private ImageView mIv_product_image;
         private TextView mTv_product_name;
         RelativeLayout mRv_checked;
@@ -64,6 +61,10 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
             mLl_whole = (FrameLayout) itemView.findViewById(R.id.ll_whole);
             mLl_whole.setOnClickListener(this);
             mRv_checked = (RelativeLayout) itemView.findViewById(R.id.rv_checked);
+            mRv_checked.setOnClickListener(this);
+            mTv_product_info = (TextView) itemView.findViewById(R.id.tv_info);
+            mTv_product_info.setOnClickListener(this);
+
         }
 
         @Override
@@ -71,11 +72,16 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
             try {
                 posit = getAdapterPosition();
                 ProductItem product = list.get(posit);
-                if (product.isActive()) {
-                    product.setActive(false);
-                } else
-                    product.setActive(true);
-                notifyDataSetChanged();
+                if(view == itemView) {
+                    if (product.isActive()) {
+                        product.setActive(false);
+                    } else
+                        product.setActive(true);
+                    notifyDataSetChanged();
+                }if(view == mTv_product_info){
+
+                    showPopup(list.get(getAdapterPosition()).getImageName());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -161,5 +167,44 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
                 e.printStackTrace();
             }
         }
+    }
+
+    private void showPopup(String imageName) {
+        dialog = new Dialog(
+                activity,R.style.popupTheme);
+        LayoutInflater inflater = (LayoutInflater) activity
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.popup_product_detail, null);
+
+
+        dialog.setContentView(view); // your custom view.
+        dialog.setCancelable(true);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        //dialog.getWindow().setGravity(Gravity.BOTTOM);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.show();
+        ImageView close = (ImageView)view.findViewById(R.id.iv_close);
+        ImageView imageView = (ImageView)view.findViewById(R.id.image_gallery);
+        String[] Images = {imageName};
+        Glide.with(activity).load(imageName).placeholder(R.color.gray_bg).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.1f).into(imageView);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dismiss the popup window
+                dialog.dismiss();
+
+            }
+        });
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(activity, ViewPagerActivity.class);
+                i.putExtra(commonVariables.INTENT_EXTRA_LIST_IMAGE_ARRAY, Images);
+                i.putExtra(commonVariables.INTENT_EXTRA_POSITION, posit);
+                i.putExtra(commonVariables.KEY_IS_LANDSCAPE, false);
+                activity.startActivity(i);
+            }
+        });
+
     }
 }
