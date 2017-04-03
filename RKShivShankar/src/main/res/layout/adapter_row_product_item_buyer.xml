@@ -48,7 +48,6 @@
         android:visibility="visible" />
 
 
-</RelativeLayout>
     <RelativeLayout
         android:id="@+id/rv_checked"
         android:layout_width="match_parent"
