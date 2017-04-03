@@ -1,9 +1,7 @@
 package com.shivshankar.adapters;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +29,6 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /*
  * Created by Mayura Devani 09-02-2015
@@ -88,21 +85,20 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
             } else if (view == mFb_eye) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle(commonVariables.appname);
-                if(list.get(posit).isActive()){
+                if (list.get(posit).isActive()) {
                     isActive = false;
                     builder.setMessage("Do you want to hide this product?");
                     builder.setPositiveButton("Yes", (dialog, which) ->
-                            APIs.ProductActiveInactive(activity, ProductsAdapterSeller.this, product.getProductId(),isActive));
-                }
-                else {
+                            APIs.ProductActiveInactive(activity, ProductsAdapterSeller.this, product.getProductId(), isActive));
+                } else {
                     isActive = true;
                     builder.setMessage("Do you want to show this product?");
                     builder.setPositiveButton("Yes", (dialog, which) ->
-                            APIs.ProductActiveInactive(activity, ProductsAdapterSeller.this, product.getProductId(),isActive));
+                            APIs.ProductActiveInactive(activity, ProductsAdapterSeller.this, product.getProductId(), isActive));
                 }
                 builder.setNegativeButton("No", null);
                 builder.show();
-            }else if (view == mFb_delete) {
+            } else if (view == mFb_delete) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setTitle(commonVariables.appname);
                 builder.setMessage("Do you want to delete this product?");
@@ -134,18 +130,17 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(item.isActive()){
-            holder.mFb_eye.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_eye_black));
-        }
-        else {
+        if (item.isActive()) {
+            holder.mFb_eye.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_eye_black));
+        } else {
 
-            holder.mFb_eye.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_eye_off_black_24dp));
+            holder.mFb_eye.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_eye_off_black_24dp));
 
         }
         holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
         String strImageURL = item.getImageName();
         if ((strImageURL != null) && (!strImageURL.equals(""))) {
-            Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).approximate().dontAnimate().diskCacheStrategy( DiskCacheStrategy.SOURCE ).thumbnail(0.01f).into(holder.mIv_product_image);
+            Glide.with(activity).load(strImageURL).asBitmap().approximate().dontAnimate().diskCacheStrategy(DiskCacheStrategy.SOURCE).thumbnail(0.01f).into(holder.mIv_product_image);
         }
     }
 
@@ -185,9 +180,9 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
                     builder.setMessage(jobjWhole.optString("res"));
                     if (strresId == 1) {
                         builder.setPositiveButton("Ok", (dialog, which) -> {
-                                list.set(posit,new ProductItem(list.get(posit).getProductId(), list.get(posit).getProductCode(), list.get(posit).getOfferPrice(), list.get(posit).getImageName(), "", "", "", "", "", "", "", "", "", "", "", "", "", list.get(posit).getMinOrderQty(), false, false, null,isActive));
-                               // ((ProductsActivitySeller) activity).setListAdapter(list);
-                                notifyDataSetChanged();
+                            list.set(posit, new ProductItem(list.get(posit).getProductId(), list.get(posit).getProductCode(), list.get(posit).getOfferPrice(), list.get(posit).getImageName(), "", "", "", "", "", "", "", "", "", "", "", "", "", list.get(posit).getMinOrderQty(), false, false, null, isActive));
+                            // ((ProductsActivitySeller) activity).setListAdapter(list);
+                            notifyDataSetChanged();
 
                         });
                     } else {

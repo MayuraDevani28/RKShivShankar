@@ -1,23 +1,31 @@
 package com.shivshankar.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.shivshankar.ProductsActivityBuyer;
 import com.shivshankar.ProductsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonVariables;
+import com.shivshankar.viewpager.ViewPagerActivity;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
@@ -32,6 +40,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
     private final ArrayList<ProductItem> list;
     private static int posit;
     LinearLayout mLl_add_to_cart;
+    Dialog dialog;
     int val28 = 28, val5 = 5;
 
     public ProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list, LinearLayout mLl_add_to_cart) {
@@ -72,15 +81,16 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
             try {
                 posit = getAdapterPosition();
                 ProductItem product = list.get(posit);
-                if(view == itemView) {
+
+                if (view == mTv_product_info) {
+
+                    showPopup(list.get(getAdapterPosition()).getImageName());
+                } else {
                     if (product.isActive()) {
                         product.setActive(false);
                     } else
                         product.setActive(true);
                     notifyDataSetChanged();
-                }if(view == mTv_product_info){
-
-                    showPopup(list.get(getAdapterPosition()).getImageName());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -102,7 +112,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
             holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
             String strImageURL = item.getImageName();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL).placeholder(R.color.gray_bg).dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.1f).into(holder.mIv_product_image);
+                Glide.with(activity).load(strImageURL).dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(holder.mIv_product_image);
             }
             if (item.isActive())//checked
                 holder.mRv_checked.setVisibility(View.VISIBLE);
@@ -171,7 +181,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
 
     private void showPopup(String imageName) {
         dialog = new Dialog(
-                activity,R.style.popupTheme);
+                activity, R.style.popupTheme);
         LayoutInflater inflater = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.popup_product_detail, null);
@@ -183,8 +193,8 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         //dialog.getWindow().setGravity(Gravity.BOTTOM);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.show();
-        ImageView close = (ImageView)view.findViewById(R.id.iv_close);
-        ImageView imageView = (ImageView)view.findViewById(R.id.image_gallery);
+        ImageView close = (ImageView) view.findViewById(R.id.iv_close);
+        ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
         String[] Images = {imageName};
         Glide.with(activity).load(imageName).placeholder(R.color.gray_bg).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.1f).into(imageView);
         close.setOnClickListener(new View.OnClickListener() {
