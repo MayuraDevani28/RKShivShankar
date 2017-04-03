@@ -1,9 +1,6 @@
 package com.shivshankar.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -11,31 +8,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.cache.DiskLruCacheWrapper;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.shivshankar.ProductsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonVariables;
-import com.shivshankar.viewpager.ViewPagerActivity;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-
-import okhttp3.OkHttpClient;
+import java.util.List;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})
 public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBuyer.MyViewHolder> implements OnResult {
@@ -43,27 +31,34 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
     private final AppCompatActivity activity;
     private final ArrayList<ProductItem> list;
     private static int posit;
-    private Dialog dialog;
-    private GlideBuilder builder;
+    LinearLayout mLl_add_to_cart;
+    int val28 = 28, val5 = 5;
 
-    public ProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list) {
+    public ProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list, LinearLayout mLl_add_to_cart) {
         this.activity = activity;
         this.list = list;
+        this.mLl_add_to_cart = mLl_add_to_cart;
+        val28 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45, activity.getResources().getDisplayMetrics());
+        val5 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, activity.getResources().getDisplayMetrics());
     }
 
+    public List<ProductItem> getItems() {
+        return list;
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView mTv_product_info;
         private ImageView mIv_product_image;
         private TextView mTv_product_name;
-        RelativeLayout mLl_whole, mRv_checked;
+        RelativeLayout mRv_checked;
+        FrameLayout mLl_whole;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mTv_product_name = (TextView) itemView.findViewById(R.id.tv_product_name);
             mIv_product_image = (ImageView) itemView.findViewById(R.id.iv_product_image);
-            mLl_whole = (RelativeLayout) itemView.findViewById(R.id.ll_whole);
+            mLl_whole = (FrameLayout) itemView.findViewById(R.id.ll_whole);
             mLl_whole.setOnClickListener(this);
             mRv_checked = (RelativeLayout) itemView.findViewById(R.id.rv_checked);
             mRv_checked.setOnClickListener(this);
@@ -74,27 +69,21 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
 
         @Override
         public void onClick(View view) {
-            if(view == itemView) {
+            try {
                 posit = getAdapterPosition();
                 ProductItem product = list.get(posit);
-                mRv_checked.setVisibility(View.VISIBLE);
+                if(view == itemView) {
+                    if (product.isActive()) {
+                        product.setActive(false);
+                    } else
+                        product.setActive(true);
+                    notifyDataSetChanged();
+                }if(view == mTv_product_info){
 
-            }
-            if(view == mTv_product_info){
-
-                showPopup(list.get(getAdapterPosition()).getImageName());
-               /* new EasyDialog(activity)
-                        .setLayoutResourceId(R.layout.popup_product_detail)
-                        .setBackgroundColor(activity.getResources().getColor(R.color.white))
-                        .setLocationByAttachedView(itemView)
-                        .setAnimationTranslationShow(EasyDialog.DIRECTION_Y, 1000, -800, 100, -50, 50, 0)
-                        .setAnimationTranslationDismiss(EasyDialog.DIRECTION_Y, 500, 0, -800)
-                        //.setGravity(EasyDialog.GRAVITY_TOP)
-                        .setTouchOutsideDismiss(true)
-                        .setMatchParent(true)
-                        .setMarginLeftAndRight(24, 24)
-                        .setOutsideColor(activity.getResources().getColor(R.color.black_transparent))
-                        .show();*/
+                    showPopup(list.get(getAdapterPosition()).getImageName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -110,15 +99,39 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         final ProductItem item = list.get(position);
         try {
             holder.mTv_product_name.setSelected(true);
+            holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
+            String strImageURL = item.getImageName();
+            if ((strImageURL != null) && (!strImageURL.equals(""))) {
+                Glide.with(activity).load(strImageURL).placeholder(R.color.gray_bg).dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.1f).into(holder.mIv_product_image);
+            }
+            if (item.isActive())//checked
+                holder.mRv_checked.setVisibility(View.VISIBLE);
+            else
+                holder.mRv_checked.setVisibility(View.GONE);
+
+            if (isOneChecked()) {
+                mLl_add_to_cart.setVisibility(View.VISIBLE);
+                ((ProductsActivityBuyer) activity).mRv_items.setPadding(val5, val5, val5, val28);
+            } else {
+                mLl_add_to_cart.setVisibility(View.GONE);
+                ((ProductsActivityBuyer) activity).mRv_items.setPadding(val5, val5, val5, val5);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
-        String strImageURL = item.getImageName();
-        if ((strImageURL != null) && (!strImageURL.equals(""))) {
-            Glide.with(activity).load(strImageURL).asBitmap().placeholder(R.color.gray_bg).approximate().dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.01f).into(holder.mIv_product_image);
 
+    }
+
+    private boolean isOneChecked() {
+        boolean isOneChecked = false;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).isActive()) {
+                isOneChecked = true;
+                break;
+            }
         }
+        return isOneChecked;
     }
 
 

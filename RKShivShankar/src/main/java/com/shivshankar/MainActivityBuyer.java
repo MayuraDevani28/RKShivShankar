@@ -23,6 +23,7 @@ import com.shivshankar.adapters.HomeCategoryAdapterBuyer;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.DataHelper;
 import com.shivshankar.classes.Suggestion;
+import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
@@ -104,7 +105,12 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
         try {
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
-            if (view == mNav_my_profile) {
+            if (view == mIv_logo_toolbar) {
+                Intent intent = new Intent(this, MainActivitySeller.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_profile) {
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, MyProfileActivityBuyer.class));
                 overridePendingTransition(0, 0);
@@ -170,6 +176,8 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
                         }
                         setListAdapter(listArray);
                     }
+                    AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, jobjWhole.optInt("CartCount")).apply();
+                    setCartAndNotiCount();
                 }
             }
         } catch (Exception e) {

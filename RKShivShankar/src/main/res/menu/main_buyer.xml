@@ -2,16 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_notifications"
-        android:icon="@drawable/ic_notification"
-        android:title="@string/action_notifications"
-        app:actionLayout="@layout/component_count_noti"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_cart"
         android:icon="@drawable/ic_cart"
         android:title="@string/action_notifications"
         app:actionLayout="@layout/component_count_noti"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_notifications"
+        android:icon="@drawable/ic_notification"
+        android:title="@string/action_notifications"
+        app:actionLayout="@layout/component_count_noti"
+        app:showAsAction="always" />
+
 
 </menu>

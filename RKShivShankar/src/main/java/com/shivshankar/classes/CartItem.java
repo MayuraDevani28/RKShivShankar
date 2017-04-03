@@ -5,105 +5,41 @@ import java.io.Serializable;
 public class CartItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String OrderDetailId, cartId, ProductId, ColorId, insertedAt, sizevalue, ProductWeight;
-    int quanitity, availQuantity, FulfillQty, ShippedRequestedQty;
-    String Price, stitchingPrice, sizeCost, Amount, Vat;
-    boolean OutOfStock, isCatalogItem;
+    String CartId, ProductId, ProductCode, productName, BrandName, MarketPrice, OfferPrice, TotalAmount, DiscountPercent, ImageName;
+    int CartQuantity, MinOrderQuantity;
+    boolean IsOutOfStock, isExpanded;
 
-    public CartItem(String orderDetailId, String cartId, String productId, String colorId, String insertedAt, int quanitity, String price, String stitchingPrice, String sizevalue, String sizeCost, String amount,
-                   String v, int availquantity, boolean isOutOfStock, int fulfillQty, int shippedRequestedQty, String productWeight, boolean isCatalogitem) {
-        super();
-        OrderDetailId = orderDetailId;
-        this.cartId = cartId;
+    public CartItem(String cartId, String productId, String productCode, String productName, String brandName, String marketPrice, String offerPrice, String totalAmount, String discountPercent, String imageName, int cartQuantity, int minOrderQuantity, boolean isOutOfStock, boolean isExpanded) {
+        CartId = cartId;
         ProductId = productId;
-        ColorId = colorId;
-        this.insertedAt = insertedAt;
-        this.quanitity = quanitity;
-        Price = price;
-        this.stitchingPrice = stitchingPrice;
-        this.sizevalue = sizevalue;
-        this.sizeCost = sizeCost;
-        Amount = amount;
-        Vat = v;
-        availQuantity = availquantity;
-        OutOfStock = isOutOfStock;
-        FulfillQty = fulfillQty;
-        ShippedRequestedQty = shippedRequestedQty;
-        ProductWeight = productWeight;
-        this.isCatalogItem = isCatalogitem;
+        ProductCode = productCode;
+        this.productName = productName;
+        BrandName = brandName;
+        MarketPrice = marketPrice;
+        OfferPrice = offerPrice;
+        DiscountPercent = discountPercent;
+        TotalAmount = totalAmount;
+        ImageName = imageName;
+        CartQuantity = cartQuantity;
+        MinOrderQuantity = minOrderQuantity;
+        IsOutOfStock = isOutOfStock;
+        this.isExpanded = isExpanded;
     }
 
-    public boolean isCatalogItem() {
-        return isCatalogItem;
+    public String getTotalAmount() {
+        return TotalAmount;
     }
 
-    public void setCatalogItem(boolean catalogItem) {
-        isCatalogItem = catalogItem;
-    }
-
-    public String getProductWeight() {
-        return ProductWeight;
-    }
-
-    public void setProductWeight(String productWeight) {
-        ProductWeight = productWeight;
-    }
-
-
-    public int getFulfillQty() {
-        return FulfillQty;
-    }
-
-    public void setFulfillQty(int fulfillQty) {
-        FulfillQty = fulfillQty;
-    }
-
-    public int getShippedRequestedQty() {
-        return ShippedRequestedQty;
-    }
-
-    public void setShippedRequestedQty(int shippedRequestedQty) {
-        ShippedRequestedQty = shippedRequestedQty;
-    }
-
-    public String getOrderDetailId() {
-        return OrderDetailId;
-    }
-
-    public void setOrderDetailId(String orderDetailId) {
-        OrderDetailId = orderDetailId;
-    }
-
-    public boolean isOutOfStock() {
-        return OutOfStock;
-    }
-
-    public void setOutOfStock(boolean outOfStock) {
-        OutOfStock = outOfStock;
-    }
-
-    public int getAvailQuantity() {
-        return availQuantity;
-    }
-
-    public void setAvailQuantity(int availQuantity) {
-        this.availQuantity = availQuantity;
-    }
-
-    public String getVat() {
-        return Vat;
-    }
-
-    public void setVat(String vat) {
-        Vat = vat;
+    public void setTotalAmount(String totalAmount) {
+        this.TotalAmount = totalAmount;
     }
 
     public String getCartId() {
-        return cartId;
+        return CartId;
     }
 
     public void setCartId(String cartId) {
-        this.cartId = cartId;
+        CartId = cartId;
     }
 
     public String getProductId() {
@@ -114,69 +50,92 @@ public class CartItem implements Serializable {
         ProductId = productId;
     }
 
-    public String getColorId() {
-        return ColorId;
+    public String getProductCode() {
+        return ProductCode;
     }
 
-    public void setColorId(String colorId) {
-        ColorId = colorId;
+    public void setProductCode(String productCode) {
+        ProductCode = productCode;
     }
 
-    public String getInsertedAt() {
-        return insertedAt;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setInsertedAt(String insertedAt) {
-        this.insertedAt = insertedAt;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public int getQuanitity() {
-        return quanitity;
+    public String getBrandName() {
+        return BrandName;
     }
 
-    public void setQuanitity(int quanitity) {
-        this.quanitity = quanitity;
+    public void setBrandName(String brandName) {
+        BrandName = brandName;
     }
 
-    public String getPrice() {
-        return Price;
+    public String getMarketPrice() {
+        return MarketPrice;
     }
 
-    public void setPrice(String price) {
-        Price = price;
+    public void setMarketPrice(String marketPrice) {
+        MarketPrice = marketPrice;
     }
 
-    public String getStitchingPrice() {
-        return stitchingPrice;
+    public String getOfferPrice() {
+        return OfferPrice;
     }
 
-    public void setStitchingPrice(String stitchingPrice) {
-        this.stitchingPrice = stitchingPrice;
+    public void setOfferPrice(String offerPrice) {
+        OfferPrice = offerPrice;
     }
 
-    public String getSizevalue() {
-        return sizevalue;
+    public String getDiscountPercent() {
+        return DiscountPercent;
     }
 
-    public void setSizevalue(String sizevalue) {
-        this.sizevalue = sizevalue;
+    public void setDiscountPercent(String discountPercent) {
+        DiscountPercent = discountPercent;
     }
 
-    public String getSizeCost() {
-        return sizeCost;
+    public String getImageName() {
+        return ImageName;
     }
 
-    public void setSizeCost(String sizeCost) {
-        this.sizeCost = sizeCost;
+    public void setImageName(String imageName) {
+        ImageName = imageName;
     }
 
-    public String getAmount() {
-        return Amount;
+    public int getCartQuantity() {
+        return CartQuantity;
     }
 
-    public void setAmount(String amount) {
-        Amount = amount;
+    public void setCartQuantity(int cartQuantity) {
+        CartQuantity = cartQuantity;
     }
 
+    public int getMinOrderQuantity() {
+        return MinOrderQuantity;
+    }
+
+    public void setMinOrderQuantity(int minOrderQuantity) {
+        MinOrderQuantity = minOrderQuantity;
+    }
+
+    public boolean isOutOfStock() {
+        return IsOutOfStock;
+    }
+
+    public void setOutOfStock(boolean outOfStock) {
+        IsOutOfStock = outOfStock;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
+    }
 
 }
