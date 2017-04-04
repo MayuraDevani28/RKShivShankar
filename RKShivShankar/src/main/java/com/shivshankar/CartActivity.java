@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.shivshankar.ServerCall.APIs;
@@ -59,6 +61,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     CartAdapterBuyer adapter;
     ArrayList<CartItem> listArray = new ArrayList<>();
     Resources res;
+    private TextView mTv_Clear_Cart;
 
 
     @Override
@@ -138,6 +141,8 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
 
             mLl_whole = (LinearLayout) findViewById(R.id.ll_view);
             mRv_items = (RecyclerView) findViewById(R.id.rv_items);
+            mTv_Clear_Cart = (TextView) findViewById(R.id.tv_clear_cart);
+            mTv_Clear_Cart.setOnClickListener(this);
             mRv_items.setHasFixedSize(true);
 
             int i = 1;
@@ -310,6 +315,14 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 finish();
                 overridePendingTransition(0, 0);
+            }else if(view == mTv_Clear_Cart){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(commonVariables.appname);
+                builder.setMessage("Do you want to clear cart?");
+                builder.setPositiveButton("Yes", (dialog, which) ->
+                        APIs.ClearCart(this, this));
+                builder.setNegativeButton("No", null);
+                builder.show();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -363,7 +376,14 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                     setListAdapter(listArray);
                 } else if (strApiName.equalsIgnoreCase("GetOrderSummary_Suit")) {
 
+                }else if (strApiName.equalsIgnoreCase("ClearCart")) {
+                    if(jobjWhole.optInt("resInt") > 0){
+                        Toast.makeText(this,jobjWhole.optString("res"),Toast.LENGTH_SHORT).show();
+                        listArray.clear();
+                        setListAdapter(listArray);
+                    }
                 }
+
             } else {
                 setListAdapter(listArray);
             }

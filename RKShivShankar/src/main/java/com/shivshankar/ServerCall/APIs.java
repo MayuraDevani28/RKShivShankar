@@ -806,4 +806,14 @@ public class APIs {
         APIs.callAPI(activity, onresult, query);
     }
 
+    public static void ClearCart(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/ClearCart")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
 }

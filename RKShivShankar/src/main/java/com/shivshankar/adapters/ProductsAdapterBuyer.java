@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +24,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.shivshankar.ProductsActivityBuyer;
 import com.shivshankar.ProductsActivitySeller;
 import com.shivshankar.R;
+import com.shivshankar.ServerCall.APIs;
+import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonVariables;
@@ -42,6 +46,21 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
     LinearLayout mLl_add_to_cart;
     Dialog dialog;
     int val28 = 28, val5 = 5;
+    private ProductItem product;
+    private Brand item;
+    private EditText mTv_Brand;
+    private EditText mTv_Top_Fabrics;
+    private EditText mTv_Bottom_Fabrics;
+    private EditText mTv_Dupatta;
+    private EditText mTv_All_Fabrics;
+    private EditText mTv_Category;
+    private EditText mTv_Type;
+    private EditText mTv_Price;
+    private EditText mTv_Min_Qty;
+    private LinearLayout mLL_Fabrics;
+    private TextInputLayout mEdt_Dupatta;
+    private TextInputLayout mEdt_All_Fabrics;
+    private EditText mTv_Product_Code;
 
     public ProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list, LinearLayout mLl_add_to_cart) {
         this.activity = activity;
@@ -84,7 +103,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
 
                 if (view == mTv_product_info) {
 
-                    showPopup(list.get(getAdapterPosition()).getImageName());
+                    showPopup(list.get(getAdapterPosition()).getImageName(),list.get(getPosition()).getProductId());
                 } else {
                     if (product.isActive()) {
                         product.setActive(false);
@@ -155,6 +174,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         if (jobjWhole != null) {
             try {
                 String strApiName = jobjWhole.optString("api");
+
                 if (strApiName.equalsIgnoreCase("RemoveProduct_Suit")) {
                     int strresId = jobjWhole.optInt("resInt");
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -173,13 +193,59 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
                     }
                     builder.show();
                 }
+                if (strApiName.equalsIgnoreCase("GetProductDetail_Suit_Seller")) {
+                    JSONObject job = jobjWhole.optJSONObject("resData");
+                   // item = new Brand(job.optString("BrandId"), job.optString("BrandName"), job.optString("BrandLogo"));
+                    mTv_Product_Code.setText(job.optString("ProductCode"));
+                    mTv_Brand.setText( job.optString("BrandName"));
+                    mTv_Category.setText(job.optString("CategoryName"));
+                    mTv_Type.setText(job.optString("FabricType"));
+                    mTv_Price.setText(""+job.optInt("OfferPrice"));
+                    mTv_Min_Qty.setText(""+job.optInt("MinOrderQty"));
+                    if(job.optBoolean("IsAllOver")){
+                        mLL_Fabrics.setVisibility(View.GONE);
+                        mEdt_All_Fabrics.setVisibility(View.VISIBLE);
+                        mEdt_Dupatta.setVisibility(View.GONE);
+                        mTv_All_Fabrics.setText(job.optString("FabricName"));
+
+
+                    }
+                    else {
+                        mLL_Fabrics.setVisibility(View.VISIBLE);
+                        mEdt_All_Fabrics.setVisibility(View.GONE);
+                        mEdt_Dupatta.setVisibility(View.VISIBLE);
+                        mTv_Top_Fabrics.setText(job.optString("TopFabricName"));
+                        mTv_Bottom_Fabrics.setText(job.optString("BottomFabricName"));
+                        mTv_Dupatta.setText(job.optString("DupattaFabricName"));
+                    }
+                  /*  product.setBrand(item);
+                    product.setAllOver(job.optBoolean("IsAllOver"));
+                    product.setFabricId(job.optString("FabricId"));
+                    product.setFabricName(job.optString("FabricName"));
+                    product.setDupattaFabricId(job.optString("DupattaFabricId"));
+                    product.setDupattaFabricName(job.optString("DupattaFabricName"));
+                    product.setBottomFabricName(job.optString("BottomFabricId"));
+                    product.setBottomFabricName(job.optString("BottomFabricName"));
+                    product.setTopFabricId(job.optString("TopFabricId"));
+                    product.setTopFabricName(job.optString("TopFabricName"));
+                    product.setFabricType(job.optString("FabricType"));
+                    product.setCategoryId(job.optString("CategoryId"));
+                    product.setCategoryName(job.optString("CategoryName"));
+                    setData();*/
+
+
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void showPopup(String imageName) {
+    private void setData() {
+
+    }
+
+    private void showPopup(String imageName, String productId) {
         dialog = new Dialog(
                 activity, R.style.popupTheme);
         LayoutInflater inflater = (LayoutInflater) activity
@@ -195,8 +261,22 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         dialog.show();
         ImageView close = (ImageView) view.findViewById(R.id.iv_close);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
+        mTv_Brand = (EditText)view.findViewById(R.id.tv_brand_name);
+        mTv_Product_Code = (EditText)view.findViewById(R.id.tv_product_code);
+        mTv_Top_Fabrics = (EditText)view.findViewById(R.id.tv_top_fabrics);
+        mTv_Bottom_Fabrics = (EditText)view.findViewById(R.id.tv_bottom_fabrics);
+        mTv_Dupatta = (EditText)view.findViewById(R.id.tv_dupatta);
+        mEdt_Dupatta = (TextInputLayout)view.findViewById(R.id.edt_dupatta);
+        mTv_All_Fabrics = (EditText)view.findViewById(R.id.tv_all_fabrics);
+        mEdt_All_Fabrics = (TextInputLayout)view.findViewById(R.id.edt_all_fabrics);
+        mTv_Category = (EditText)view.findViewById(R.id.tv_category);
+        mTv_Type = (EditText)view.findViewById(R.id.tv_type);
+        mTv_Price = (EditText)view.findViewById(R.id.tv_price);
+        mTv_Min_Qty = (EditText)view.findViewById(R.id.tv_min_qty);
+        mLL_Fabrics = (LinearLayout)view.findViewById(R.id.ll_top_bottom_fab);
         String[] Images = {imageName};
         Glide.with(activity).load(imageName).placeholder(R.color.gray_bg).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.1f).into(imageView);
+        APIs.GetProductDetail_Suit_Seller(activity, this, productId);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
