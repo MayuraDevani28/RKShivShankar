@@ -68,7 +68,6 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
             }
             bindViews(rootView);
             mTv_title.setText("Our Brands");
-
             APIs.GetBuyerBrands(this, this, item.getBrandId(), strFabricType);
         } catch (Exception e) {
             e.printStackTrace();
@@ -298,7 +297,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
     @Override
     public void onResume() {
         try {
-            invalidateOptionsMenu();
+
             if (adapter != null)
                 adapter.notifyDataSetChanged();
 

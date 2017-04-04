@@ -64,7 +64,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
 
 
             swipeRefreshLayout.setEnabled(false);
-            setCartAndNotiCount();
+            //setCartAndNotiCount();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,7 +129,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
             if (mTv_cart_count != null && !commonMethods.isOnline(this)) {
                 Snackbar.make(mTv_cart_count, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
-            setCartAndNotiCount();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -166,7 +166,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
                     overridePendingTransition(0, 0);
                 }
             };
-
+            setCartAndNotiCount();
         } catch (Exception e) {
             e.printStackTrace();
         }

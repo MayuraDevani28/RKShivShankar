@@ -403,7 +403,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     @Override
     public void onResume() {
         try {
-            invalidateOptionsMenu();
+
             isLogedIn = AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false);
             if (adapter != null)
                 adapter.notifyDataSetChanged();
