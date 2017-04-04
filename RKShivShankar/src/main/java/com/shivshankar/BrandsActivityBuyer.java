@@ -70,6 +70,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
             mTv_title.setText("Our Brands");
 
             APIs.GetBuyerBrands(this, this, item.getBrandId(), strFabricType);
+            setCartAndNotiCount();
         } catch (Exception e) {
             e.printStackTrace();
         }

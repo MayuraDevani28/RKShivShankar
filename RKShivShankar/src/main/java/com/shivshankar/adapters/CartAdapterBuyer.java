@@ -85,8 +85,14 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     builder.setMessage("Quantity can't be 0");
                     builder.setPositiveButton("OK", null);
                     builder.show();
+                } else if (Integer.parseInt(qty) < product.getMinOrderQuantity()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle(commonVariables.appname);
+                    builder.setMessage("Minimum " + product.getMinOrderQuantity() + " quantity required");
+                    builder.setPositiveButton("OK", null);
+                    builder.show();
                 } else
-                    APIs.Update_Cart_Suit(activity, CartAdapterBuyer.this, product.getCartId(), qty);
+                    APIs.Update_Cart_Suit(activity, CartAdapterBuyer.this, product.getCartId(), qty, product.getMinOrderQuantity() + "");
             }
         }
 
@@ -171,19 +177,19 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     builder.show();
                 } else if (strApiName.equalsIgnoreCase("Update_Cart_Suit")) {
                     int strresId = jobjWhole.optInt("resInt");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jobjWhole.optString("res"));
+
                     if (strresId == 1) {
-                        builder.setPositiveButton("Ok", (dialog, which) -> {
-                            list.get(posit).setCartQuantity(jobjWhole.optJSONObject("resData").optInt("CartQuantity"));
-                            list.get(posit).setTotalAmount(jobjWhole.optJSONObject("resData").optString("TotalPrice"));
-                            notifyDataSetChanged();
-                        });
+                        list.get(posit).setCartQuantity(jobjWhole.optJSONObject("resData").optInt("CartQuantity"));
+                        list.get(posit).setTotalAmount(jobjWhole.optJSONObject("resData").optString("TotalPrice"));
+                        notifyDataSetChanged();
                     } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                        builder.setTitle(commonVariables.appname);
+                        builder.setMessage(jobjWhole.optString("res"));
                         builder.setPositiveButton("Ok", null);
+                        builder.show();
                     }
-                    builder.show();
+
                 }
                 APIs.GetOrderSummary_Suit(null, (CartActivity) activity);
             } catch (Exception e) {

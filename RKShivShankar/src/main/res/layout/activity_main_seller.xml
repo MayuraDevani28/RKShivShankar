@@ -35,8 +35,8 @@
                 android:id="@+id/ll_add_product"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:elevation="2dp"
                 android:background="@drawable/xml_round_app_color"
+                android:elevation="2dp"
                 android:gravity="center">
 
                 <ImageView
@@ -49,11 +49,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="5dp"
                 android:text="Add Product"
-                android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
         <LinearLayout

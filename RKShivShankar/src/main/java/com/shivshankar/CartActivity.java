@@ -8,11 +8,14 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -80,11 +83,27 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            APIs.GetCartList_Suit_Buyer(this, this);
-            APIs.GetOrderSummary_Suit(null, this);
+            if (AppPreferences.getPrefs().getInt(commonVariables.CART_COUNT, 0) != 0) {
+                APIs.GetCartList_Suit_Buyer(this, this);
+                APIs.GetOrderSummary_Suit(null, this);
+            } else
+                setListAdapter(listArray);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        try {
+            if (AppPreferences.getPrefs().getInt(commonVariables.CART_COUNT, 0) != 0) {
+                MenuInflater menuInflater = getMenuInflater();
+                menuInflater.inflate(R.menu.cart, menu);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -94,6 +113,16 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        } else if (id == R.id.action_clear) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(commonVariables.appname);
+            builder.setCancelable(false);
+            builder.setMessage("Do you want to clear cart?");
+            builder.setPositiveButton("Yes", (dialog, which) ->
+                    APIs.ClearCart(this, this));
+            builder.setNegativeButton("No", null);
+            builder.show();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -236,6 +265,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         try {
             if (listArray.size() == 0) {
                 mRv_items.setVisibility(View.GONE);
+                mLl_order_summary.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
                 String strMessage = "Uhh! Your Cart is Empty. Want to add now ?";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));
@@ -345,7 +375,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             if (jobjWhole != null) {
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("GetSuitCart_Buyer")) {
-
                     mLl_whole.setVisibility(View.VISIBLE);
 
                     JSONObject job = jobjWhole.optJSONObject("resData");
@@ -370,6 +399,11 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                     } else
                         mLl_shipping.setVisibility(View.GONE);
                     mTv_subtotal.setText(jo.optString("SubTotal"));
+                } else if (strApiName.equalsIgnoreCase("ClearCart")) {
+                    listArray.clear();
+                    AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, 0).apply();
+                    setListAdapter(listArray);
+                    invalidateOptionsMenu();
                 }
             } else {
                 setListAdapter(listArray);
