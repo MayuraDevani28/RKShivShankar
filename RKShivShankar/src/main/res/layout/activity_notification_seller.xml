@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -56,17 +57,55 @@
                 android:requiresFadingEdge="none"
                 android:visibility="visible" />
 
-            <TextView
-                android:id="@+id/tv_no_data_found"
+            <LinearLayout
+                android:id="@+id/ll_no_data_found"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:gravity="center_horizontal"
-                android:padding="5dp"
-                android:text="No notifications found!"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_medium"
-                android:visibility="gone" />
+                android:orientation="vertical"
+                android:padding="25dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/animation_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:minHeight="70dp"
+                        app:lottie_fileName="Mobilo/R.json"
+                        app:lottie_loop="false" />
+
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/animation_view2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="-40dp"
+                        app:lottie_fileName="Mobilo/K.json"
+                        app:lottie_loop="false" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_no_data_found"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center"
+                    android:paddingLeft="18dp"
+                    android:paddingRight="18dp"
+                    android:text="Uhh No notifications found"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_medium" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>

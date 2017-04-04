@@ -156,7 +156,7 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
             String strImageURL = item.getBrandLogo();
             if ((strImageURL != null) && (!strImageURL.equals("")))
                 Glide.with(activity).load(strImageURL).asBitmap()
-                        .placeholder(R.color.gray_bg_transparent).error(R.color.red)
+                        .placeholder(R.color.gray_bg_transparent)
                         .centerCrop().into(holder.mIv_image);
         } catch (Exception e) {
             e.printStackTrace();

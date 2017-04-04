@@ -97,7 +97,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     private void bindViews(View rootView) {
 
         try {
-            main_content.setBackgroundResource(R.color.white);
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setOnClickListener(this);
             mIv_logo_nav.setOnClickListener(this);
