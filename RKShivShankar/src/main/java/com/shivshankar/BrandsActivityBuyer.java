@@ -299,7 +299,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
     @Override
     public void onResume() {
         try {
-            invalidateOptionsMenu();
+
             if (adapter != null)
                 adapter.notifyDataSetChanged();
 
