@@ -171,7 +171,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             e.printStackTrace();
         }
     }
-
     @Override
     public void onClick(View v) {
 
@@ -179,7 +178,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             login();
         } else if (v == mIv_eye) {
             passwordVisibility(mEdtPassword);
-        } else if (v == mLl_skip) {
+        }else if (v == mLl_skip) {
             callBuyerWithoutLogin();
         } else if (v == mTv_forget) {
 
@@ -328,10 +327,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                         getActivity().finish();
                         getActivity().overridePendingTransition(0, 0);
                     } else if (resultId == 2) {
-                        SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                        editor.putString(commonVariables.KEY_USER_ID_FOR_OTP, mEdtUsername.getText().toString().trim());
-                        editor.apply();
-
                         //added by praful
                         Intent intent = new Intent(getActivity(), OTPRegisterActivity.class);
                         intent.putExtra(commonVariables.KEY_USER_TYPE, stType);
