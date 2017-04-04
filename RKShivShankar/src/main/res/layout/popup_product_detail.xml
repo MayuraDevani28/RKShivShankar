@@ -6,68 +6,71 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/xml_popup_square_box"
-        android:layout_margin="20dp">
+        android:layout_margin="20dp"
+        android:background="@drawable/xml_popup_square_box">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <ImageView
                 android:id="@+id/image_gallery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:adjustViewBounds="true"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="18dp"
-            android:orientation="horizontal"
-            android:padding="3dp">
+                android:adjustViewBounds="true" />
 
-
-
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:textColorHint="@color/text_color_hint">
+                android:layout_marginBottom="18dp"
+                android:orientation="horizontal"
+                android:padding="3dp">
 
-                <EditText
-                    android:id="@+id/tv_product_code"
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:hint="Product Code"
-                    android:editable="false"
-                    android:focusable="false"
-                    android:inputType="textCapWords"
-                    android:textSize="@dimen/text_size_small" />
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:textColorHint="@color/text_color_hint">
 
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="5dp"
-                android:textColorHint="@color/text_color_hint">
+                    <EditText
+                        android:id="@+id/tv_product_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:focusable="false"
+                        android:hint="Product Code"
+                        android:inputType="textCapWords"
+                        android:text=""
+                        android:textSize="@dimen/text_size_small" />
 
-                <EditText
-                    android:id="@+id/tv_brand_name"
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:hint="Brand Name"
-                    android:editable="false"
-                    android:focusable="false"
-                    android:inputType="textCapWords"
-                    android:textSize="@dimen/text_size_small" />
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:textColorHint="@color/text_color_hint">
 
-            </android.support.design.widget.TextInputLayout>
-</LinearLayout>
+                    <EditText
+                        android:id="@+id/tv_brand_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:focusable="false"
+                        android:hint="Brand Name"
+                        android:inputType="textCapWords"
+                        android:text=""
+                        android:textSize="@dimen/text_size_small" />
+
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ll_top_bottom_fab"
                 android:layout_width="match_parent"
@@ -75,6 +78,7 @@
                 android:layout_marginBottom="18dp"
                 android:orientation="horizontal"
                 android:padding="3dp">
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -86,11 +90,11 @@
                         android:id="@+id/tv_top_fabrics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:hint="Top Fabrics"
                         android:editable="false"
                         android:focusable="false"
+                        android:hint="Top Fabrics"
                         android:inputType="textCapWords"
+                        android:text=""
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -106,11 +110,11 @@
                         android:id="@+id/tv_bottom_fabrics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:hint="Bottom Fabrics"
                         android:editable="false"
                         android:focusable="false"
+                        android:hint="Bottom Fabrics"
                         android:inputType="textCapWords"
+                        android:text=""
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -122,6 +126,7 @@
                 android:layout_marginBottom="18dp"
                 android:orientation="horizontal"
                 android:padding="3dp">
+
                 <android.support.design.widget.TextInputLayout
 
                     android:id="@+id/edt_dupatta"
@@ -135,11 +140,11 @@
                         android:id="@+id/tv_dupatta"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:hint="Dupatta"
                         android:editable="false"
                         android:focusable="false"
+                        android:hint="Dupatta"
                         android:inputType="textCapWords"
+                        android:text=""
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -157,20 +162,22 @@
                         android:id="@+id/tv_all_fabrics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="all Fabrics"
                         android:editable="false"
                         android:focusable="false"
+                        android:hint="all Fabrics"
                         android:inputType="textCapWords"
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
                 android:orientation="horizontal"
                 android:padding="3dp">
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -182,11 +189,11 @@
                         android:id="@+id/tv_category"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:hint="Category"
                         android:editable="false"
                         android:focusable="false"
+                        android:hint="Category"
                         android:inputType="textCapWords"
+                        android:text=""
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -202,16 +209,17 @@
                         android:id="@+id/tv_type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:hint="Type"
                         android:editable="false"
                         android:focusable="false"
+                        android:hint="Type"
                         android:inputType="textCapWords"
+                        android:text=""
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -231,9 +239,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Price"
-                        android:text=""
                         android:imeOptions="actionNext"
                         android:inputType="number"
+                        android:text=""
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -250,24 +258,25 @@
                         android:id="@+id/tv_min_qty"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Min Parcel Size"
-                        android:text=""
                         android:editable="false"
                         android:focusable="false"
+                        android:hint="Min Parcel Size"
                         android:imeOptions="actionGo"
                         android:inputType="number"
+                        android:text=""
                         android:textSize="@dimen/text_size_small" />
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <ImageView
         android:id="@+id/iv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
         android:adjustViewBounds="true"
         android:padding="5dp"
         android:scaleType="fitXY"

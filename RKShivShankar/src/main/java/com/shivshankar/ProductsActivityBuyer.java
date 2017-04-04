@@ -18,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -53,6 +54,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     Boolean isLogedIn = false;
     String strCategoryIds = "", srtPriceRange = "", strFabricIds = "", strSortBy = "";
 
+    RelativeLayout mLl_rv_items;
     ProductsAdapterBuyer adapter;
     ArrayList<ProductItem> listArray = new ArrayList<ProductItem>();
     String strSearch = "", brandId = "", strFabricType = "", total = "";
@@ -118,6 +120,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             mLl_add_to_cart.setOnClickListener(this);
 
             mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
+            mLl_rv_items = (RelativeLayout) rootView.findViewById(R.id.ll_rv_items);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.gv_items);
             mRv_items.setHasFixedSize(true);
 
@@ -282,7 +285,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     private void setListAdapter(ArrayList<ProductItem> listArray) {
         try {
             if (listArray.size() == 0) {
-                mRv_items.setVisibility(View.GONE);
+                mLl_rv_items.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
                 String strMessage = "Uhh! We you have not added any product yet. Want to add now ?";
                 if (!strSearch.isEmpty())
@@ -291,7 +294,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 startAnim();
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
-                mRv_items.setVisibility(View.VISIBLE);
+                mLl_rv_items.setVisibility(View.VISIBLE);
                 mFl_whole.setVisibility(View.VISIBLE);
                 adapter = new ProductsAdapterBuyer(this, listArray, mLl_add_to_cart);
                 mRv_items.setAdapter(adapter);
@@ -450,7 +453,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                     } else {
                         if (listArray.size() != 0) {
                             mLl_no_data_found.setVisibility(View.GONE);
-                            mRv_items.setVisibility(View.VISIBLE);
+                            mLl_rv_items.setVisibility(View.VISIBLE);
                             if (isLogedIn && adapter != null)
                                 adapter.notifyDataSetChanged();
                         }
@@ -462,6 +465,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                     int resultId = jobjWhole.optInt("resInt");
                     String result = jobjWhole.optString("res");
                     if (resultId == 1) {
+                        AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, jobjWhole.optInt("cartCount")).apply();
                         Intent intent = new Intent(this, CartActivity.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);

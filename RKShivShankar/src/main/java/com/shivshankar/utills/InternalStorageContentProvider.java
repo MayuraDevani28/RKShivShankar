@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class InternalStorageContentProvider extends ContentProvider {
     public static final Uri CONTENT_URI = Uri
             .parse("content://eu.janmuller.android.simplecropimage.example/");
-    public static final String TEMP_PHOTO_FILE_NAME = "temp_photo.jpg";
+    public static final String TEMP_PHOTO_FILE_NAME = ".photo.jpg";
     private static final HashMap<String, String> MIME_TYPES = new HashMap<String, String>();
     private static final String IMAGE_DIRECTORY_NAME = "Hello Camera";
 

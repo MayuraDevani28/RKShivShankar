@@ -28,8 +28,7 @@
             <include layout="@layout/toolbar_main" />
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/view_cart" />
-
+        <include layout="@layout/view_order_form" />
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView

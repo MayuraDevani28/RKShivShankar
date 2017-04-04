@@ -64,7 +64,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
 
 
             swipeRefreshLayout.setEnabled(false);
-            setCartAndNotiCount();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,7 +169,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
                     overridePendingTransition(0, 0);
                 }
             };
-
+            setCartAndNotiCount();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -241,10 +241,6 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         }
     }
 
-    private void setData() {
-
-    }
-
     private void showPopup(String imageName, String productId) {
         dialog = new Dialog(
                 activity, R.style.popupTheme);
@@ -275,7 +271,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         mTv_Min_Qty = (EditText)view.findViewById(R.id.tv_min_qty);
         mLL_Fabrics = (LinearLayout)view.findViewById(R.id.ll_top_bottom_fab);
         String[] Images = {imageName};
-        Glide.with(activity).load(imageName).placeholder(R.color.gray_bg).diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.no_img).thumbnail(0.1f).into(imageView);
+        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(imageView);
         APIs.GetProductDetail_Suit_Seller(activity, this, productId);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
