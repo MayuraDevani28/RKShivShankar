@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,13 +43,9 @@ import java.util.ArrayList;
  * Created by Mayura on 4/1/2017.
  */
 
-public class OrderFormActivity extends AppCompatActivity implements View.OnClickListener, OnResult {
+public class OrderFormActivity extends AppCompatActivity implements View.OnClickListener, OnResult, CompoundButton.OnCheckedChangeListener {
 
-    TextView mTv_no_data_found;
-    Button mBtn_add_now;
-    private LinearLayout mLl_no_data_found, mLl_whole_Cart;
-    RecyclerView mRv_items;
-    LottieAnimationView animationView2, animationView;
+
 
     private LinearLayout mLl_order_summary, mLl_confirm_order, mLl_shipping;
     private TextView mTv_subtotal, mTv_shipping, mTv_grand_total;
@@ -61,6 +60,18 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
     CartAdapterBuyer adapter;
     ArrayList<CartItem> listArray = new ArrayList<>();
     Resources res;
+    private CheckBox mCB_Defferent_Address;
+    private LinearLayout mll_Billing_Title;
+    private LinearLayout mll_Billing;
+    private EditText mEdt_FullName_s;
+    private EditText mEdt_Email_s;
+    private EditText mEdt_Mobile_s;
+    private EditText mEdt_Address1_s;
+    private EditText mEdt_Address2_s;
+    private EditText mEdt_City_s;
+    private EditText mEdt_State_s;
+    private EditText mEdt_Country_s;
+    private EditText mEdt_Pincode_s;
 
 
     @Override
@@ -80,10 +91,8 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             if (AppPreferences.getPrefs().getInt(commonVariables.CART_COUNT, 0) != 0) {
-                APIs.GetCartList_Suit_Buyer(this, this);
                 APIs.GetOrderSummary_Suit(null, this);
-            } else
-                setListAdapter(listArray);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,6 +128,22 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
             mTv_logout = (TextView) findViewById(R.id.tv_logout);
             mLl_close = (LinearLayout) findViewById(R.id.ll_close);
 
+            mll_Billing_Title = (LinearLayout)findViewById(R.id.ll_billing_title);
+            mll_Billing = (LinearLayout)findViewById(R.id.ll_billing);
+
+            mEdt_FullName_s = (EditText)findViewById(R.id.edt_full_name_shipping);
+            mEdt_Email_s = (EditText)findViewById(R.id.edt_email_shipping);
+            mEdt_Mobile_s = (EditText)findViewById(R.id.edt_mobile_shipping);
+            mEdt_Address1_s = (EditText)findViewById(R.id.edt_address1_shipping);
+            mEdt_Address2_s = (EditText)findViewById(R.id.edt_address2_shipping);
+            mEdt_City_s = (EditText)findViewById(R.id.edt_address_city_shipping);
+            mEdt_State_s = (EditText)findViewById(R.id.edt_address_state_shipping);
+            mEdt_Country_s = (EditText)findViewById(R.id.sp_country_shipping);
+            mEdt_Pincode_s = (EditText)findViewById(R.id.edt_pin_code_shipping);
+
+            mCB_Defferent_Address = (CheckBox) findViewById(R.id.cb_same_address);
+            mCB_Defferent_Address.setOnCheckedChangeListener(this);
+
             mIv_logo_nav.setOnClickListener(this);
             mIv_logo_toolbar.setOnClickListener(this);
             mTv_username.setOnClickListener(this);
@@ -132,26 +157,9 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
             mNav_contact_us.setOnClickListener(this);
 
 
-            mLl_whole_Cart = (LinearLayout) findViewById(R.id.ll_view);
-            mLl_whole_Cart.setVisibility(View.GONE);
-            mRv_items = (RecyclerView) findViewById(R.id.rv_items);
-            mRv_items.setHasFixedSize(true);
-
-            int i = 1;
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                i = 2;
-            }
-            GridLayoutManager mLayoutManager = new GridLayoutManager(this, i);
-            mRv_items.setLayoutManager(mLayoutManager);
 
 
-            mBtn_add_now = (Button) findViewById(R.id.btn_add_now);
-            mBtn_add_now.setOnClickListener(this);
-            mTv_no_data_found = (TextView) findViewById(R.id.tv_no_data_found);
 
-            mLl_no_data_found = (LinearLayout) findViewById(R.id.ll_no_data_found);
-            animationView = (LottieAnimationView) findViewById(R.id.animation_view);
-            animationView2 = (LottieAnimationView) findViewById(R.id.animation_view2);
 
             mLl_order_summary = (LinearLayout) findViewById(R.id.ll_order_summary);
             mTv_subtotal = (TextView) findViewById(R.id.tv_subtotal);
@@ -166,54 +174,7 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void startAnim() {
-        animationView.setProgress(0f);
-        animationView.playAnimation();
-        animationView.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationView2.setProgress(0f);
-                animationView2.playAnimation();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-        animationView2.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationView.setProgress(0f);
-                animationView.playAnimation();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-    }
 
     @Override
     public void onPause() {
@@ -228,32 +189,12 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
 
     public void finishAnim() {
         try {
-            animationView.cancelAnimation();
-            animationView2.cancelAnimation();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setListAdapter(ArrayList<CartItem> listArray) {
-        try {
-            if (listArray.size() == 0) {
-                mRv_items.setVisibility(View.GONE);
-                mLl_order_summary.setVisibility(View.GONE);
-                mLl_no_data_found.setVisibility(View.VISIBLE);
-                String strMessage = "Uhh! Your Cart is Empty. Want to add now ?";
-                mTv_no_data_found.setText((Html.fromHtml(strMessage)));
-                startAnim();
-            } else {
-                mLl_no_data_found.setVisibility(View.GONE);
-                mRv_items.setVisibility(View.VISIBLE);
-                adapter = new CartAdapterBuyer(this, listArray);
-                mRv_items.setAdapter(adapter);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -309,17 +250,11 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
                 } else {
                     commonMethods.logout(this, true);
                 }
-            } else if (view == mBtn_add_now) {
-                Intent intent = new Intent(this, SplashActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }  else if (view == mLl_confirm_order) {
+               /* Intent intent = new Intent(this, OrderFormActivity.class);
                 startActivity(intent);
                 finish();
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_confirm_order) {
-                Intent intent = new Intent(this, OrderFormActivity.class);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(0, 0);
+                overridePendingTransition(0, 0);*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -338,9 +273,7 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
                 if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
                     mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
             }
-            if (mLl_no_data_found.getVisibility() == View.VISIBLE && animationView != null) {
-                startAnim();
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -364,8 +297,6 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
                         mLl_shipping.setVisibility(View.GONE);
                     mTv_subtotal.setText(jo.optString("SubTotal"));
                 }
-            } else {
-                setListAdapter(listArray);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,5 +304,16 @@ public class OrderFormActivity extends AppCompatActivity implements View.OnClick
     }
 
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked){
+            mll_Billing.setVisibility(View.VISIBLE);
+            mll_Billing_Title.setVisibility(View.VISIBLE);
+        }
+        else {
+            mll_Billing.setVisibility(View.GONE);
+            mll_Billing_Title.setVisibility(View.GONE);
+        }
+    }
 }
 

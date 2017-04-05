@@ -816,4 +816,32 @@ public class APIs {
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
     }
+    public static void AddUpdateOrder_Suit(AppCompatActivity activity, OnResult onresult, JSONArray jarray) {
+
+        String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/AddProductToCart_Suit_Buyer";
+
+        try {
+            JSONObject jo = new JSONObject();
+            jo.put("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("custOrderId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("DeviceType", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("DeviceUUID", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("ModelName", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("OSVersion", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("GCMRegistraionNo", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("AppStoreRegistraionNo", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("bFullName", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("bAddress1", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("bAddress2", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+
+            JSONObject jobj = new JSONObject();
+            jobj.put("mdlOrder", jo);
+
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("mdlOrder", jo.toString());
+            APIs.callPostAPI(activity, onresult, query, params, jobj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
