@@ -1,21 +1,14 @@
-package com.shivshankar.utills;
+package com.shivshankar;
 
 import android.content.Context;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.integration.okhttp3.OkHttpGlideModule;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.module.GlideModule;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +20,8 @@ import okhttp3.OkHttpClient;
 public class MyGlideModule extends OkHttpGlideModule {
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
-        // stub
+        // Apply options to the builder here.
+        builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
     }
 
     @Override
@@ -35,9 +29,9 @@ public class MyGlideModule extends OkHttpGlideModule {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         // set your timeout here
-        builder.readTimeout(60, TimeUnit.SECONDS);
-        builder.writeTimeout(60, TimeUnit.SECONDS);
-        builder.connectTimeout(60, TimeUnit.SECONDS);
+        builder.readTimeout(5, TimeUnit.MINUTES);
+        builder.writeTimeout(5, TimeUnit.MINUTES);
+        builder.connectTimeout(5, TimeUnit.MINUTES);
 
         glide.register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(builder.build()));
     }

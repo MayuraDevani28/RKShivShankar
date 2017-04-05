@@ -14,6 +14,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -125,27 +126,22 @@
             android:name=".CMSDisplayActivityBuyer"
             android:label="@string/title_activity_customer_service_buyer"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".CMSCallandDisplayActivityBuyer"
             android:label="@string/title_activity_customer_service_buyer"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".BrandsActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ProductsActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".FilterActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".OTPRegisterActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -160,7 +156,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".viewpager.ViewPagerActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -169,10 +164,9 @@
             android:name=".OrderFormActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <meta-data
-            android:name="com.shivshankar.utills.MyGlideModule"
-            android:value="OkHttpGlideModule" />
+            android:name="com.shivshankar.MyGlideModule"
+            android:value="GlideModule" />
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:gesture-image="http://schemas.polites.com/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,7 +7,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/splashscreen_bg"/>
+        android:src="@drawable/splashscreen_bg" />
 
     <ImageView
         android:id="@+id/pbar_product"
@@ -25,8 +24,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:src="@drawable/xml_side_nav_bar"
-        app:backgroundTint="@color/red"
+        android:src="@drawable/ic_file_download"
+        app:backgroundTint="@color/colorPrimary"
         app:fabSize="mini" />
 
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.shivshankar.ProductsActivityBuyer;
 import com.shivshankar.ProductsActivitySeller;
@@ -102,8 +104,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
                 ProductItem product = list.get(posit);
 
                 if (view == mTv_product_info) {
-
-                    showPopup(list.get(getAdapterPosition()).getImageName(),list.get(getPosition()).getProductId());
+                    showPopup(list.get(getAdapterPosition()).getImageName(), list.get(getPosition()).getProductId());
                 } else {
                     if (product.isActive()) {
                         product.setActive(false);
@@ -130,9 +131,43 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
             holder.mTv_product_name.setSelected(true);
             holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
             String strImageURL = item.getImageName();
+            Log.v("TAGRK", "ImageURL: " + strImageURL);
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL).dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(holder.mIv_product_image);
+
+                Glide.with(activity)
+                        .load(strImageURL)
+                        .asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).priority(Priority.IMMEDIATE).dontAnimate().thumbnail(0.1f).override(200, 200)
+                        .into(holder.mIv_product_image);
+
+//                Glide.with(activity).load(strImageURL).asBitmap().listener(new RequestListener<String, Bitmap>() {
+//                    @Override
+//                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+//                        e.printStackTrace();
+//                    Log.v("TAGRK", "Error: " + e.toString());
+//                    Log.v("TAGRK", "Model: " + model);
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                        return false;
+//                    }
+//                }).into(holder.mIv_product_image);
             }
+//            .listener(new RequestListener<String, GlideDrawable>() {
+//                @Override
+//                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+//                    e.printStackTrace();
+//                    Log.v("TAGRK", "Error: " + e.toString());
+//                    Log.v("TAGRK", "Model: " + model);
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                    return false;
+//                }
+//            })
             if (item.isActive())//checked
                 holder.mRv_checked.setVisibility(View.VISIBLE);
             else
@@ -195,22 +230,21 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
                 }
                 if (strApiName.equalsIgnoreCase("GetProductDetail_Suit_Seller")) {
                     JSONObject job = jobjWhole.optJSONObject("resData");
-                   // item = new Brand(job.optString("BrandId"), job.optString("BrandName"), job.optString("BrandLogo"));
+                    // item = new Brand(job.optString("BrandId"), job.optString("BrandName"), job.optString("BrandLogo"));
                     mTv_Product_Code.setText(job.optString("ProductCode"));
-                    mTv_Brand.setText( job.optString("BrandName"));
+                    mTv_Brand.setText(job.optString("BrandName"));
                     mTv_Category.setText(job.optString("CategoryName"));
                     mTv_Type.setText(job.optString("FabricType"));
-                    mTv_Price.setText(""+job.optInt("OfferPrice"));
-                    mTv_Min_Qty.setText(""+job.optInt("MinOrderQty"));
-                    if(job.optBoolean("IsAllOver")){
+                    mTv_Price.setText("" + job.optInt("OfferPrice"));
+                    mTv_Min_Qty.setText("" + job.optInt("MinOrderQty"));
+                    if (job.optBoolean("IsAllOver")) {
                         mLL_Fabrics.setVisibility(View.GONE);
                         mEdt_All_Fabrics.setVisibility(View.VISIBLE);
                         mEdt_Dupatta.setVisibility(View.GONE);
                         mTv_All_Fabrics.setText(job.optString("FabricName"));
 
 
-                    }
-                    else {
+                    } else {
                         mLL_Fabrics.setVisibility(View.VISIBLE);
                         mEdt_All_Fabrics.setVisibility(View.GONE);
                         mEdt_Dupatta.setVisibility(View.VISIBLE);
@@ -257,19 +291,19 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         dialog.show();
         ImageView close = (ImageView) view.findViewById(R.id.iv_close);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
-        mTv_Brand = (EditText)view.findViewById(R.id.tv_brand_name);
-        mTv_Product_Code = (EditText)view.findViewById(R.id.tv_product_code);
-        mTv_Top_Fabrics = (EditText)view.findViewById(R.id.tv_top_fabrics);
-        mTv_Bottom_Fabrics = (EditText)view.findViewById(R.id.tv_bottom_fabrics);
-        mTv_Dupatta = (EditText)view.findViewById(R.id.tv_dupatta);
-        mEdt_Dupatta = (TextInputLayout)view.findViewById(R.id.edt_dupatta);
-        mTv_All_Fabrics = (EditText)view.findViewById(R.id.tv_all_fabrics);
-        mEdt_All_Fabrics = (TextInputLayout)view.findViewById(R.id.edt_all_fabrics);
-        mTv_Category = (EditText)view.findViewById(R.id.tv_category);
-        mTv_Type = (EditText)view.findViewById(R.id.tv_type);
-        mTv_Price = (EditText)view.findViewById(R.id.tv_price);
-        mTv_Min_Qty = (EditText)view.findViewById(R.id.tv_min_qty);
-        mLL_Fabrics = (LinearLayout)view.findViewById(R.id.ll_top_bottom_fab);
+        mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
+        mTv_Product_Code = (EditText) view.findViewById(R.id.tv_product_code);
+        mTv_Top_Fabrics = (EditText) view.findViewById(R.id.tv_top_fabrics);
+        mTv_Bottom_Fabrics = (EditText) view.findViewById(R.id.tv_bottom_fabrics);
+        mTv_Dupatta = (EditText) view.findViewById(R.id.tv_dupatta);
+        mEdt_Dupatta = (TextInputLayout) view.findViewById(R.id.edt_dupatta);
+        mTv_All_Fabrics = (EditText) view.findViewById(R.id.tv_all_fabrics);
+        mEdt_All_Fabrics = (TextInputLayout) view.findViewById(R.id.edt_all_fabrics);
+        mTv_Category = (EditText) view.findViewById(R.id.tv_category);
+        mTv_Type = (EditText) view.findViewById(R.id.tv_type);
+        mTv_Price = (EditText) view.findViewById(R.id.tv_price);
+        mTv_Min_Qty = (EditText) view.findViewById(R.id.tv_min_qty);
+        mLL_Fabrics = (LinearLayout) view.findViewById(R.id.ll_top_bottom_fab);
         String[] Images = {imageName};
         Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(imageView);
         APIs.GetProductDetail_Suit_Seller(activity, this, productId);
