@@ -8,14 +8,11 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -35,7 +32,6 @@ import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -44,11 +40,11 @@ import java.util.ArrayList;
  * Created by Mayura on 4/1/2017.
  */
 
-public class CartActivity extends AppCompatActivity implements View.OnClickListener, OnResult {
+public class OrderFormActivity extends AppCompatActivity implements View.OnClickListener, OnResult {
 
     TextView mTv_no_data_found;
     Button mBtn_add_now;
-    private LinearLayout mLl_no_data_found, mLl_whole;
+    private LinearLayout mLl_no_data_found, mLl_whole_Cart;
     RecyclerView mRv_items;
     LottieAnimationView animationView2, animationView;
 
@@ -71,7 +67,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        setContentView(R.layout.activity_cart);
+        setContentView(R.layout.activity_order_form);
 
         try {
             res = getResources();
@@ -93,18 +89,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        try {
-            if (AppPreferences.getPrefs().getInt(commonVariables.CART_COUNT, 0) != 0) {
-                MenuInflater menuInflater = getMenuInflater();
-                menuInflater.inflate(R.menu.cart, menu);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -113,18 +97,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (id == R.id.action_clear) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(commonVariables.appname);
-            builder.setCancelable(false);
-            builder.setMessage("Do you want to clear cart?");
-            builder.setPositiveButton("Yes", (dialog, which) ->
-                    APIs.ClearCart(this, this));
-            builder.setNegativeButton("No", null);
-            builder.show();
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -159,7 +132,8 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
             mNav_contact_us.setOnClickListener(this);
 
 
-            mLl_whole = (LinearLayout) findViewById(R.id.ll_view);
+            mLl_whole_Cart = (LinearLayout) findViewById(R.id.ll_view);
+            mLl_whole_Cart.setVisibility(View.GONE);
             mRv_items = (RecyclerView) findViewById(R.id.rv_items);
             mRv_items.setHasFixedSize(true);
 
@@ -341,7 +315,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 finish();
                 overridePendingTransition(0, 0);
-            }else if (view == mLl_confirm_order) {
+            } else if (view == mLl_confirm_order) {
                 Intent intent = new Intent(this, OrderFormActivity.class);
                 startActivity(intent);
                 finish();
@@ -379,22 +353,7 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
         try {
             if (jobjWhole != null) {
                 String strApiName = jobjWhole.optString("api");
-                if (strApiName.equalsIgnoreCase("GetSuitCart_Buyer")) {
-                    mLl_whole.setVisibility(View.VISIBLE);
-
-                    JSONObject job = jobjWhole.optJSONObject("resData");
-                    JSONArray jarray = job.optJSONArray("lstCartItems");
-                    if (jarray != null) {
-                        for (int i = 0; i < jarray.length(); i++) {
-                            JSONObject jObjItem = jarray.optJSONObject(i);
-                            listArray.add(new CartItem(jObjItem.optString("CartId"), jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("productName"), jObjItem.optString("BrandName"), jObjItem.optString("MarketPrice"), jObjItem.optString("OfferPrice"), jObjItem.optString("TotalPrice"), jObjItem.optString("DiscountPercent"), jObjItem.optString("ImageName"), jObjItem.optInt("CartQuantity"), jObjItem.optInt("MinOrderQuantity"), jObjItem.optBoolean("IsOutOfStock"), false));
-                        }
-                    }
-                    AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, listArray.size()).apply();
-                    if (jarray == null || jarray.length() == 0)
-                        listArray.clear();
-                    setListAdapter(listArray);
-                } else if (strApiName.equalsIgnoreCase("GetOrderSummary_Suit")) {
+                if (strApiName.equalsIgnoreCase("GetOrderSummary_Suit")) {
                     mLl_order_summary.setVisibility(View.VISIBLE);
                     JSONObject jo = jobjWhole.optJSONObject("resData");
                     mTv_grand_total.setText(jo.optString("TotalAmount"));
@@ -404,11 +363,6 @@ public class CartActivity extends AppCompatActivity implements View.OnClickListe
                     } else
                         mLl_shipping.setVisibility(View.GONE);
                     mTv_subtotal.setText(jo.optString("SubTotal"));
-                } else if (strApiName.equalsIgnoreCase("ClearCart")) {
-                    listArray.clear();
-                    AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, 0).apply();
-                    setListAdapter(listArray);
-                    invalidateOptionsMenu();
                 }
             } else {
                 setListAdapter(listArray);

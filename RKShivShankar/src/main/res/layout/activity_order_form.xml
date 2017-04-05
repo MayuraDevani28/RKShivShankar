@@ -28,18 +28,7 @@
             <include layout="@layout/toolbar_main" />
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <FrameLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        <include layout="@layout/view_order_form" />
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
@@ -56,16 +45,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="100dp"
                 android:background="@color/primary_transparent_nav"
                 android:gravity="bottom"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="40dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-            <ImageView
+                <ImageView
                     android:id="@+id/iv_logo_nav"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
@@ -310,3 +298,5 @@
         </LinearLayout>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
+
+

@@ -157,38 +157,35 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("RemoveProduct_Suit")) {
                     int strresId = jobjWhole.optInt("resInt");
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jobjWhole.optString("res"));
+
                     if (strresId == 1) {
-                        builder.setPositiveButton("Ok", (dialog, which) -> {
-                            list.remove(posit);
-                            if (list.size() == 0) {
-                                ((ProductsActivitySeller) activity).setListAdapter(list);
-                            } else
-                                notifyDataSetChanged();
-                        });
+                        list.remove(posit);
+                        if (list.size() == 0) {
+                            ((ProductsActivitySeller) activity).setListAdapter(list);
+                        } else
+                            notifyDataSetChanged();
                     } else {
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
+                        builder.setTitle(commonVariables.appname);
+                        builder.setMessage(jobjWhole.optString("res"));
                         builder.setPositiveButton("Ok", null);
+                        builder.show();
                     }
-                    builder.show();
+
                 }
                 if (strApiName.equalsIgnoreCase("ProductActiveInactive")) {
                     int strresId = jobjWhole.optInt("resInt");
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jobjWhole.optString("res"));
                     if (strresId == 1) {
-                        builder.setPositiveButton("Ok", (dialog, which) -> {
-                            list.set(posit, new ProductItem(list.get(posit).getProductId(), list.get(posit).getProductCode(), list.get(posit).getOfferPrice(), list.get(posit).getImageName(), "", "", "", "", "", "", "", "", "", "", "", "", "", list.get(posit).getMinOrderQty(), false, false, null, isActive));
-                            // ((ProductsActivitySeller) activity).setListAdapter(list);
-                            notifyDataSetChanged();
-
-                        });
+                        list.set(posit, new ProductItem(list.get(posit).getProductId(), list.get(posit).getProductCode(), list.get(posit).getOfferPrice(), list.get(posit).getImageName(), "", "", "", "", "", "", "", "", "", "", "", "", "", list.get(posit).getMinOrderQty(), false, false, null, isActive));
+                        notifyDataSetChanged();
                     } else {
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
+                        builder.setTitle(commonVariables.appname);
+                        builder.setMessage(jobjWhole.optString("res"));
                         builder.setPositiveButton("Ok", null);
+                        builder.show();
                     }
-                    builder.show();
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();

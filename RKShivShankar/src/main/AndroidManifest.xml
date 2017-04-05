@@ -165,6 +165,10 @@
             android:name=".viewpager.ViewPagerActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OrderFormActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.shivshankar.utills.MyGlideModule"

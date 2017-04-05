@@ -327,9 +327,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                         getActivity().finish();
                         getActivity().overridePendingTransition(0, 0);
                     } else if (resultId == 2) {
-                        SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                        editor.putString(commonVariables.KEY_USER_ID_FOR_OTP, mEdtUsername.getText().toString().trim());
-                        editor.apply();
                         //added by praful
                         Intent intent = new Intent(getActivity(), OTPRegisterActivity.class);
                         intent.putExtra(commonVariables.KEY_USER_TYPE, stType);

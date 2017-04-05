@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -50,6 +51,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     private ImageView mIv_filer;
     LottieAnimationView animationView2, animationView;
 
+    RelativeLayout mLl_rv_items;
     private LinearLayout mLl_header;
     private ImageView mIv_down;
     private LinearLayout mLl_header_views;
@@ -74,7 +76,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
 
         try {
@@ -114,6 +116,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
             mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
             mLl_header_whole = (LinearLayout) rootView.findViewById(R.id.ll_header_whole);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.gv_items);
+            mLl_rv_items = (RelativeLayout) rootView.findViewById(R.id.ll_rv_items);
             mRv_items.setHasFixedSize(true);
 //            mRv_items.setNestedScrollingEnabled(false);
 
@@ -256,7 +259,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     public void setListAdapter(ArrayList<ProductItem> listArray) {
         try {
             if (listArray.size() == 0) {
-                mRv_items.setVisibility(View.GONE);
+                mLl_rv_items.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
                 String strMessage = "Uhh! We you have not added any product yet. Want to add now ?";
                 if (!strSearch.isEmpty())
@@ -265,9 +268,11 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 startAnim();
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
-                mRv_items.setVisibility(View.VISIBLE);
+                mLl_rv_items.setVisibility(View.VISIBLE);
                 adapter = new ProductsAdapterSeller(this, listArray);
                 mRv_items.setAdapter(adapter);
+                mTv_count_items.setVisibility(View.VISIBLE);
+                mTv_count_items.setText(" (" + total + " products)");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -313,7 +318,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this,true);
+                commonMethods.logout(this, true);
             } else if (view == mIv_close) {
                 Intent output = new Intent();
                 setResult(RESULT_OK, output);
@@ -325,14 +330,10 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mTv_go) {
-                String code = mEdt_product_code.getText().toString().trim();
-                if (code.isEmpty() && strCategory.isEmpty()) {
-                } else {
-                    listArray.clear();
-                    strSearch = mEdt_product_code.getText().toString().trim();
-                    pageNo = 1;
-                    APIs.GetProductList_Suit_Seller(this, this, strCategory, pageNo, strSearch);
-                }
+                strSearch = mEdt_product_code.getText().toString().trim();
+                listArray.clear();
+                pageNo = 1;
+                APIs.GetProductList_Suit_Seller(this, this, strCategory, pageNo, strSearch);
             } else if (view == mIv_filer) {
                 if (mLl_header_whole.getVisibility() == View.VISIBLE)
                     mLl_header_whole.setVisibility(View.GONE);
@@ -399,7 +400,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                     if (jarray != null) {
                         for (int i = 0; i < jarray.length(); i++) {
                             JSONObject jObjItem = jarray.optJSONObject(i);
-                            listArray.add(new ProductItem(jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("OfferPrice"), jObjItem.optString("ImageName"), "", "", "", "", "", "", "", "", "", "", "", "", "", jObjItem.optInt("MinOrderQty"), false, false, null,jObjItem.optBoolean("IsActive")));
+                            listArray.add(new ProductItem(jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("OfferPrice"), jObjItem.optString("ImageName"), "", "", "", "", "", "", "", "", "", "", "", "", "", jObjItem.optInt("MinOrderQty"), false, false, null, jObjItem.optBoolean("IsActive")));
                         }
                     }
                     if (pageNo == 1) {
@@ -409,7 +410,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                     } else {
                         if (listArray.size() != 0) {
                             mLl_no_data_found.setVisibility(View.GONE);
-                            mRv_items.setVisibility(View.VISIBLE);
+                            mLl_rv_items.setVisibility(View.VISIBLE);
                             if (adapter != null)
                                 adapter.notifyDataSetChanged();
                         }

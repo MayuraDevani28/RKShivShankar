@@ -783,11 +783,12 @@ public class APIs {
     }
 
 
-    public static void Update_Cart_Suit(AppCompatActivity activity, OnResult onresult, String cartId, String qty) {
+    public static void Update_Cart_Suit(AppCompatActivity activity, OnResult onresult, String cartId, String qty, String minQty) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/Update_Cart_Suit")
                 .appendQueryParameter("CartId", cartId)
-                .appendQueryParameter("Qty", qty)
+                .appendQueryParameter("newQty", qty)
+                .appendQueryParameter("MinOdrQty", minQty)
                 .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
                 .build();
 
@@ -815,5 +816,4 @@ public class APIs {
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
     }
-
 }

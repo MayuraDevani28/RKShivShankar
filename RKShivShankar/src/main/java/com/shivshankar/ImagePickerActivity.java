@@ -47,7 +47,7 @@ import static com.shivshankar.utills.commonVariables.REQUEST_CODE_GALLERY;
 
 @SuppressLint("NewApi")
 public class ImagePickerActivity extends Activity {
-    public static final String TEMP_PHOTO_FILE_NAME = "temp_photo.jpg";
+    public static final String TEMP_PHOTO_FILE_NAME = ".photo.jpg";
     static File mFileTemp;
     TextView mTv_title;
     String[] permissions = new String[]{
