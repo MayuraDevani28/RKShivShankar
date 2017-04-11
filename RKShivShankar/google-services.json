@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "204457524093",
+    "firebase_url": "https://shivshankar-964db.firebaseio.com",
+    "project_id": "shivshankar-964db",
+    "storage_bucket": "shivshankar-964db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204457524093:android:9b6cc7dd2ecaec33",
+        "android_client_info": {
+          "package_name": "com.shivshankar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "204457524093-olnqvcdf7lsig18nqfht0pnh3e9a4krq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shivshankar",
+            "certificate_hash": "9c117beff503a634477eb8ec530dace221822d8f"
+          }
+        },
+        {
+          "client_id": "204457524093-2khrj9ln7tpjkpujqb278gucc8halk1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPosiIEUJzb_kaQG_jYQBAjgBD0yiSEsQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204457524093-2khrj9ln7tpjkpujqb278gucc8halk1i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
