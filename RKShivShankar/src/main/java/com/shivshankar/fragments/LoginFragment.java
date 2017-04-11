@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -51,6 +52,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
 
     private Button btnLogin;
     public EditText mEdtUsername, mEdtPassword;
+    public TextInputLayout mTiUsername, mTiPassword;
     TextView mTv_forget;
     LinearLayout mLl_skip;
     private String strUserId, stPassword;
@@ -79,6 +81,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
     private void init(View v) {
         mEdtUsername = (EditText) v.findViewById(R.id.edt_username);
         mEdtPassword = (EditText) v.findViewById(R.id.edt_password);
+        mTiUsername = (TextInputLayout) v.findViewById(R.id.ti_username);
+        mTiPassword = (TextInputLayout) v.findViewById(R.id.ti_password);
         mEdtPassword.setOnEditorActionListener((v1, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_GO || actionId == EditorInfo.IME_ACTION_DONE) {
                 login();
@@ -115,8 +119,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                mEdtUsername.setError(null);
-                mEdtPassword.setError(null);
+                mTiUsername.setError(null);
+                mTiPassword.setError(null);
             }
 
             @Override
@@ -269,15 +273,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
         AppPreferences.getPrefs().edit().putString(commonVariables.KEY_CACHE_EMAIL, strUserId).apply();
 
         if (Validation.isEmptyEdittext(mEdtUsername) && Validation.isEmptyEdittext(mEdtPassword)) {
-            mEdtUsername.setError("Enter Username");
+            mTiUsername.setError("Enter Username");
             mEdtUsername.requestFocus();
-            mEdtPassword.setError("Enter Password");
+            mTiPassword.setError("Enter Password");
         } else if (Validation.isEmptyEdittext(mEdtUsername)) {
             mEdtUsername.requestFocus();
-            mEdtUsername.setError("Enter Username");
+            mTiUsername.setError("Enter Username");
         } else if (Validation.isEmptyEdittext(mEdtPassword)) {
             mEdtPassword.requestFocus();
-            mEdtPassword.setError("Enter Password");
+            mTiPassword.setError("Enter Password");
         } else {
             String strModelName = Build.MODEL;
             String strOSVersion = Build.VERSION.RELEASE;

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -43,6 +44,7 @@ import java.io.File;
 public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements View.OnClickListener, OnResultString {
     ImageView mIv_imageView, mIv_change_image;
     EditText mEdt_brand_name;
+    TextInputLayout mTi_brand_name;
     TextView mBtn_submit, mTv_title;
     Bitmap bmp;
 
@@ -118,6 +120,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             mIv_imageView = (ImageView) rootView.findViewById(R.id.iv_effectImg);
             mIv_change_image = (ImageView) rootView.findViewById(R.id.iv_change_image);
             mEdt_brand_name = (EditText) rootView.findViewById(R.id.edt_brand_name);
+            mTi_brand_name = (TextInputLayout) rootView.findViewById(R.id.ti_brand_name);
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mBtn_submit = (TextView) rootView.findViewById(R.id.btn_submit);
 
@@ -219,7 +222,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                     file = ImagePickerActivity.mFileTemp;
                 String strBrandName = mEdt_brand_name.getText().toString().trim();
                 if (strBrandName.isEmpty()) {
-                    mEdt_brand_name.setError("Brand name required");
+                    mTi_brand_name.setError("Brand name required");
                 } else if (file == null) {
                     if (mIv_imageView.getDrawable() == null) {
                         AlertDialogManager.showDialog(this, "Please select brand logo", null);

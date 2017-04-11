@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
@@ -55,9 +55,11 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
 
     private TextView mTv_subtotal, mTv_shipping, mTv_grand_total;
     private EditText mEdt_full_name_shipping, mEdt_mobile_shipping, mEdt_address1_shipping, mEdt_address2_shipping, mEdt_address_city_shipping, mEdt_address_state_shipping, mSp_country_shipping, mEdt_pin_code_shipping;
+    private TextInputLayout mTi_full_name_shipping, mTi_mobile_shipping, mTi_address1_shipping, mTi_address2_shipping, mTi_address_city_shipping, mTi_address_state_shipping, mTi_country_shipping, mTi_pin_code_shipping;
 
     private CheckBox mCB_Different_Address;
     private EditText mEdt_full_name_billing, mEdt_mobile_billing, mEdt_address1_billing, mEdt_address2_billing, mEdt_address_city_billing, mEdt_address_state_billing, mSp_country_billing, mEdt_pin_code_billing, mEdt_note;
+    private TextInputLayout mTi_full_name_billing, mTi_mobile_billing, mTi_address1_billing, mTi_address2_billing, mTi_address_city_billing, mTi_address_state_billing, mTi_country_billing, mTi_pin_code_billing;
 
     String strDeviceUUID = commonVariables.uuid, bstrCountryCode = "", sstrCountryCode = "";
     ArrayList<SC3Object> listCountry = new ArrayList<SC3Object>();
@@ -153,12 +155,15 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
             public void onItemClick(AdapterView<?> parent, View arg1, int position, long arg3) {
                 try {
                     SC3Object country = (SC3Object) parent.getItemAtPosition(position);
-                    mEdt_country.setError(null);
+
                     mEdt_country.setText(country.getName());
-                    if (mEdt_country == mSp_country_billing)
+                    if (mEdt_country == mSp_country_billing) {
+                        mTi_country_billing.setError(null);
                         bstrCountryCode = country.getIFSCCode();
-                    else
+                    } else {
+                        mTi_country_shipping.setError(null);
                         sstrCountryCode = country.getIFSCCode();
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -217,6 +222,17 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
             mSp_country_shipping.setOnClickListener(this);
 
             mEdt_pin_code_shipping = (EditText) rootView.findViewById(R.id.edt_pin_code_shipping);
+
+
+            mTi_full_name_shipping = (TextInputLayout) rootView.findViewById(R.id.ti_full_name_shipping);
+            mTi_mobile_shipping = (TextInputLayout) rootView.findViewById(R.id.ti_mobile_shipping);
+            mTi_address1_shipping = (TextInputLayout) rootView.findViewById(R.id.ti_address1_shipping);
+            mTi_address2_shipping = (TextInputLayout) rootView.findViewById(R.id.ti_address2_shipping);
+            mTi_address_city_shipping = (TextInputLayout) rootView.findViewById(R.id.ti_address_city_shipping);
+            mTi_address_state_shipping = (TextInputLayout) rootView.findViewById(R.id.ti_address_state_shipping);
+            mTi_country_shipping = (TextInputLayout) rootView.findViewById(R.id.ti_country_shipping);
+            mTi_pin_code_shipping = (TextInputLayout) rootView.findViewById(R.id.ti_pin_code_shipping);
+
             mCB_Different_Address = (CheckBox) rootView.findViewById(R.id.cb_different_Address);
 
             mLl_billing = (LinearLayout) rootView.findViewById(R.id.ll_billing);
@@ -231,6 +247,16 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
             mSp_country_billing.setCursorVisible(false);
             mSp_country_billing.setOnClickListener(this);
             mEdt_pin_code_billing = (EditText) rootView.findViewById(R.id.edt_pin_code_billing);
+
+            mTi_full_name_billing = (TextInputLayout) rootView.findViewById(R.id.ti_full_name_billing);
+            mTi_mobile_billing = (TextInputLayout) rootView.findViewById(R.id.ti_mobile_billing);
+            mTi_address1_billing = (TextInputLayout) rootView.findViewById(R.id.ti_address1_billing);
+            mTi_address2_billing = (TextInputLayout) rootView.findViewById(R.id.ti_address2_billing);
+            mTi_address_city_billing = (TextInputLayout) rootView.findViewById(R.id.ti_address_city_billing);
+            mTi_address_state_billing = (TextInputLayout) rootView.findViewById(R.id.ti_address_state_billing);
+            mTi_country_billing = (TextInputLayout) rootView.findViewById(R.id.ti_country_billing);
+            mTi_pin_code_billing = (TextInputLayout) rootView.findViewById(R.id.ti_pin_code_billing);
+
             mEdt_note = (EditText) rootView.findViewById(R.id.edt_note);
             mLl_confirm_order = (LinearLayout) rootView.findViewById(R.id.ll_confirm_order);
 
@@ -334,31 +360,31 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
                 AppPreferences.getPrefs().edit().putString(commonVariables.ADDRESS_SHIPPING, sstrAddress1).apply();
 
                 if (Validation.isEmptyEdittext(mEdt_full_name_shipping)) {
-                    mEdt_full_name_shipping.setError("Name required");
+                    mTi_full_name_shipping.setError("Name required");
                     mEdt_full_name_shipping.requestFocus();
                 } else if (Validation.isEmptyEdittext(mEdt_mobile_shipping)) {
-                    mEdt_mobile_shipping.setError("Mobile no required");
+                    mTi_mobile_shipping.setError("Mobile no required");
                     mEdt_mobile_shipping.requestFocus();
                 } else if (sstrMobile.length() < 10 || sstrMobile.length() > 13) {
-                    mEdt_mobile_shipping.setError("Mobile no is not valid");
+                    mTi_mobile_shipping.setError("Mobile no is not valid");
                     mEdt_mobile_shipping.requestFocus();
                 } else if (Validation.isEmptyEdittext(mEdt_address1_shipping)) {
-                    mEdt_address1_shipping.setError("Address required");
+                    mTi_address1_shipping.setError("Address required");
                     mEdt_address1_shipping.requestFocus();
                 } else if (Validation.isEmptyEdittext(mEdt_address_city_shipping)) {
-                    mEdt_address_city_shipping.setError("City required");
+                    mTi_address_city_shipping.setError("City required");
                     mEdt_address_city_shipping.requestFocus();
                 } else if (Validation.isEmptyEdittext(mEdt_address_state_shipping)) {
-                    mEdt_address_state_shipping.setError("State required");
+                    mTi_address_state_shipping.setError("State required");
                     mEdt_address_state_shipping.requestFocus();
                 } else if (Validation.isEmptyEdittext(mSp_country_shipping)) {
-                    mSp_country_shipping.setError("Select Country");
+                    mTi_country_shipping.setError("Select Country");
                     mSp_country_shipping.requestFocus();
                 } else if (Validation.isEmptyEdittext(mEdt_pin_code_shipping)) {
-                    mEdt_pin_code_shipping.setError("Pin Code required");
+                    mTi_pin_code_shipping.setError("Pin Code required");
                     mEdt_pin_code_shipping.requestFocus();
                 } else if (sstrPinCode.length() < 3 || sstrPinCode.length() > 10) {
-                    mEdt_pin_code_shipping.setError("Pincode is not valid");
+                    mTi_pin_code_shipping.setError("Pincode is not valid");
                     mEdt_pin_code_shipping.requestFocus();
                 } else {
                     String bstrFname = mEdt_full_name_billing.getText().toString();
@@ -372,31 +398,31 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
 
                     if (mCB_Different_Address.isChecked()) {
                         if (Validation.isEmptyEdittext(mEdt_full_name_billing)) {
-                            mEdt_full_name_billing.setError("Name required");
+                            mTi_full_name_billing.setError("Name required");
                             mEdt_full_name_billing.requestFocus();
                         } else if (Validation.isEmptyEdittext(mEdt_mobile_billing)) {
-                            mEdt_mobile_billing.setError("Mobile no required");
+                            mTi_mobile_billing.setError("Mobile no required");
                             mEdt_mobile_billing.requestFocus();
                         } else if (bstrMobile.length() < 10 || bstrMobile.length() > 13) {
-                            mEdt_mobile_billing.setError("Mobile no is not valid");
+                            mTi_mobile_billing.setError("Mobile no is not valid");
                             mEdt_mobile_billing.requestFocus();
                         } else if (Validation.isEmptyEdittext(mEdt_address1_billing)) {
-                            mEdt_address1_billing.setError("Address required");
+                            mTi_address1_billing.setError("Address required");
                             mEdt_address1_billing.requestFocus();
                         } else if (Validation.isEmptyEdittext(mEdt_address_city_billing)) {
-                            mEdt_address_city_billing.setError("City required");
+                            mTi_address_city_billing.setError("City required");
                             mEdt_address_city_billing.requestFocus();
                         } else if (Validation.isEmptyEdittext(mEdt_address_state_billing)) {
-                            mEdt_address_state_billing.setError("State required");
+                            mTi_address_state_billing.setError("State required");
                             mEdt_address_state_billing.requestFocus();
                         } else if (Validation.isEmptyEdittext(mSp_country_billing)) {
-                            mSp_country_billing.setError("Select Country");
+                            mTi_country_billing.setError("Select Country");
                             mSp_country_billing.requestFocus();
                         } else if (Validation.isEmptyEdittext(mEdt_pin_code_billing)) {
-                            mEdt_pin_code_billing.setError("Pin Code required");
+                            mTi_pin_code_billing.setError("Pin Code required");
                             mEdt_pin_code_billing.requestFocus();
                         } else if (bstrPinCode.length() < 3 || bstrPinCode.length() > 10) {
-                            mEdt_pin_code_billing.setError("Pincode is not valid");
+                            mTi_pin_code_billing.setError("Pincode is not valid");
                             mEdt_pin_code_billing.requestFocus();
                         } else {
                             call = true;

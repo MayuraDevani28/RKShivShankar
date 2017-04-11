@@ -276,10 +276,10 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             mTI_register_city.setError(null);
 
             if (Validation.isEmptyEdittext(mEdt_register_first_name)) {
-                mTI_register_first_name.setError("First name is required.");
+                mTI_register_first_name.setError("First name is required");
                 mEdt_register_first_name.requestFocus();
             } else if (fullNamerequiredError) {
-                mTI_register_first_name.setError("Enter full name.");
+                mTI_register_first_name.setError("Enter full name");
                 mEdt_register_first_name.requestFocus();
             } else if (city.isEmpty()) {
                 mTI_register_city.setError("City required");
@@ -415,7 +415,7 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             public void onItemClick(AdapterView<?> parent, View arg1, int position, long arg3) {
                 try {
                     SC3Object country = (SC3Object) parent.getItemAtPosition(position);
-                    mEdt_country.setError(null);
+                    mTI_country_billing.setError(null);
                     mEdt_country.setText(country.getName());
                     strCountryCode = country.getIFSCCode();
 

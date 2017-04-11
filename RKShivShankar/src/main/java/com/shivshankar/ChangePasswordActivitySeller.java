@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 public class ChangePasswordActivitySeller extends BaseActivitySeller implements OnClickListener, OnResult {
 
     private EditText mEdt_current_password, mEdt_new_password, mEdt_confirm_password;
+    private TextInputLayout mTi_current_password, mTi_new_password, mTi_confirm_password;
     ImageView mIv_eye_current_password, mIv_eye_new_password, mIv_eye_confirm_password;
     TextView mBtn_cancel;
 
@@ -94,6 +96,12 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
             mEdt_current_password = (EditText) rootView.findViewById(R.id.edt_current_password);
             mEdt_new_password = (EditText) rootView.findViewById(R.id.edt_new_password);
             mEdt_confirm_password = (EditText) rootView.findViewById(R.id.edt_confirm_password);
+
+            mTi_current_password = (TextInputLayout) rootView.findViewById(R.id.ti_current_password);
+            mTi_new_password = (TextInputLayout) rootView.findViewById(R.id.ti_new_password);
+            mTi_confirm_password = (TextInputLayout) rootView.findViewById(R.id.ti_confirm_password);
+
+
             mIv_eye_current_password = (ImageView) rootView.findViewById(R.id.iv_eye_current_password);
             mIv_eye_current_password.setOnClickListener(this);
             mIv_eye_new_password = (ImageView) rootView.findViewById(R.id.iv_eye_new_password);
@@ -184,9 +192,9 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
         try {
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
-            mEdt_current_password.setError(null);
-            mEdt_confirm_password.setError(null);
-            mEdt_new_password.setError(null);
+            mTi_current_password.setError(null);
+            mTi_confirm_password.setError(null);
+            mTi_new_password.setError(null);
             if (view == mIv_logo_toolbar) {
                 Intent intent = new Intent(this, MainActivitySeller.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -294,15 +302,15 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 String strConfirm_password = mEdt_confirm_password.getText().toString().trim();
 
                 if (Validation.isEmptyEdittext(mEdt_current_password)) {
-                    mEdt_current_password.setError("Current Password required.");
+                    mTi_current_password.setError("Current Password required.");
                 } else if (Validation.isEmptyEdittext(mEdt_new_password)) {
-                    mEdt_new_password.setError("New Password required.");
+                    mTi_new_password.setError("New Password required.");
                 } else if (strNew_password.length() < 6) {
-                    mEdt_new_password.setError("Min 6 characters required.");
+                    mTi_new_password.setError("Min 6 characters required.");
                 } else if (Validation.isEmptyEdittext(mEdt_confirm_password)) {
-                    mEdt_confirm_password.setError("Confirm Password is required.");
+                    mTi_confirm_password.setError("Confirm Password is required.");
                 } else if (!strNew_password.equals(strConfirm_password)) {
-                    mEdt_confirm_password.setError("Passwords Does not match.");
+                    mTi_confirm_password.setError("Passwords Does not match.");
                 } else {
                     if (commonMethods.knowInternetOn(ChangePasswordActivitySeller.this)) {
                         APIs.SellerChangePassword(this, this, strPassword, strNew_password);

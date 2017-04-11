@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout   xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,44 +16,46 @@
 
             <ImageView
                 android:id="@+id/iv_close"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_margin="5dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_close_cancel" />
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold"
-                android:id="@+id/textView2" />
+                android:textStyle="bold" />
 
 
         </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tv_otp_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="50dp"
                 android:text="Verify your OTP"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_medium" />
 
 
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <EditText
@@ -60,13 +63,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_padding_bottom"
-                    android:padding="@dimen/default_padding_bottom"
-                    android:hint="-"
-                    android:textSize="@dimen/text_size_large"
-                    android:maxLines="1"
-                    android:maxLength="1"
+                    android:background="@drawable/xml_oval_white"
                     android:gravity="center"
-                    android:background="@drawable/xml_oval_white"/>
+                    android:hint="-"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:padding="@dimen/default_padding_bottom"
+                    android:textSize="@dimen/text_size_large" />
 
 
                 <EditText
@@ -74,13 +77,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_padding_bottom"
-                    android:padding="@dimen/default_padding_bottom"
-                    android:hint="-"
-                    android:textSize="@dimen/text_size_large"
-                    android:maxLines="1"
-                    android:maxLength="1"
+                    android:background="@drawable/xml_oval_white"
                     android:gravity="center"
-                    android:background="@drawable/xml_oval_white"/>
+                    android:hint="-"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:padding="@dimen/default_padding_bottom"
+                    android:textSize="@dimen/text_size_large" />
 
 
                 <EditText
@@ -88,13 +91,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_padding_bottom"
-                    android:padding="@dimen/default_padding_bottom"
-                    android:hint="-"
-                    android:textSize="@dimen/text_size_large"
-                    android:maxLines="1"
-                    android:maxLength="1"
+                    android:background="@drawable/xml_oval_white"
                     android:gravity="center"
-                    android:background="@drawable/xml_oval_white"/>
+                    android:hint="-"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:padding="@dimen/default_padding_bottom"
+                    android:textSize="@dimen/text_size_large" />
 
 
                 <EditText
@@ -102,27 +105,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_padding_bottom"
-                    android:padding="@dimen/default_padding_bottom"
-                    android:hint="-"
-                    android:textSize="@dimen/text_size_large"
-                    android:maxLines="1"
-                    android:maxLength="1"
+                    android:background="@drawable/xml_oval_white"
                     android:gravity="center"
-                    android:background="@drawable/xml_oval_white"/>
+                    android:hint="-"
+                    android:maxLength="1"
+                    android:maxLines="1"
+                    android:padding="@dimen/default_padding_bottom"
+                    android:textSize="@dimen/text_size_large" />
 
 
             </LinearLayout>
+
             <ImageView
                 android:id="@+id/btn_submit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/square_button_padding"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/xml_round_green"
+                android:padding="@dimen/square_button_padding"
                 android:src="@drawable/ic_go"
                 android:textAllCaps="false"
                 android:textSize="@dimen/text_size_medium" />
+
             <TextView
                 android:id="@+id/tv_resend_verification_code"
                 android:layout_width="wrap_content"
@@ -136,11 +141,12 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <ImageView
         android:id="@+id/iv_logo"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:src="@drawable/ic_otp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp" />
+        android:layout_marginTop="50dp"
+        android:src="@drawable/ic_otp" />
 </FrameLayout>

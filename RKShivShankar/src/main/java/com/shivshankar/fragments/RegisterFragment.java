@@ -37,7 +37,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     boolean isClick;
     Button mBtn_login;
     private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_company, mEdt_register_password, mEdt_register_confirm_password2, mEdt_register_mobile;
-    TextInputLayout mLl_firm;
+    private TextInputLayout mTi_register_first_name, mTi_register_email, mTi_register_city, mLl_firm, mTi_register_password, mTi_register_mobile;
     ImageView mIv_eye;
     RadioGroup radioGroup;
     private boolean isVisiblePass = false;
@@ -77,10 +77,17 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         mEdt_register_password = (EditText) view.findViewById(R.id.edt_register_password);
         mIv_eye = (ImageView) view.findViewById(R.id.iv_eye);
         mIv_eye.setOnClickListener(this);
-        mEdt_register_company = (EditText) view.findViewById(R.id.edt_register_company);
-        mLl_firm = (TextInputLayout) view.findViewById(R.id.ll_firm);
+        mEdt_register_company = (EditText) view.findViewById(R.id.edt_firm);
         mEdt_register_city = (EditText) view.findViewById(R.id.edt_register_city);
         mEdt_register_mobile = (EditText) view.findViewById(R.id.edt_mobile);
+
+        mTi_register_first_name = (TextInputLayout) view.findViewById(R.id.ti_register_first_name);
+        mTi_register_email = (TextInputLayout) view.findViewById(R.id.ti_register_email);
+        mTi_register_password = (TextInputLayout) view.findViewById(R.id.ti_register_password);
+        mLl_firm = (TextInputLayout) view.findViewById(R.id.ll_firm);
+        mTi_register_city = (TextInputLayout) view.findViewById(R.id.ti_register_city);
+        mTi_register_mobile = (TextInputLayout) view.findViewById(R.id.ti_mobile);
+
         mBtn_login = (Button) view.findViewById(R.id.btn_register);
         mBtn_login.setOnClickListener(this);
         radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
@@ -144,42 +151,42 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 String password = mEdt_register_password.getText().toString().trim();
                 String city = mEdt_register_city.getText().toString().trim();
                 String company = mEdt_register_company.getText().toString().trim();
-                mEdt_register_first_name.setError(null);
-                mEdt_register_email.setError(null);
-                mEdt_register_password.setError(null);
-                mEdt_register_mobile.setError(null);
-                mEdt_register_city.setError(null);
-                mEdt_register_company.setError(null);
+                mTi_register_first_name.setError(null);
+                mTi_register_email.setError(null);
+                mTi_register_password.setError(null);
+                mTi_register_mobile.setError(null);
+                mTi_register_city.setError(null);
+                mLl_firm.setError(null);
 
                 if (Validation.isEmptyEdittext(mEdt_register_first_name)) {
-                    mEdt_register_first_name.setError("First name required");
+                    mTi_register_first_name.setError("First name required");
                     mEdt_register_first_name.requestFocus();
                 }
 //                else if (Validation.isEmptyEdittext(mEdt_register_last_name))
 //                    mEdt_register_last_name.setError("Last Name is required.");
                 else if (fullNamerequiredError) {
-                    mEdt_register_first_name.setError("Full name required");
+                    mTi_register_first_name.setError("Full name required");
                     mEdt_register_first_name.requestFocus();
                 } else if (Validation.isEmptyEdittext(mEdt_register_email)) {
-                    mEdt_register_email.setError("Email required");
+                    mTi_register_email.setError("Email required");
                     mEdt_register_email.requestFocus();
                 } else if (!Validation.isValidEmail(mEdt_register_email.getText().toString().trim())) {
-                    mEdt_register_email.setError("Invalid Email Address.");
+                    mTi_register_email.setError("Invalid Email Address.");
                     mEdt_register_email.requestFocus();
                 } else if (mobile.isEmpty()) {
-                    mEdt_register_mobile.setError("Mobile is required.");
+                    mTi_register_mobile.setError("Mobile is required.");
                     mEdt_register_mobile.requestFocus();
                 } else if (mobile.length() < 6 || mobile.length() > 13) {
-                    mEdt_register_mobile.setError("Enter valid mobile number.");
+                    mTi_register_mobile.setError("Enter valid mobile number.");
                     mEdt_register_mobile.requestFocus();
                 } else if (city.isEmpty()) {
-                    mEdt_register_city.setError("City is required.");
+                    mTi_register_city.setError("City is required.");
                     mEdt_register_city.requestFocus();
                 } else if (Validation.isEmptyEdittext(mEdt_register_password)) {
-                    mEdt_register_password.setError("Password is required.");
+                    mTi_register_password.setError("Password is required.");
                     mEdt_register_password.requestFocus();
                 } else if (password.length() < 6) {
-                    mEdt_register_password.setError("Min 6 characters required.");
+                    mTi_register_password.setError("Min 6 characters required.");
                     mEdt_register_password.requestFocus();
                 } else if (commonMethods.knowInternetOn(getActivity())) {
                     SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();

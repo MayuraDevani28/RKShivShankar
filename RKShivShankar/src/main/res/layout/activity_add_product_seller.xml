@@ -114,11 +114,12 @@
                     <ImageView
                         android:id="@+id/iv_brand"
                         android:layout_width="40dp"
-                        android:visibility="gone"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitXY"
+                        android:visibility="gone" />
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/ti_brand_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -290,6 +291,7 @@
                     android:padding="3dp">
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/ti_price"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -312,6 +314,7 @@
                         android:visibility="gone" />
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/ti_min_qty"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

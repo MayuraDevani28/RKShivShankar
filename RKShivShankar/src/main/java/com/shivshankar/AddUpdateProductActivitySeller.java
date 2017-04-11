@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -54,6 +55,8 @@ import static com.shivshankar.utills.commonVariables.REQUEST_ADD_UPDATE_PRODUCT;
 public class AddUpdateProductActivitySeller extends BaseActivitySeller implements View.OnClickListener, OnResult, OnResultString, CompoundButton.OnCheckedChangeListener {
     ImageView mIv_imageView, mIv_change_image, mIv_close, mIv_brand;
     EditText mEdt_brand_name, mEdt_price, mEdt_min_qty;
+    TextInputLayout mTi_brand_name, mTi_price, mTi_min_qty;
+
     TextView mBtn_submit, mTv_title;
     private Button mBtn_add_brand;
     LinearLayout mLl_top_bottom_fab;
@@ -195,6 +198,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
         mIv_brand = (ImageView) rootView.findViewById(R.id.iv_brand);
         mIv_change_image = (ImageView) rootView.findViewById(R.id.iv_change_image);
         mEdt_brand_name = (EditText) rootView.findViewById(R.id.edt_brand_name);
+        mTi_brand_name = (TextInputLayout) rootView.findViewById(R.id.ti_brand_name);
         mBtn_submit = (TextView) rootView.findViewById(R.id.btn_submit);
         mBtn_add_brand = (Button) findViewById(R.id.btn_add_brand);
         mBtn_add_brand.setOnClickListener(this);
@@ -207,6 +211,8 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
         mSp_Type = (MaterialBetterSpinner) findViewById(R.id.sp_type);
         mEdt_price = (EditText) findViewById(R.id.edt_price);
         mEdt_min_qty = (EditText) findViewById(R.id.edt_min_qty);
+        mTi_price = (TextInputLayout) findViewById(R.id.ti_price);
+        mTi_min_qty = (TextInputLayout) findViewById(R.id.ti_min_qty);
         mCb_all_over = (CheckBox) findViewById(R.id.cb_all_over);
         mCb_all_over.setOnCheckedChangeListener(this);
         mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
@@ -382,7 +388,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                 if (file == null && mIv_imageView.getDrawable() == null) {
                     AlertDialogManager.showDialog(this, "Please select product image", null);
                 } else if (strBrandName.isEmpty()) {
-                    mEdt_brand_name.setError("Brand name required");
+                    mTi_brand_name.setError("Brand name required");
                 } else if (mLl_top_bottom_fab.getVisibility() == View.GONE && strAllOver.isEmpty()) {
                     AlertDialogManager.showDialog(this, "Please select All over fabric", null);
                 } else if (mLl_top_bottom_fab.getVisibility() == View.VISIBLE && (strTop.isEmpty() || strBottom.isEmpty() || strDupatta.isEmpty())) {
