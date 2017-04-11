@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,11 +45,10 @@ import java.util.ArrayList;
 @SuppressLint("NewApi")
 public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult, View.OnFocusChangeListener {
 
-    private TextView mBtn_logout;
+    private TextView mBtn_logout, mBtn_save_profile;//, mBtn_add_mobile;
 
-    private TextView mBtn_save_profile;//, mBtn_add_mobile;
-    private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_mobile_wholesaler, mEdt_pincode;//mEdt_register_company
-    private EditText mSp_country_billing, mSp_address_state_billing;
+    private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_mobile_wholesaler, mEdt_pincode, mSp_country_billing, mSp_address_state_billing;//mEdt_register_company
+    private TextInputLayout mTI_register_first_name, mTI_register_email, mTI_register_city, mTI_register_mobile_wholesaler, mTI_pincode, mTI_country_billing, mTI_address_state_billing;
 
     private TextView mBtn_change_password;
     public ImageView mIv_close;
@@ -130,12 +130,20 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
 
         mEdt_register_first_name = (EditText) rootView.findViewById(R.id.edt_register_first_name);
         mEdt_register_email = (EditText) rootView.findViewById(R.id.edt_register_email);
-//        mEdt_register_company = (EditText) rootView.findViewById(R.id.edt_register_company);
         mEdt_register_city = (EditText) rootView.findViewById(R.id.edt_register_city);
         mEdt_pincode = (EditText) rootView.findViewById(R.id.edt_pincode);
         mSp_address_state_billing = (EditText) rootView.findViewById(R.id.edt_register_state);
         mEdt_register_mobile_wholesaler = (EditText) rootView.findViewById(R.id.edt_otp);
         mSp_country_billing = (EditText) rootView.findViewById(R.id.edt_register_country);
+
+        mTI_register_first_name = (TextInputLayout) rootView.findViewById(R.id.ti_register_first_name);
+        mTI_register_email = (TextInputLayout) rootView.findViewById(R.id.ti_register_email);
+        mTI_register_city = (TextInputLayout) rootView.findViewById(R.id.ti_register_city);
+        mTI_pincode = (TextInputLayout) rootView.findViewById(R.id.ti_pincode);
+        mTI_address_state_billing = (TextInputLayout) rootView.findViewById(R.id.ti_register_state);
+        mTI_register_mobile_wholesaler = (TextInputLayout) rootView.findViewById(R.id.ti_otp);
+        mTI_country_billing = (TextInputLayout) rootView.findViewById(R.id.ti_register_country);
+
 //        mBtn_add_mobile = (TextView) rootView.findViewById(R.id.btn_add_mobile);
 //        mBtn_add_mobile.setOnClickListener(this);
 
@@ -260,32 +268,30 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             String mobile = mEdt_register_mobile_wholesaler.getText().toString().trim();
             String city = mEdt_register_city.getText().toString().trim();
             String strPincode = mEdt_pincode.getText().toString().trim();
-//            String company = mEdt_register_company.getText().toString().trim();
             String state = mSp_address_state_billing.getText().toString().trim();
             String strCountryB = mSp_country_billing.getText().toString().trim();
-            mEdt_register_first_name.setError(null);
-            mEdt_register_email.setError(null);
-            mEdt_register_mobile_wholesaler.setError(null);
-            mEdt_register_city.setError(null);
-//            mEdt_register_company.setError(null);
+            mTI_register_first_name.setError(null);
+            mTI_register_email.setError(null);
+            mTI_register_mobile_wholesaler.setError(null);
+            mTI_register_city.setError(null);
 
             if (Validation.isEmptyEdittext(mEdt_register_first_name)) {
-                mEdt_register_first_name.setError("First name is required.");
+                mTI_register_first_name.setError("First name is required.");
                 mEdt_register_first_name.requestFocus();
             } else if (fullNamerequiredError) {
-                mEdt_register_first_name.setError("Enter full name.");
+                mTI_register_first_name.setError("Enter full name.");
                 mEdt_register_first_name.requestFocus();
             } else if (city.isEmpty()) {
-                mEdt_register_city.setError("City required");
+                mTI_register_city.setError("City required");
                 mEdt_register_city.requestFocus();
             } else if (strPincode.isEmpty()) {
-                mEdt_pincode.setError("Pincode required");
+                mTI_pincode.setError("Pincode required");
                 mEdt_pincode.requestFocus();
             } else if (strCountryB.isEmpty()) {
-                mSp_country_billing.setError("Country required");
+                mTI_country_billing.setError("Country required");
                 mSp_country_billing.requestFocus();
             } else if (state.isEmpty()) {
-                mSp_address_state_billing.setError("State required");
+                mTI_address_state_billing.setError("State required");
                 mSp_address_state_billing.requestFocus();
             } else if (commonMethods.knowInternetOn(this)) {
                 APIs.UpdateBuyerProfile(this, this, name, email, mobile, city, strPincode, state, strCountryCode);

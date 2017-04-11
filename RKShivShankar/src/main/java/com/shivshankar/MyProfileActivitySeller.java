@@ -227,13 +227,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 returnBack();
             } else if (view == mBtn_save_profile) {
                 updateProfile();
-            }
-//            else if (v == mBtn_add_mobile) {
-//                Intent intent = new Intent(this, AddMobileNoActivityBuyer.class);
-//                startActivityForResult(intent, commonVariables.REQUEST_ADD_MOBILE);
-//                overridePendingTransition(0, 0);
-//            }
-            else if (view == mBtn_logout) {
+            } else if (view == mBtn_logout) {
                 commonMethods.logout(this, true);
             } else if (view == mBtn_change_password) {
                 Intent intent = new Intent(this, ChangePasswordActivitySeller.class);
