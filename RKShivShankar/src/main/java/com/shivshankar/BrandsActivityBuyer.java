@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -36,12 +37,12 @@ import java.util.ArrayList;
 
 public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult {
 
-    TextView mTv_no_data_found, mTv_title, mTv_count_items;
+    TextView mTv_no_data_found, mTv_title, mTv_count_items, mTv_brand_search;
     Button mBtn_add_now;
     LottieAnimationView animationView2, animationView;
     private LinearLayout mLl_no_data_found;
+    RelativeLayout mLl_rv_items;
     RecyclerView mRv_items;
-    LinearLayout mFl_whole;
     private ImageView mIv_filer;
 
     GridLayoutManager mLayoutManager;
@@ -58,7 +59,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         try {
             Gson gson = new Gson();
             String json = getIntent().getStringExtra(commonVariables.KEY_CATEGORY);
@@ -68,6 +69,8 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
             }
             bindViews(rootView);
             mTv_title.setText("Our Brands");
+            mTv_brand_search.setVisibility(View.VISIBLE);
+            mTv_brand_search.setText("(" + WordUtils.capitalize(strFabricType + " " + item.getBrandName()) + ")");
             APIs.GetBuyerBrands(this, this, item.getBrandId(), strFabricType);
             setCartAndNotiCount();
         } catch (Exception e) {
@@ -99,7 +102,6 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setVisibility(View.GONE);
 
-            mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.gv_items);
             mLayoutManager = new GridLayoutManager(this, 2);
             mRv_items.setLayoutManager(mLayoutManager);
@@ -117,7 +119,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
                         if (isFirstScrollDone && listArray.size() != 0) {
                             int citem = (pastVisiblesItems + visibleItemCount);
                             if (citem != 2) {
-                                mTv_count_items.setText(" (" + citem + "/" + total + " products)");
+                                mTv_count_items.setText(" (" + citem + "/" + total + " brands)");
                             }
                         }
                         isFirstScrollDone = true;
@@ -133,8 +135,11 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
             mTv_no_data_found = (TextView) rootView.findViewById(R.id.tv_no_data_found);
             mLl_no_data_found = (LinearLayout) rootView.findViewById(R.id.ll_no_data_found);
             mLl_no_data_found.setVisibility(View.GONE);
+            mLl_rv_items = (RelativeLayout) rootView.findViewById(R.id.ll_rv_items);
 
             mTv_count_items = (TextView) rootView.findViewById(R.id.tv_no_items);
+            mTv_brand_search = (TextView) rootView.findViewById(R.id.tv_brand_search);
+
             animationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
             animationView2 = (LottieAnimationView) rootView.findViewById(R.id.animation_view2);
 
@@ -215,16 +220,15 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
     public void setListAdapter(ArrayList<Brand> listArray) {
         try {
             if (listArray.size() == 0) {
-                mRv_items.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
+                mLl_rv_items.setVisibility(View.GONE);
                 String strMessage = "Uhh! No brands found for " + strFabricType + " " + item.getBrandName();
-                mTv_no_data_found.setText((Html.fromHtml(strMessage)));
                 startAnim();
+                mTv_no_data_found.setText((Html.fromHtml(strMessage)));
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
-                mRv_items.setVisibility(View.VISIBLE);
-                mFl_whole.setVisibility(View.VISIBLE);
-                adapter = new BrandsAdapterBuyer(this, listArray, strFabricType);
+                mLl_rv_items.setVisibility(View.VISIBLE);
+                adapter = new BrandsAdapterBuyer(this, listArray, strFabricType, item.getBrandId());
                 mRv_items.setAdapter(adapter);
             }
         } catch (Exception e) {
@@ -243,8 +247,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-            }
-            if (view == mNav_my_profile) {
+            } else if (view == mNav_my_profile) {
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, MyProfileActivityBuyer.class));
                 overridePendingTransition(0, 0);
@@ -271,7 +274,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
                 intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-            }else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
+            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -322,7 +325,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
                 if (strApiName.equalsIgnoreCase("GetBuyerBrands")) {
                     JSONArray jarray = jobjWhole.optJSONArray("resData");
                     total = jobjWhole.optString("count");
-//                    mTv_count_items.setVisibility(View.VISIBLE);
+                    mTv_count_items.setVisibility(View.VISIBLE);
 //                    mTv_count_items.setText(" (" + total + " brands)");
                     if (jarray != null) {
                         for (int i = 0; i < jarray.length(); i++) {

@@ -120,7 +120,12 @@ public class CMSDisplayActivityBuyer extends BaseActivityBuyer implements View.O
     public void onClick(View view) {
         AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
         view.startAnimation(buttonClick);
-        if (view == mNav_my_profile) {
+        if (view == mIv_logo_toolbar) {
+            Intent intent = new Intent(this, MainActivityBuyer.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (view == mNav_my_profile) {
             drawer.closeDrawer(GravityCompat.START);
             startActivity(new Intent(this, MyProfileActivityBuyer.class));
             overridePendingTransition(0, 0);

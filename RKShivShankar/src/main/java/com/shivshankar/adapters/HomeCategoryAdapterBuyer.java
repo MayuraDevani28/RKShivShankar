@@ -1,7 +1,6 @@
 package com.shivshankar.adapters;
 
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,19 +14,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.shivshankar.BrandsActivityBuyer;
-import com.shivshankar.BrandsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.classes.Brand;
-import com.shivshankar.utills.AppPreferences;
-import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryAdapterBuyer.MyViewHolder> implements OnResult {
+public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryAdapterBuyer.MyViewHolder> {
 
     private final AppCompatActivity activity;
     private final ArrayList<Brand> list;
@@ -38,37 +33,6 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
         this.activity = activity;
         this.list = list;
     }
-
-    @Override
-    public void onResult(JSONObject jobjWhole) {
-        try {
-            if (jobjWhole != null) {
-                String strApiName = jobjWhole.optString("api");
-                if (strApiName.equalsIgnoreCase("RemoveSellerBrand")) {
-                    int strresId = jobjWhole.optInt("resInt");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jobjWhole.optString("res"));
-                    if (strresId == 1) {
-                        builder.setPositiveButton("Ok", (dialog, which) -> {
-                            list.remove(posit);
-                            if (list.size() == 0) {
-                                AppPreferences.getPrefs().edit().putString(commonVariables.KEY_BRAND, "").apply();
-                                ((BrandsActivitySeller) activity).setListAdapter(list);
-                            } else
-                                notifyDataSetChanged();
-                        });
-                    } else {
-                        builder.setPositiveButton("Ok", null);
-                    }
-                    builder.show();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -162,7 +126,6 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
             e.printStackTrace();
         }
     }
-
 
     @Override
     public int getItemCount() {

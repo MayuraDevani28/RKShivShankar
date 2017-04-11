@@ -1,18 +1,14 @@
 package com.shivshankar;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,14 +18,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.customcontrols.JumpBall;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 @SuppressLint("NewApi")
@@ -39,10 +37,8 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
     int versionCode = 0;
     LinearLayout mFl_whole;
     Snackbar snack;
-    boolean isVersioningDone = true, isTimerOut = false, isValidCustDevice;
-    //    DialogBallLoadingView mView;
+    boolean isVersioningDone = false, isTimerOut = false;
     JumpBall mJumpBall;
-    private String regId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +49,16 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         try {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-            // //Temporary
-//            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-//            editor.putInt(commonVariables.KEY_USER_RETAILER, 2);
-//            editor.putBoolean(commonVariables.KEY_IS_WHOLESALE, true);
-//            editor.apply();
-//            changePage();
 
-            //edit
-//            regId = FirebaseInstanceId.getInstance().getToken();
-            Log.d("ReId", regId);
+            if (commonMethods.knowInternetOn(this)) {
+                Log.e("TAGRK", "ReId:!" + FirebaseInstanceId.getInstance().getToken());
+            } else {
+                Log.d("TAGRK", "Internet Problem!");
+            }
 
             setContentView(R.layout.activity_splash_screen);
             bindview();
-/**/
+
             try {
                 PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 versionName = pInfo.versionName;
@@ -74,30 +66,6 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
-//            ViewGroup hiddenPanel = (ViewGroup) findViewById(R.id.ll_logo);
-//            bottomUp.setAnimationListener(new Animation.AnimationListener() {
-//                @Override
-//                public void onAnimationStart(Animation animation) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animation animation) {
-//                    isTimerOut = true;
-//                    callMainActivity(isValidCustDevice);
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animation animation) {
-//
-//                }
-//            });
-//            hiddenPanel.startAnimation(bottomUp);
-//            hiddenPanel.setVisibility(View.VISIBLE);
-//
-//            mView = new DialogBallLoadingView();
-//            mView.show(getSupportFragmentManager(), "load");
 
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -105,7 +73,7 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
                 public void run() {
 
                     isTimerOut = true;
-                    callMainActivity(isValidCustDevice);
+                    callMainActivity();
                 }
             }, 2000);
 
@@ -114,27 +82,20 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
         }
     }
 
-    private void callCheckAppVersionAPI() {
-//        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-//                .path("MobileAPI/CheckAppVersion")
-//                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
-//                .appendQueryParameter("GCMRegistraionId", regId)
-//                .build();
-//        String query = uri.toString();
-//        new ServerAPICAll(null, this).execute(query);
-
-    }
-
-
     @Override
     protected void onPause() {
-        mJumpBall.pause();
-        super.onPause();
+        try {
+            mJumpBall.pause();
+            super.onPause();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onResume() {
         try {
+            FirebaseInstanceId.getInstance().getToken();
             if (mJumpBall != null)
                 mJumpBall.start();
             if (!commonMethods.knowInternetOn(this)) {
@@ -144,7 +105,7 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
                 tv.setTextColor(Color.WHITE);
                 snack.show();
             } else if (!isVersioningDone)
-                callCheckAppVersionAPI();
+                APIs.CheckAppVersion(this, BuildConfig.VERSION_CODE + "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -164,11 +125,8 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
         mJumpBall = (JumpBall) findViewById(R.id.jump_ball);
     }
 
-    private void callMainActivity(boolean isValidCustDevice) {
+    private void callMainActivity() {
         if (isVersioningDone && isTimerOut) {
-//            if (mView != null) {
-//                mView.finishAnim();
-//            }
             mJumpBall.finish();
             final Handler handler = new Handler();
             handler.postDelayed(() -> {
@@ -186,28 +144,6 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
                 finish();
                 overridePendingTransition(0, 0);
             }, 600);
-
-//            if (cmobile.isEmpty()) {
-//                startActivity(new Intent(SplashActivity.this, RegisterActivity.class));
-//            } else {
-//                commonMethods.SaveCategoryMenu(null);
-//                try {
-//                    if (!isValidCustDevice) {
-//                        SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-//                        editor.putString(commonVariables.KEY_LOGIN_ID, "");
-//                        editor.putBoolean(commonVariables.KEY_IS_LOG_IN, false);
-//                        editor.putString(commonVariables.KEY_SELLER_PROFILE, "");
-//                        editor.putString(commonVariables.KEY_ORDER_ID, "0");
-//                        editor.commit();
-//                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-//                    } else
-//                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-
         }
     }
 
@@ -215,97 +151,65 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
     public void onResult(JSONObject jobj) {
 
         try {
+
             if (jobj != null) {
                 String strApiName = jobj.optString("api");
                 if (strApiName.equalsIgnoreCase("CheckAppVersion")) {
-                    JSONArray jArray = jobj.optJSONArray("resData");
-                    for (int i = 0; i < jArray.length(); i++) {
-                        JSONObject jObject = jArray.optJSONObject(i);
-                        if (versionCode == jObject.optInt("AppVersionCode")) {
-                            if (!jObject.optBoolean("IsOldVersionCompatible")) {
-                                showNotCompatibleDialog();
-                            } else {
-                                isVersioningDone = true;
-                                isValidCustDevice = jobj.optBoolean("isValidCustDevice");
-                                callMainActivity(isValidCustDevice);
-                            }
+                    AppPreferences.getPrefs().edit().putInt(commonVariables.KEY_NOTI_COUNT, jobj.optInt("sellerNotificationCount")).apply();
+                    switch (jobj.optInt("resInt")) {
+                        case 0:
+                            showNotCompatibleDialog(false);
                             break;
-                        }
+                        case 1:
+                            isVersioningDone = true;
+                            callMainActivity();
+                            break;
+                        case 2:
+                            showNotCompatibleDialog(true);
+                            break;
                     }
                 }
             } else {
-                showDialog("Sorry! Some error occurred, Please try again latter.");
+                AlertDialogManager.showDialog(this, "Sorry! Some error occurred, Please try again latter.", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-//            if (result.equalsIgnoreCase("Server not found")) {
-//
-//                String strMessage = "We are updating. Please try later.";
-//                showDialog(strMessage);
-//            } else if (result.equalsIgnoreCase("Internet off")) {
-//                String strMessage = "Internet is off.";
-//                showDialog(strMessage);
-//            }
         }
 
     }
 
-    private void showNotCompatibleDialog() {
+    private void showNotCompatibleDialog(boolean shouldEnterApp) {
 
         try {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-            builder.setTitle(commonVariables.appname);
-            builder.setMessage("New version of " + commonVariables.appname + " is available, update now ?");
-            builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            String strMessage = "A lot have been changed after this version, To continue using " + commonVariables.appname + ", Please update app from playstore";
+            if (shouldEnterApp)
+                strMessage = "A lot have been changed after this version, Please update app from playstore for more functionality and better user experience";
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    final String appPackageName = getPackageName();
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                    }
-                    finishAffinity();
-                    overridePendingTransition(0, 0);
+            Runnable listenerPos = () -> {
+                final String appPackageName = getPackageName();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                 }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                finishAffinity();
+                overridePendingTransition(0, 0);
+            };
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+
+            Runnable listenerNeg = () -> {
+                if (shouldEnterApp) {
+                    isVersioningDone = true;
+                    callMainActivity();
+                } else
                     finishAffinity();
-                }
-            });
-
-            AlertDialog alertDialog = builder.show();
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.black));
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.black));
+            };
+            AlertDialogManager.showDialogCustom(this, strMessage, "Update", "Cancel", listenerPos, listenerNeg);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void showDialog(String strMessage) {
-        try {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-            builder.setTitle(commonVariables.appname);
-            builder.setMessage(strMessage);
-            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finishAffinity();
-                }
-            });
-            AlertDialog alertDialog = builder.show();
-            Resources res = getResources();
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.black));
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this, R.color.black));
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-    }
 }

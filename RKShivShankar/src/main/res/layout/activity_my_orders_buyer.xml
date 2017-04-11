@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
@@ -8,7 +9,7 @@
     android:scrollbars="none">
 
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/fl_whole"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
@@ -40,14 +41,34 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_close_white" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="My Ordres"
-                    android:textColor="@color/white"
-                    android:gravity="center_vertical"
-                    android:textSize="@dimen/text_size_large" />
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
+                        android:text="My Orders"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_large" />
+
+                    <TextView
+                        android:id="@+id/tv_no_items"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_small" />
+
+                </LinearLayout>
             </LinearLayout>
 
 
@@ -66,16 +87,61 @@
                     android:layout_margin="5dp"
                     android:scrollbars="none" />
 
-                <TextView
-                    android:id="@+id/tv_order_no_data"
+                <LinearLayout
+                    android:id="@+id/ll_no_data_found"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="No order(s) yet !"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_medium"
-                    android:visibility="gone" />
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="25dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/animation_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:minHeight="70dp"
+                            app:lottie_fileName="Mobilo/R.json"
+                            app:lottie_loop="false" />
+
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/animation_view2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="-40dp"
+                            app:lottie_fileName="Mobilo/K.json"
+                            app:lottie_loop="false" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_no_data_found"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:gravity="center"
+                        android:paddingLeft="18dp"
+                        android:paddingRight="18dp"
+                        android:text="Uhh You have not orders yet.?"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_medium" />
+
+                    <Button
+                        android:id="@+id/btn_add_now"
+                        style="@style/ButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="Add Now" />
+                </LinearLayout>
 
             </LinearLayout>
 

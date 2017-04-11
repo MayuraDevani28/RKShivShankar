@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shivshankar.ServerCall.APIs;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -163,20 +164,12 @@ public class OTPMobileNoActivityBuyer extends BaseActivityBuyer implements View.
                 String result = jObjWhole.optString("res");
                 String strApiName = jObjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("CheckMobileNoForRegistration")) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(result);
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, result,null);
                 } else if (strApiName.equalsIgnoreCase("VerifyOTPForNewMobileNo")) {
                     if (result.equals("success")) {
                         returnBack(true);
                     } else {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage(result);
-                        builder.setPositiveButton("Ok", null);
-                        builder.show();
+                        AlertDialogManager.showDialog(this, result,null);
                     }
                 }
             }

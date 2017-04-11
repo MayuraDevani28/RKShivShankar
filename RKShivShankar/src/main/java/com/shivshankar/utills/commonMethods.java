@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.shivshankar.R;
 import com.shivshankar.SplashActivity;
+import com.shivshankar.classes.SC3Object;
 import com.shivshankar.classes.Suggestion;
 
 import java.io.ByteArrayOutputStream;
@@ -40,6 +41,16 @@ public class commonMethods {
             return true;
         }
         return false;
+    }
+
+    public static int getIndexOf(ArrayList<SC3Object> listCountry, String strCountryCode) {
+        int ccode = 254;
+        for (int i = 0; i < listCountry.size(); i++) {
+            if (listCountry.get(i).getIFSCCode().equalsIgnoreCase(strCountryCode)) {
+                ccode = i;
+            }
+        }
+        return ccode;
     }
 
     public static boolean knowInternetOn(Activity activity) {
@@ -136,10 +147,6 @@ public class commonMethods {
                     array.add(new Suggestion(strSearch));
                     saveSearchArray(array);
                 }
-//                Intent output = new Intent();
-//                output.putExtra(commonVariables.INTENT_EXTRA_SEARCH_STRING, strSearch);
-//                activity.setResult(activity.RESULT_OK, output);
-//                activity.finish();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,15 +169,6 @@ public class commonMethods {
         try {
             if (mTv_cart_count != null) {
                 final int[] count = {3};
-//                ObjectAnimator animation = ObjectAnimator.ofFloat(mTv_cart_count, "rotationY", 0.0f, 360f);
-//                ObjectAnimator animation = ObjectAnimator. (mTv_cart_count, "rotationY", 0.0f, 360f)
-//                ;
-//                animation.setDuration(3000);
-//                animation.setRepeatCount(0);
-//                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-//                animation.start();
-
-
                 mTv_cart_count.clearAnimation();
                 Animation zoomin = AnimationUtils.loadAnimation(activity, R.anim.zoom_in);
                 Animation zoomout = AnimationUtils.loadAnimation(activity, R.anim.zoom_out);
@@ -206,47 +204,15 @@ public class commonMethods {
                         count[0]--;
                     }
                 });
-
-
-//                mTv_cart_count.setBackgroundResource(R.drawable.xml_green_border_square_box);
-//                mTv_cart_count.setTextColor(ContextCompat.getColor(activity, R.color.white));
-//
-//                final Handler h = new Handler();
-//                h.postDelayed(new Runnable() {
-//                    public void run() {
-//                        mTv_cart_count.setBackgroundResource(R.drawable.xml_black_border_square_box);
-////                        mTv_cart_count.setTextColor(ContextCompat.getColor(activity, R.color.black));
-//                    }
-//                }, 2000);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void saveAndSetCartCount(int cartcount, TextView mTv_cart_count) {
-        if (cartcount >= 0) {
-            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-            editor.putInt(commonVariables.KEY_NOTI_COUNT, cartcount);
-            editor.apply();
-            Log.v("TAGRK", "CART ITEMS: " + AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
-            if (mTv_cart_count != null)
-                if (cartcount > 0) {
-                    mTv_cart_count.setVisibility(View.VISIBLE);
-                    mTv_cart_count.setText(cartcount + "");
-                } else
-                    mTv_cart_count.setVisibility(View.GONE);
-        }
-    }
-
     public static void logout(AppCompatActivity activity, boolean isShowDialog) {
         if (isShowDialog) {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
-            builder.setTitle(commonVariables.appname);
-            builder.setMessage("Do you want to logout?");
-            builder.setPositiveButton("Logout", (arg0, arg1) -> commonMethods.logoutCode(activity));
-            builder.setNegativeButton("Cancel", null);
-            builder.show();
+            AlertDialogManager.showDialogCustom(activity, "Do you want to logout?", "Logout", "Cancel", () -> commonMethods.logoutCode(activity), null);
         } else
             logoutCode(activity);
     }
@@ -261,7 +227,6 @@ public class commonMethods {
         editor.putBoolean(commonVariables.KEY_IS_BRAND, false);
         editor.putBoolean(commonVariables.KEY_IS_SELLER, false);
         editor.putBoolean(commonVariables.KEY_IS_SKIPPED_LOGIN_BUYER, false);
-//        editor.putString(commonVariables.KEY_ORDER_ID, "0");
         editor.commit();
         Intent intent = new Intent(activity, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

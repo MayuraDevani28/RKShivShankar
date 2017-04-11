@@ -28,6 +28,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResultString;
@@ -55,7 +56,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
             super.onCreate(savedInstanceState);
             View rootView = getLayoutInflater().inflate(R.layout.activity_add_brand_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             Gson gson = new Gson();
@@ -130,6 +131,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             mNav_my_products.setOnClickListener(this);
             mNav_notification.setOnClickListener(this);
             mNav_change_pass.setOnClickListener(this);
+            mNav_my_orders.setOnClickListener(this);
             mIv_change_image.setOnClickListener(this);
 
             mBtn_submit.setOnClickListener(this);
@@ -199,6 +201,10 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ChangePasswordActivitySeller.class));
                 overridePendingTransition(0, 0);
+            } else if (view == mNav_my_orders) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyOrdersActivitySeller.class));
+                overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
@@ -216,11 +222,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                     mEdt_brand_name.setError("Brand name required");
                 } else if (file == null) {
                     if (mIv_imageView.getDrawable() == null) {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage("Please select brand logo");
-                        builder.setPositiveButton("Ok", null);
-                        builder.show();
+                        AlertDialogManager.showDialog(this, "Please select brand logo", null);
                     } else {
                         Uri tempUri = commonMethods.getImageUri(getApplicationContext(), ((RoundedBitmapDrawable) mIv_imageView.getDrawable()).getBitmap());
                         file = new File(commonMethods.getRealPathFromURI(this, tempUri));
@@ -302,47 +304,44 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                 String strAPIName = job.optString("api");
                 if (strAPIName.equalsIgnoreCase("CreateSellerBrand") || strAPIName.equalsIgnoreCase("UpdateSellerBrand")) {
                     int strresId = job.optInt("resInt");
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setCancelable(false);
-                    builder.setMessage(job.optString("res"));
+                    Runnable listener = null;
                     if (strresId == 1) {
                         try {
-                            builder.setPositiveButton("Ok", (dialog, which) -> {
+                            listener = () -> {
+                                {
 
 //                                Intent intent = new Intent(getApplicationContext(), BrandsActivitySeller.class);
 //                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
 //                                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
 //                                byte[] byteArray = stream.toByteArray();
 //                                String saveThis = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                                SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                                Gson gson = new Gson();
-                                item = new Brand(job.optString("brandId"), mEdt_brand_name.getText().toString(), job.optString("brandLogoPath"));
-                                String json = gson.toJson(item);
-                                editor.putString(commonVariables.KEY_BRAND, json);
-                                editor.apply();
+                                    SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                                    Gson gson = new Gson();
+                                    item = new Brand(job.optString("brandId"), mEdt_brand_name.getText().toString(), job.optString("brandLogoPath"));
+                                    String json = gson.toJson(item);
+                                    editor.putString(commonVariables.KEY_BRAND, json);
+                                    editor.apply();
 //                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                                startActivity(intent);
-                                if (alDialog != null)
-                                    alDialog.dismiss();
-                                Intent output = new Intent();
-                                output.putExtra(commonVariables.KEY_IS_BRAND_UPDATED, true);
+                                    if (alDialog != null)
+                                        alDialog.dismiss();
+                                    Intent output = new Intent();
+                                    output.putExtra(commonVariables.KEY_IS_BRAND_UPDATED, true);
 //                                setResult(RESULT_OK, output);
-                                if (getParent() == null) {
-                                    setResult(Activity.RESULT_OK, output);
-                                } else {
-                                    getParent().setResult(Activity.RESULT_OK, output);
+                                    if (getParent() == null) {
+                                        setResult(Activity.RESULT_OK, output);
+                                    } else {
+                                        getParent().setResult(Activity.RESULT_OK, output);
+                                    }
+                                    finish();
+                                    overridePendingTransition(0, 0);
                                 }
-                                finish();
-                                overridePendingTransition(0, 0);
-                            });
+                            };
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        builder.setPositiveButton("Ok", null);
                     }
-                    alDialog = builder.show();
+                    AlertDialogManager.showDialog(this, job.optString("res"), listener);
                 }
             }
         } catch (Exception e) {

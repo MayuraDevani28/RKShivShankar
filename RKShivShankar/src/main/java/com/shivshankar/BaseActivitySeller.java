@@ -41,8 +41,8 @@ public class BaseActivitySeller extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     DrawerLayout drawer;
     CoordinatorLayout main_content;
-    LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mLl_close;
-    TextView mTv_cart_count, mTv_username, mTv_logout;
+    LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mNav_my_orders, mLl_close;
+    TextView mTv_noti_count, mTv_username, mTv_logout;
     ImageView mIv_logo_nav, mIv_logo_toolbar;
     File file = null;
 
@@ -89,6 +89,7 @@ public class BaseActivitySeller extends AppCompatActivity {
             mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
             mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
             mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
+            mNav_my_orders = (LinearLayout) findViewById(R.id.nav_my_orders);
             mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
 
             mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
@@ -141,9 +142,10 @@ public class BaseActivitySeller extends AppCompatActivity {
             if (mTv_username != null) {
                 setUserName();
             }
-            if (mTv_cart_count != null && !commonMethods.isOnline(this)) {
-                Snackbar.make(mTv_cart_count, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            if (mTv_noti_count != null && !commonMethods.isOnline(this)) {
+                Snackbar.make(mTv_noti_count, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
+            setNotiCount();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -155,38 +157,36 @@ public class BaseActivitySeller extends AppCompatActivity {
             MenuInflater menuInflater = getMenuInflater();
             menuInflater.inflate(R.menu.main, menu);
             final View menu_layout = menu.findItem(R.id.action_notifications).getActionView();
-            mTv_cart_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
+            mTv_noti_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
 
-            updateHotCount(3);
-            commonMethods.cartCountAnimation(this, mTv_cart_count);
+            commonMethods.cartCountAnimation(this, mTv_noti_count);
             new MyMenuItemStuffListener(menu_layout, "Show hot message") {
                 @Override
                 public void onClick(View view) {
-                    commonMethods.cartCountAnimation(BaseActivitySeller.this, mTv_cart_count);
                     startActivity(new Intent(BaseActivitySeller.this, NotificationsActivitySeller.class));
                     overridePendingTransition(0, 0);
                 }
             };
-
+            setNotiCount();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return super.onCreateOptionsMenu(menu);
     }
 
-    // so we can call this asynchronously
-    public void updateHotCount(final int count) {
+    private void setNotiCount() {
+        updateCount(AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
+
+    }
+
+    public void updateCount(final int count) {
         try {
-            if (mTv_cart_count == null) return;
+            if (mTv_noti_count == null) return;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        if (count > 0) {
-                            mTv_cart_count.setVisibility(View.VISIBLE);
-                            mTv_cart_count.setText(count + "");
-                        } else
-                            mTv_cart_count.setVisibility(View.GONE);
+                        mTv_noti_count.setText(count + "");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -197,7 +197,6 @@ public class BaseActivitySeller extends AppCompatActivity {
         }
     }
 
-//test praful
     @Override
     public void onBackPressed() {
 

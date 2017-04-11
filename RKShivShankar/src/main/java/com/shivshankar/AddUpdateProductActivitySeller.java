@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +32,7 @@ import com.google.gson.Gson;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.ProductItem;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -61,7 +61,6 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
     CheckBox mCb_all_over;
     Brand item;
     String strTop, strBottom, strDupatta, strAllOver, strCategory, strFabricType, productId = "0";
-    AlertDialog alDialog;
 
     String[] SP_TOP = {"Top Fabrics"};
     String[] VAL_TOP = {""};
@@ -78,6 +77,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
     Bitmap bmp;
     ScrollView sv;
     ProductItem product;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +136,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
     private void setProductData(ProductItem product) {
         try {
             mEdt_min_qty.setText(product.getMinOrderQty() + "");
-            mEdt_price.setText(product.getOfferPrice() + "");
+            mEdt_price.setText(commonVariables.strCurrency_name + " " + product.getOfferPrice());
 
             String strImageURL = product.getImageName();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
@@ -187,6 +187,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
         mNav_my_profile.setOnClickListener(this);
         mNav_my_products.setOnClickListener(this);
         mNav_notification.setOnClickListener(this);
+        mNav_my_orders.setOnClickListener(this);
         mNav_change_pass.setOnClickListener(this);
 
         sv = (ScrollView) rootView.findViewById(R.id.sv);
@@ -361,6 +362,10 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ChangePasswordActivitySeller.class));
                 overridePendingTransition(0, 0);
+            } else if (view == mNav_my_orders) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyOrdersActivitySeller.class));
+                overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
@@ -375,19 +380,11 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                         strPrice = mEdt_price.getText().toString().trim();
 
                 if (file == null && mIv_imageView.getDrawable() == null) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage("Please select product image");
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, "Please select product image", null);
                 } else if (strBrandName.isEmpty()) {
                     mEdt_brand_name.setError("Brand name required");
                 } else if (mLl_top_bottom_fab.getVisibility() == View.GONE && strAllOver.isEmpty()) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage("Please select All over fabric");
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, "Please select All over fabric", null);
                 } else if (mLl_top_bottom_fab.getVisibility() == View.VISIBLE && (strTop.isEmpty() || strBottom.isEmpty() || strDupatta.isEmpty())) {
                     String type = "";
                     if (strTop.isEmpty())
@@ -404,35 +401,15 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                         else
                             type = type + ", Dupatta";
                     }
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage("Please select " + type + " fabric");
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, "Please select " + type + " fabric", null);
                 } else if (strCategory.isEmpty()) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage("Please select category");
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, "Please select category", null);
                 } else if (strFabricType.isEmpty()) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage("Please select fabric type");
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, "Please select fabric type", null);
                 } else if (strPrice.isEmpty() || Float.parseFloat(strPrice) == 0) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage("Please select price");
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, "Please select price", null);
                 } else if (strMinQty.isEmpty() || Integer.parseInt(strMinQty) == 0) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage("Please select min order quantity");
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, "Please select min order quantity", null);
                 } else {
                     if (file == null && mIv_imageView.getDrawable() != null) {
                         try {
@@ -702,25 +679,21 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                 String strAPIName = job.optString("api");
                 if (strAPIName.equalsIgnoreCase("AddUpdateProduct_Suit")) {
                     int strresId = job.optInt("resInt");
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setCancelable(false);
-                    builder.setMessage(job.optString("res"));
+                    Runnable listener = null;
                     if (strresId == 1) {
                         try {
-                            builder.setPositiveButton("Ok", (dialog, which) -> {
+                            listener = () -> {
                                 Intent intent = new Intent(getApplicationContext(), ProductsActivitySeller.class);
                                 startActivity(intent);
                                 finish();
                                 overridePendingTransition(0, 0);
-                            });
+                            };
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        builder.setPositiveButton("Ok", null);
                     }
-                    alDialog = builder.show();
+
+                    AlertDialogManager.showDialog(this, job.optString("res"), listener);
                 }
             }
         } catch (Exception e) {

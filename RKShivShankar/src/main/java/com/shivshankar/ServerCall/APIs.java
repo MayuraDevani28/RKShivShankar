@@ -7,11 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shivshankar.Application.App;
 import com.shivshankar.customcontrols.DialogHorizontalView;
 import com.shivshankar.utills.AppPreferences;
@@ -80,34 +82,55 @@ public class APIs {
         }
     }
 
-    public static void callPostAPI(AppCompatActivity activity, OnResult onresult, String url, Map<String, String> params, JSONObject param) {
+    public static void callPostAPI(AppCompatActivity activity, OnResult onresult, String url, Map<String, String> params, JSONObject job) {
 
         try {
-            Log.d("TAGRK", url + "\n" + params.toString());
-            if (activity != null) {
-                mView = new DialogHorizontalView();
-                mView.show(activity.getSupportFragmentManager(), "load");
+            if (params != null) {
+                Log.d("TAGRK", url + "\n" + params.toString());
+            } else {
+                Log.d("TAGRK", url + "\n" + job.toString());
             }
-            JSONObject parameters = new JSONObject(params);
-            if (param != null)
-                parameters = param;
+            try {
+                if (activity != null) {
+                    mView = new DialogHorizontalView();
+                    mView.show(activity.getSupportFragmentManager(), "load");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            JSONObject parameters = new JSONObject();
+            if (params != null)
+                parameters = new JSONObject(params.toString());
+            else if (job != null)
+                parameters = job;
+
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                     url, parameters,
                     response -> {
-                        Log.d("TAGRK", response.toString());
-                        if (mView != null)
-                            mView.dismiss();
-                        onresult.onResult(response);
+                        try {
+                            Log.d("TAGRK", response.toString());
+                            try {
+                                if (mView != null)
+                                    mView.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            onresult.onResult(response);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }, error -> {
                 if (error.networkResponse != null && error.networkResponse.data != null) {
                     VolleyError error1 = new VolleyError(new String(error.networkResponse.data));
                     Log.v("TAGRK", "Error: " + error1.toString());
                 }
-
-
                 onresult.onResult(null);
-                if (mView != null)
-                    mView.dismiss();
+                try {
+                    if (mView != null)
+                        mView.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }) {
 //                @Override
 //                protected Map<String, String> getParams() {
@@ -121,7 +144,10 @@ public class APIs {
                 //                return headers;
                 //            }
             };
-
+            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                    0,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             App.getInstance().addToRequestQueue(jsonObjReq);
         } catch (Exception e) {
             e.printStackTrace();
@@ -373,7 +399,7 @@ public class APIs {
     }
 
 
-    public static void SellerBuyerLogin(AppCompatActivity activity, OnResult onresult, String strUserId, String strPassword, String strDeviceType, String strDeviceUUID, String strModelName, String strOSVersion, String GCMRegistraionId, int strLoginType) {
+    public static void SellerBuyerLogin(AppCompatActivity activity, OnResult onresult, String strUserId, String strPassword, String strDeviceType, String strDeviceUUID, String strModelName, String strOSVersion, int strLoginType) {
 
         Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/" + "SellerBuyerLogin")
@@ -384,7 +410,7 @@ public class APIs {
                 .appendQueryParameter("strDeviceUUID", strDeviceUUID)
                 .appendQueryParameter("strModelName", strModelName)
                 .appendQueryParameter("strOSVersion", strOSVersion)
-                .appendQueryParameter("GCMRegistraionId", GCMRegistraionId)
+                .appendQueryParameter("GCMRegistraionId", FirebaseInstanceId.getInstance().getToken())
 
                 .build();
         String url = uri.toString();
@@ -506,11 +532,46 @@ public class APIs {
         }
     }
 
-    public static void callGetNotificationsAPI(AppCompatActivity activity, OnResult onresult) {
+    public static void GetNotifications_Seller(AppCompatActivity activity, OnResult onresult) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("MobileAPI/GetNotifications")
-                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .path("MobileAPI/GetNotifications_Seller")
+                .appendQueryParameter("sellerId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(null, onresult, query);
+    }
+
+
+    public static void GetNotifications_Buyer(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/GetNotifications_Buyer")
+                .appendQueryParameter("CustomerId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(null, onresult, query);
+    }
+
+    public static void RemoveNotifications_Seller(AppCompatActivity activity, OnResult onresult, String notificationCustBindId) {
+
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/RemoveNotifications_Seller")
+                .appendQueryParameter("sellerId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .appendQueryParameter("notificationCustBindId", notificationCustBindId)
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(null, onresult, query);
+    }
+
+    public static void RemoveNotifications_Buyer(AppCompatActivity activity, OnResult onresult, String notificationCustBindId) {
+
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/RemoveNotifications_Buyer")
+                .appendQueryParameter("CustomerId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .appendQueryParameter("notificationCustBindId", notificationCustBindId)
                 .build();
         String query = uri.toString();
         APIs.callAPI(null, onresult, query);
@@ -527,7 +588,6 @@ public class APIs {
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
     }
-
 
     public static void RemoveProduct_Suit(AppCompatActivity activity, OnResult onresult, String productId) {
         Uri uri = new Uri.Builder().scheme("http")
@@ -580,7 +640,7 @@ public class APIs {
         APIs.callAPI(activity, onresult, query);
     }
 
-    public static void GetProductList_Suit_Buyer(AppCompatActivity activity, OnResult onresult, String brandId, int pageNo, String strcategoryIds, String strpriceRange, String strfabricIds, String strSortBy, String strFabricType) {
+    public static void GetProductList_Suit_Buyer(AppCompatActivity activity, OnResult onresult, String brandId, int pageNo, String strcategoryIds, String strpriceRange, String strfabricIds, String strSortBy, String strFabricType, String strCatidSuitFabric) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/GetProductList_Suit_Buyer")
@@ -591,6 +651,7 @@ public class APIs {
                 .appendQueryParameter("fabricIds", strfabricIds)
                 .appendQueryParameter("sortBy", strSortBy)
                 .appendQueryParameter("FabricType", strFabricType)
+                .appendQueryParameter("SuitFabricId", strCatidSuitFabric)
                 .appendQueryParameter("buyerLoginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
@@ -598,7 +659,7 @@ public class APIs {
     }
 
 
-    public static void SellerBuyerRegister(AppCompatActivity activity, OnResult onresult, String name, String email, String password, String mobile, String city, String company, String strDeviceUUID, String regId, int loginType) {
+    public static void SellerBuyerRegister(AppCompatActivity activity, OnResult onresult, String name, String email, String password, String mobile, String city, String company, String strDeviceUUID, int loginType) {
 
         String strModelName = Build.MODEL;
         String strOSVersion = Build.VERSION.RELEASE;
@@ -618,8 +679,7 @@ public class APIs {
                 .appendQueryParameter("strDeviceUUID", strDeviceUUID)
                 .appendQueryParameter("strModelName", strModelName)
                 .appendQueryParameter("strOSVersion", strOSVersion)
-                .appendQueryParameter("GCMRegistraionId", regId)
-
+                .appendQueryParameter("GCMRegistraionId", FirebaseInstanceId.getInstance().getId())
                 .build();
 
         String query = uri.toString();
@@ -752,9 +812,11 @@ public class APIs {
             JSONObject jobj = new JSONObject();
             jobj.put("mdlSuitCart", jo);
 
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("mdlSuitCart", jo.toString());
-            APIs.callPostAPI(activity, onresult, query, params, jobj);
+
+//            Map<String, String> params = new HashMap<String, String>();
+//            params.put("mdlSuitCart", jo.toString());
+
+            APIs.callPostAPI(activity, onresult, query, null, jobj);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -816,32 +878,123 @@ public class APIs {
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
     }
-    public static void AddUpdateOrder_Suit(AppCompatActivity activity, OnResult onresult, JSONArray jarray) {
 
-        String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/AddProductToCart_Suit_Buyer";
+    public static void AddUpdateOrder_Suit(AppCompatActivity activity, OnResult onresult, String orderId, String strDeviceType, String strDeviceUUID, String strModelName, String strOSVersion, String bstrFname, String bstrAddress1, String bstrAddress2, String bstrPinCode, String bstrCity, String bstrState, String bstrCity1, String bstrCountryCode, String bstrMobile, String sstrFname, String sstrAddress1, String sstrAddress2, String sstrPinCode, String sstrCity, String sstrState, String sstrCity1, String sstrCountryCode, String sstrMobile, String note) {
+        String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/AddUpdateOrder_Suit";
 
         try {
             JSONObject jo = new JSONObject();
             jo.put("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("custOrderId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("DeviceType", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("DeviceUUID", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("ModelName", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("OSVersion", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("GCMRegistraionNo", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("AppStoreRegistraionNo", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("bFullName", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("bAddress1", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-            jo.put("bAddress2", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("custOrderId", orderId);
+            jo.put("DeviceType", strDeviceType);
+            jo.put("DeviceUUID", strDeviceUUID);
+            jo.put("ModelName", strModelName);
+            jo.put("OSVersion", strOSVersion);
+            jo.put("GCMRegistraionNo", FirebaseInstanceId.getInstance().getToken());
+            jo.put("AppStoreRegistraionNo", "");
+            jo.put("bFullName", bstrFname);
+            jo.put("bAddress1", bstrAddress1);
+            jo.put("bAddress2", bstrAddress2);
+            jo.put("bPinCode", bstrPinCode);
+            jo.put("bCity", bstrCity);
+            jo.put("bState", bstrState);
+            jo.put("bCountryCode", bstrCountryCode);
+            jo.put("bMobileNo", bstrMobile);
+            jo.put("sFullName", sstrFname);
+            jo.put("sAddress1", sstrAddress1);
+            jo.put("sAddress2", sstrAddress2);
+            jo.put("sPinCode", sstrPinCode);
+            jo.put("sCity", sstrCity1);
+            jo.put("sState", sstrState);
+            jo.put("sCountryCode", sstrCountryCode);
+            jo.put("sMobileNo", sstrMobile);
+            jo.put("customerNote", note);
 
             JSONObject jobj = new JSONObject();
             jobj.put("mdlOrder", jo);
 
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("mdlOrder", jo.toString());
-            APIs.callPostAPI(activity, onresult, query, params, jobj);
-        } catch (JSONException e) {
+//            Map<String, String> params = new HashMap<String, String>();
+//            params.put("mdlOrder", jo.toString());
+
+            APIs.callPostAPI(activity, onresult, query, null, jobj);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static void GetOrderDetailsMini(AppCompatActivity activity, OnResult onresult, String orderId) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetOrderDetailsMini")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .appendQueryParameter("orderId", orderId)
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void GetMyOrders(AppCompatActivity activity, OnResult onresult, int pageNo) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetMyOrders")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .appendQueryParameter("PageNo", pageNo + "")
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void GetOrderDetails(AppCompatActivity activity, OnResult onresult, String orderId) {
+        String strSellerId = AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_SELLER, false) ? AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0") : "0";
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetOrderDetails")
+                .appendQueryParameter("orderId", orderId)
+                .appendQueryParameter("sellerId", strSellerId)
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void GetOrderList_Seller(AppCompatActivity activity, OnResult onresult, int pageNo) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetOrderList_Seller")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .appendQueryParameter("PageNo", pageNo + "")
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+
+    public static void CheckAppVersion(OnResult onresult, String appVersionCode) {
+        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("mobileapi/CheckAppVersion")
+                .appendQueryParameter("OSVersion", "android")
+                .appendQueryParameter("appVersionCode", appVersionCode)
+                .appendQueryParameter("sellerId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(null, onresult, query);
+    }
+
+    public static void RemoveAllNotifications_Buyer(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("mobileapi/RemoveAllNotifications_Buyer")
+                .appendQueryParameter("CustomerId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void RemoveAllNotifications_Seller(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("mobileapi/RemoveAllNotifications_Seller")
+                .appendQueryParameter("sellerId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
     }
 }

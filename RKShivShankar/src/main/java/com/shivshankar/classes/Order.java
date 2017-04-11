@@ -1,27 +1,37 @@
 package com.shivshankar.classes;
 
-public class Order {
-    String OrderId, OrderNo, OrderDate, Total, CustomerName, Status;
-    boolean ShowShipNowBtn;
+import java.util.ArrayList;
 
-    public Order(String orderId, String orderNo, String orderDate, String total, String customerName, String status, boolean showShipNowBtn) {
+public class Order {
+    String OrderId, OrderNo, OrderDate, Total, Status, CustName;
+    ArrayList<SC3Object> listImages;
+
+    public Order(String orderId, String orderNo, String orderDate, String total, String status, ArrayList<SC3Object> listImages, String cname) {
         super();
         OrderNo = orderNo;
         OrderId = orderId;
         OrderDate = orderDate;
         Total = total;
-        CustomerName = customerName;
         Status = status;
-        ShowShipNowBtn = showShipNowBtn;
+        this.listImages = listImages;
+        CustName = cname;
     }
 
 
-    public boolean isShowShipNowBtn() {
-        return ShowShipNowBtn;
+    public String getCustName() {
+        return CustName;
     }
 
-    public void setShowShipNowBtn(boolean showShipNowBtn) {
-        ShowShipNowBtn = showShipNowBtn;
+    public void setCustName(String custName) {
+        CustName = custName;
+    }
+
+    public ArrayList<SC3Object> getListImages() {
+        return listImages;
+    }
+
+    public void setListImages(ArrayList<SC3Object> listImages) {
+        this.listImages = listImages;
     }
 
     public String getStatus() {
@@ -64,11 +74,4 @@ public class Order {
         Total = total;
     }
 
-    public String getCustomerName() {
-        return CustomerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        CustomerName = customerName;
-    }
 }

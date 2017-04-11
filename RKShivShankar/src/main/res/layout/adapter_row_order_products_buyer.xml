@@ -18,27 +18,18 @@
             android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="100dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:visibility="gone">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
 
-                <ProgressBar
-                    android:id="@+id/pbar_product"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_product_image"
                     android:layout_width="100dp"
-                    android:layout_height="150dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:background="@drawable/xml_black_white_square_box"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/xml_gray_white_square_box"
                     android:padding="0.5dp"
                     android:scaleType="fitXY" />
             </RelativeLayout>
@@ -52,12 +43,13 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_product_name"
+                    android:id="@+id/tv_brand_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text=""
-                    android:textSize="@dimen/text_size_medium"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -71,7 +63,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Product code"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
 
                     <TextView
                         android:id="@+id/tv_product_code"
@@ -80,8 +73,8 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:text=""
-                        android:textSize="@dimen/text_size_medium"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -96,7 +89,8 @@
                         android:layout_gravity="left"
                         android:padding="5dp"
                         android:text="Qty"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
 
 
                     <TextView
@@ -110,40 +104,11 @@
                         android:paddingRight="7dp"
                         android:paddingTop="5dp"
                         android:text="1"
-                        android:textSize="@dimen/text_size_small"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_size"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:padding="5dp"
-                        android:text="Size"
-                        android:textSize="@dimen/text_size_medium" />
-
-
-                    <TextView
-                        android:id="@+id/tv_product_size"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="7dp"
-                        android:paddingRight="7dp"
-                        android:paddingTop="5dp"
-                        android:textSize="@dimen/text_size_small"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -156,8 +121,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="Unit price"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:text="Price"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
 
                     <TextView
                         android:id="@+id/tv_product_price"
@@ -166,8 +132,8 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="right"
-                        android:textSize="@dimen/text_size_medium"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
                 </LinearLayout>
 
                 <View
@@ -188,9 +154,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:text="Sub total "
+                        android:text="Sub Total "
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_small" />
 
                     <TextView
                         android:id="@+id/tv_sub_total"
@@ -200,7 +166,7 @@
                         android:layout_weight="1"
                         android:gravity="right"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_small" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

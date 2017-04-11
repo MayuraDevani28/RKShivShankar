@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.CountryAdapter;
 import com.shivshankar.classes.SC3Object;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -69,7 +70,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_my_profile_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             try {
@@ -126,6 +127,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
         mNav_my_profile.setOnClickListener(this);
         mNav_my_products.setOnClickListener(this);
         mNav_notification.setOnClickListener(this);
+        mNav_my_orders.setOnClickListener(this);
         mNav_change_pass.setOnClickListener(this);
 
         mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
@@ -211,6 +213,10 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
             } else if (view == mNav_change_pass) {
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_orders) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyOrdersActivitySeller.class));
                 overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -313,7 +319,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                         }
                     }
                     if (!strCountryCode.isEmpty()) {
-                        mSp_country_billing.setText(listCountry.get(getIndexOf(listCountry, strCountryCode)).getName());
+                        mSp_country_billing.setText(listCountry.get(commonMethods.getIndexOf(listCountry, strCountryCode)).getName());
                     }
                 } else if (strAPIName.equalsIgnoreCase("GetSellerProfile")) {
                     JSONObject JOb = jObWhole.optJSONObject("resData");
@@ -326,25 +332,22 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 } else if (strAPIName.equalsIgnoreCase("UpdateSellerProfile")) {
                     int strresId = jObWhole.optInt("resInt");
 
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jObWhole.optString("res"));
+                    Runnable listener = null;
                     if (strresId == 1) {
                         try {
-                            builder.setPositiveButton("Ok", (dialog, which) -> {
-                                onBackPressed();
-                                overridePendingTransition(0, 0);
-                            });
                             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                             editor.putString(commonVariables.KEY_SELLER_PROFILE, jObWhole.optString("resData"));
                             editor.apply();
+
+                            listener = () -> {
+                                onBackPressed();
+                                overridePendingTransition(0, 0);
+                            };
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        builder.setPositiveButton("Ok", null);
                     }
-                    builder.show();
+                    AlertDialogManager.showDialog(this, jObWhole.optString("res"), listener);
                 }
             }
             commonMethods.hidesoftKeyboard(this);
@@ -374,20 +377,10 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
             if (strCountryCode == null)
                 strCountryCode = "";
             if (!strCountryCode.isEmpty())
-                mSp_country_billing.setText(listCountry.get(getIndexOf(listCountry, strCountryCode)).getName());
+                mSp_country_billing.setText(listCountry.get(commonMethods.getIndexOf(listCountry, strCountryCode)).getName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private int getIndexOf(ArrayList<SC3Object> listCountry, String strCountryCode) {
-        int ccode = 254;
-        for (int i = 0; i < listCountry.size(); i++) {
-            if (listCountry.get(i).getIFSCCode().equalsIgnoreCase(strCountryCode)) {
-                ccode = i;
-            }
-        }
-        return ccode;
     }
 
     @Override
@@ -403,7 +396,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
     private void showCountryDialog(final EditText mEdt_country) {
 
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setContentView(R.layout.dialog_custom_bank);
         EditText inputSearch = (EditText) dialog.findViewById(R.id.inputSearch);
         ListView list = (ListView) dialog.findViewById(R.id.list_view);
         dialog.setTitle("Select Country");

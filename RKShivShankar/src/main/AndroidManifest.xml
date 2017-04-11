@@ -76,10 +76,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ChangePasswordWithOTPActivityBuyer"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".MyProfileActivitySeller"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
@@ -152,7 +148,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".CartActivity"
+            android:name=".CartActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
@@ -161,12 +157,35 @@
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OrderFormActivity"
+            android:name=".OrderFormBuyerActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".OrderSuccessActivityBuyer"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.shivshankar.MyGlideModule"
             android:value="GlideModule" />
+
+        /* FCM Reciever*/
+        <service android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        /* Over FCM Reciever*/
     </application>
 
 </manifest>

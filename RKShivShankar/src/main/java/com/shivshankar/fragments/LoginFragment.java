@@ -14,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,15 +29,18 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shivshankar.LoginRegisterActivity;
 import com.shivshankar.MainActivityBuyer;
 import com.shivshankar.MainActivitySeller;
 import com.shivshankar.OTPRegisterActivity;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.Validation;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONObject;
@@ -55,7 +59,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
     private RadioGroup radioGroup;
     public int stType = 1;
     private boolean isVisiblePass = false;
-    String regId, strDeviceUUID = commonVariables.uuid;
+    String strDeviceUUID = commonVariables.uuid;
 
 
     public LoginFragment() {
@@ -141,18 +145,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             }
         });
 
-
-//        context = getActivity().getApplicationContext();
-//        if (commonMethods.knowInternetOn(getActivity())) {
-//            if (TextUtils.isEmpty(regId)) {
-//                regId = FirebaseInstanceId.getInstance().getToken();
-//                Log.e("TAGRK", "ReId:!" + regId);
-//            } else {
-//                Log.d("TAGRK", "Already Registered with GCM Server!");
-//            }
-//        } else {
-//            Log.d("TAGRK", "Internet Problem!");
-//        }
+        if (commonMethods.knowInternetOn(getActivity())) {
+            Log.e("TAGRK", "ReId:!" + FirebaseInstanceId.getInstance().getToken());
+        } else {
+            Log.d("TAGRK", "Internet Problem!");
+        }
     }
 
 
@@ -171,6 +168,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             e.printStackTrace();
         }
     }
+
     @Override
     public void onClick(View v) {
 
@@ -178,7 +176,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             login();
         } else if (v == mIv_eye) {
             passwordVisibility(mEdtPassword);
-        }else if (v == mLl_skip) {
+        } else if (v == mLl_skip) {
             callBuyerWithoutLogin();
         } else if (v == mTv_forget) {
 
@@ -284,8 +282,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
             String strModelName = Build.MODEL;
             String strOSVersion = Build.VERSION.RELEASE;
             String strDeviceType = "Android";
-            //FirebaseInstanceId.getInstance().getToken()
-            APIs.SellerBuyerLogin((AppCompatActivity) getActivity(), this, strUserId, stPassword, strDeviceType, strDeviceUUID, strModelName, strOSVersion, regId, stType);
+            FirebaseInstanceId.getInstance().getToken();
+            APIs.SellerBuyerLogin((AppCompatActivity) getActivity(), this, strUserId, stPassword, strDeviceType, strDeviceUUID, strModelName, strOSVersion, stType);
         }
 
     }
@@ -335,19 +333,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                         getActivity().overridePendingTransition(0, 0);
 
                     } else {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage(result);
-                        builder.setPositiveButton("Ok", null);
-                        builder.show();
+                        AlertDialogManager.showDialog((AppCompatActivity) getActivity(), result, null);
                     }
                 } else if (strApiName.equalsIgnoreCase("SellerBuyerForgotPassward")) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(result);
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
-
+                    AlertDialogManager.showDialog((AppCompatActivity) getActivity(), result, null);
                 }
             }
         } catch (Exception e) {

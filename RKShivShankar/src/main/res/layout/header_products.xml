@@ -12,7 +12,7 @@
         android:id="@+id/ll_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/xml_black_white_square_box"
+        android:background="@drawable/xml_gray_white_square_box"
         android:orientation="vertical"
         android:padding="5dp">
 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/xml_popup_square_box"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="100dp"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/btn_no"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:background="@color/yellow"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="No"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/btn_done"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Ok"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
+        android:adjustViewBounds="true"
+        android:padding="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_error" />
+
+    <ImageView
+        android:id="@+id/iv_center"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:adjustViewBounds="true"
+        android:padding="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_done"
+        android:visibility="gone" />
+</RelativeLayout>

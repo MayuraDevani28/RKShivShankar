@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ import com.shivshankar.BrandsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonVariables;
@@ -58,22 +58,18 @@ public class BrandsAdapterSeller extends RecyclerView.Adapter<BrandsAdapterSelle
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("RemoveSellerBrand")) {
                     int strresId = jobjWhole.optInt("resInt");
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(activity);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jobjWhole.optString("res"));
+
                     if (strresId == 1) {
-                        builder.setPositiveButton("Ok", (dialog, which) -> {
-                            list.remove(posit);
-                            if (list.size() == 0) {
-                                AppPreferences.getPrefs().edit().putString(commonVariables.KEY_BRAND, "").apply();
-                                ((BrandsActivitySeller) activity).setListAdapter(list);
-                            } else
-                                notifyDataSetChanged();
-                        });
+                        list.remove(posit);
+                        if (list.size() == 0) {
+                            AppPreferences.getPrefs().edit().putString(commonVariables.KEY_BRAND, "").apply();
+                            ((BrandsActivitySeller) activity).setListAdapter(list);
+                        } else
+                            notifyDataSetChanged();
                     } else {
-                        builder.setPositiveButton("Ok", null);
+                        AlertDialogManager.showDialog(activity, jobjWhole.optString("res"), null);
                     }
-                    builder.show();
+
                 }
             }
         } catch (Exception e) {
@@ -134,13 +130,7 @@ public class BrandsAdapterSeller extends RecyclerView.Adapter<BrandsAdapterSelle
                     activity.startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_BRAND);
                     activity.overridePendingTransition(0, 0);
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage("Do you want to delete this brand?");
-                    builder.setPositiveButton("Yes", (dialog, which) -> APIs.RemoveSellerBrand(activity, BrandsAdapterSeller.this, item.getBrandId() + ""));
-                    builder.setNegativeButton("No", null);
-                    builder.show();
-
+                    AlertDialogManager.showDialogYesNo(activity, "Do you want to delete this brand?", "Yes", () -> APIs.RemoveSellerBrand(activity, BrandsAdapterSeller.this, item.getBrandId() + ""));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

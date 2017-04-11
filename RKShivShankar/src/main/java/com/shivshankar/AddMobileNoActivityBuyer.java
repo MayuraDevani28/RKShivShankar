@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shivshankar.ServerCall.APIs;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -40,9 +41,9 @@ public class AddMobileNoActivityBuyer extends BaseActivityBuyer implements View.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             }
-            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE,WindowManager.LayoutParams.FLAG_SECURE);
+            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_add_mobile_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
         } catch (Exception e) {
@@ -132,22 +133,14 @@ public class AddMobileNoActivityBuyer extends BaseActivityBuyer implements View.
                 int resId = jObjWhole.optInt("resInt");
                 if (strApiName.equalsIgnoreCase("CheckMobileNoForRegistration")) {
                     if (resId == 1) {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage(result);
-                        builder.setPositiveButton("Ok", (dialog, which) -> {
+                        AlertDialogManager.showDialog(this, result, () -> {
                             Intent intent = new Intent(AddMobileNoActivityBuyer.this, OTPMobileNoActivityBuyer.class);
                             intent.putExtra(commonVariables.KEY_MOBILE_NO, mEdt_register_mobile_wholesaler.getText().toString().trim());
                             startActivityForResult(intent, commonVariables.REQUEST_ADD_MOBILE);
                             overridePendingTransition(0, 0);
                         });
-                        builder.show();
                     } else {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage(result);
-                        builder.setPositiveButton("Ok", null);
-                        builder.show();
+                        AlertDialogManager.showDialog(this, result, null);
                     }
                 }
             }

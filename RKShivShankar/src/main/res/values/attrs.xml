@@ -4,4 +4,5 @@
     <declare-styleable name="ImageRadioButton">
         <attr name="radioTextImage" format="reference" />
     </declare-styleable>
+    <bool name="abc_config_actionMenuItemAllCaps">false</bool>
 </resources>

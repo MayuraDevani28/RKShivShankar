@@ -39,6 +39,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.shivshankar.R.id.btn_add_now;
 import static com.shivshankar.R.id.ll_header;
 import static com.shivshankar.R.id.ll_no_data_found;
 
@@ -48,16 +49,14 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     Button mBtn_add_now;
     private LinearLayout mLl_no_data_found, mFl_whole, mLl_header_whole;
     RecyclerView mRv_items;
-    private ImageView mIv_filer;
+    private ImageView mIv_filer, mIv_add_product;
     LottieAnimationView animationView2, animationView;
 
     RelativeLayout mLl_rv_items;
-    private LinearLayout mLl_header;
-    private ImageView mIv_down;
-    private LinearLayout mLl_header_views;
+    private LinearLayout mLl_header, mLl_header_views;
     private MaterialBetterSpinner mSp_Category;
     private EditText mEdt_product_code;
-    public ImageView mIv_close;
+    private ImageView mIv_down, mIv_close;
 
 
     int pageNo = 1;
@@ -78,7 +77,6 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
         rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
-
         try {
             res = getResources();
             bindViews(rootView);
@@ -96,6 +94,9 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
         try {
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setOnClickListener(this);
+            mIv_add_product = (ImageView) findViewById(R.id.iv_add_product);
+            mIv_add_product.setVisibility(View.VISIBLE);
+            mIv_add_product.setOnClickListener(this);
             mIv_logo_nav.setOnClickListener(this);
             mIv_logo_toolbar.setOnClickListener(this);
             mTv_username.setOnClickListener(this);
@@ -105,6 +106,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
             mNav_my_profile.setOnClickListener(this);
             mNav_my_products.setOnClickListener(this);
             mNav_notification.setOnClickListener(this);
+            mNav_my_orders.setOnClickListener(this);
             mNav_change_pass.setOnClickListener(this);
 
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
@@ -118,7 +120,6 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
             mRv_items = (RecyclerView) rootView.findViewById(R.id.gv_items);
             mLl_rv_items = (RelativeLayout) rootView.findViewById(R.id.ll_rv_items);
             mRv_items.setHasFixedSize(true);
-//            mRv_items.setNestedScrollingEnabled(false);
 
             int i = 2;
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -131,7 +132,6 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-//                    mLl_counter.setVisibility(View.GONE);
                     mLl_header_whole.setVisibility(View.GONE);
                 }
 
@@ -143,8 +143,6 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                         if (isFirstScrollDone && listArray.size() != 0) {
                             int citem = (pastVisiblesItems + visibleItemCount);
                             if (citem != 2) {
-//                                mTv_counter.setText(citem + "/" + total);
-//                                mLl_counter.setVisibility(View.VISIBLE);
                                 mTv_count_items.setText(" (" + citem + "/" + total + " products)");
                             }
                         }
@@ -164,7 +162,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 }
             });
 
-            mBtn_add_now = (Button) rootView.findViewById(R.id.btn_add_now);
+            mBtn_add_now = (Button) rootView.findViewById(btn_add_now);
             mBtn_add_now.setOnClickListener(this);
             mTv_no_data_found = (TextView) rootView.findViewById(R.id.tv_no_data_found);
             mTv_title.setOnClickListener(this);
@@ -314,6 +312,10 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ChangePasswordActivitySeller.class));
                 overridePendingTransition(0, 0);
+            } else if (view == mNav_my_orders) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyOrdersActivitySeller.class));
+                overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
@@ -339,6 +341,8 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                     mLl_header_whole.setVisibility(View.GONE);
                 else
                     mLl_header_whole.setVisibility(View.VISIBLE);
+            } else if (view == mIv_add_product) {
+                mBtn_add_now.performClick();
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -136,7 +136,8 @@ public class BaseActivityBuyer extends AppCompatActivity {
     }
 
     public void setCartAndNotiCount() {
-        updateHotCount(mTv_cart_count, AppPreferences.getPrefs().getInt(commonVariables.CART_COUNT, 0));
+        updateCount(mTv_cart_count, AppPreferences.getPrefs().getInt(commonVariables.CART_COUNT, 0));
+        updateCount(mTv_noti_count, AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
     }
 
     @Override
@@ -150,10 +151,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
             new BaseActivitySeller.MyMenuItemStuffListener(menu_layout, "") {
                 @Override
                 public void onClick(View view) {
-                    if (mTv_cart_count.getVisibility() == View.VISIBLE)
-                        commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_cart_count);
-
-                    startActivity(new Intent(BaseActivityBuyer.this, CartActivity.class));
+                    startActivity(new Intent(BaseActivityBuyer.this, CartActivityBuyer.class));
                     overridePendingTransition(0, 0);
                 }
             };
@@ -163,8 +161,6 @@ public class BaseActivityBuyer extends AppCompatActivity {
             new BaseActivitySeller.MyMenuItemStuffListener(cart_layout, "") {
                 @Override
                 public void onClick(View view) {
-                    if (mTv_noti_count.getVisibility() == View.VISIBLE)
-                        commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_noti_count);
                     startActivity(new Intent(BaseActivityBuyer.this, NotificationsActivityBuyer.class));
                     overridePendingTransition(0, 0);
                 }
@@ -177,20 +173,20 @@ public class BaseActivityBuyer extends AppCompatActivity {
     }
 
     // so we can call this asynchronously
-    public void updateHotCount(TextView mTv_cart_count, final int count) {
+    public void updateCount(TextView mTv_cart_count, final int count) {
         try {
             if (mTv_cart_count == null) return;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        if (count > 0) {
-//                            mTv_cart_count.setVisibility(View.VISIBLE);
-                            mTv_cart_count.setText(count + "");
-//                            commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_cart_count);
-                        }
+//                        if (count > 0) {
+//                            mTv_noti_count.setVisibility(View.VISIBLE);
+                        mTv_cart_count.setText(count + "");
+//                            commonMethods.cartCountAnimation(BaseActivityBuyer.this, mTv_noti_count);
+//                        }
 //                        else
-//                            mTv_cart_count.setVisibility(View.INVISIBLE);
+//                            mTv_noti_count.setVisibility(View.INVISIBLE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

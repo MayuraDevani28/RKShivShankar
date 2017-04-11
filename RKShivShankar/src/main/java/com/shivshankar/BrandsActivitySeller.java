@@ -85,6 +85,7 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
             mNav_my_products.setOnClickListener(this);
             mNav_notification.setOnClickListener(this);
             mNav_change_pass.setOnClickListener(this);
+            mNav_my_orders.setOnClickListener(this);
 
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mIv_close = (ImageView) findViewById(R.id.iv_close);
@@ -249,6 +250,10 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
             } else if (view == mNav_change_pass) {
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_orders) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyOrdersActivitySeller.class));
                 overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);

@@ -3,7 +3,6 @@ package com.shivshankar;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -26,6 +25,7 @@ import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.ProductsAdapterBuyer;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.ProductItem;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -38,8 +38,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.shivshankar.utills.commonVariables.REQUEST_LOGIN;
 
 public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult {
 
@@ -57,7 +55,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     RelativeLayout mLl_rv_items;
     ProductsAdapterBuyer adapter;
     ArrayList<ProductItem> listArray = new ArrayList<ProductItem>();
-    String strSearch = "", brandId = "", strFabricType = "", total = "";
+    String strSearch = "", brandId = "", strFabricType = "", total = "", strCatidSuitFabric = "";
     Resources res;
     int pageNo = 1;
     boolean loading, isFirstScrollDone = false;
@@ -68,13 +66,14 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
             res = getResources();
             bindViews(rootView);
 
             strFabricType = getIntent().getStringExtra(commonVariables.KEY_FABRIC_TYPE);
+            strCatidSuitFabric = getIntent().getStringExtra(commonVariables.KEY_CATEGORY);
             Brand category = (Brand) getIntent().getSerializableExtra(commonVariables.KEY_BRAND);
             if (category != null) {
                 brandId = category.getBrandId();
@@ -85,12 +84,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             if (strSearch == null)
                 strSearch = "";
 
-            APIs.GetProductList_Suit_Buyer(this, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
-
-            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-            editor.putString(commonVariables.KEY_LAST_SORT_BY, strSortBy);
-            editor.commit();
-
+            APIs.GetProductList_Suit_Buyer(this, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,6 +111,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             mIv_close = (ImageView) findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
             mLl_add_to_cart = (LinearLayout) rootView.findViewById(R.id.ll_add_to_cart);
+            mLl_add_to_cart.setVisibility(View.VISIBLE);
             mLl_add_to_cart.setOnClickListener(this);
 
             mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
@@ -154,7 +149,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                             if (loading) {
                                 if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 10)) {
                                     loading = false;
-                                    APIs.GetProductList_Suit_Buyer(null, ProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
+                                    APIs.GetProductList_Suit_Buyer(null, ProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
                                 }
                             }
                         }
@@ -173,7 +168,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             mLl_no_data_found = (LinearLayout) rootView.findViewById(R.id.ll_no_data_found);
             animationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
             animationView2 = (LottieAnimationView) rootView.findViewById(R.id.animation_view2);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -270,8 +264,8 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 listArray.clear();
                 adapter.notifyDataSetChanged();
                 pageNo = 1;
-                APIs.GetProductList_Suit_Buyer(null, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
-            } else if (requestCode == REQUEST_LOGIN && resultCode == RESULT_OK) {
+                APIs.GetProductList_Suit_Buyer(null, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
+            } else if (requestCode == commonVariables.REQUEST_LOGIN && resultCode == RESULT_OK) {
                 boolean isLoggedIn = data.getExtras().getBoolean(commonVariables.KEY_IS_LOG_IN);
                 if (isLoggedIn)
                     mLl_add_to_cart.performClick();
@@ -287,10 +281,11 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             if (listArray.size() == 0) {
                 mLl_rv_items.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
-                String strMessage = "Uhh! We you have not added any product yet. Want to add now ?";
+                String strMessage = "Uhh! no products found. Search for products now?";
                 if (!strSearch.isEmpty())
-                    strMessage = "<font color=\"#000\">" + "No results found for \"" + strSearch + "\"" + "</font>" + "<br />Please check the spelling or type any other keyword to search";
+                    strMessage = "<font color=\"#000\">" + "No products found for \"" + strSearch + "\"" + "</font>";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));
+                mBtn_add_now.setText("Search Now");
                 startAnim();
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
@@ -379,23 +374,27 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 overridePendingTransition(0, 0);
             } else if (view == mLl_add_to_cart) {
 
-                if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
-                    JSONArray jarr = new JSONArray();
-                    List<ProductItem> lisarr = adapter.getItems();
-                    for (int i = 0; i < lisarr.size(); i++) {
-                        if (lisarr.get(i).isActive()) {
-                            ProductItem item = lisarr.get(i);
-                            JSONObject jo = new JSONObject();
-                            jo.put("ProductId", item.getProductId());
-                            jo.put("SuitQty", item.getMinOrderQty());
-                            jarr.put(jo);
+                if (adapter.isOneChecked()) {
+                    if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
+                        JSONArray jarr = new JSONArray();
+                        List<ProductItem> lisarr = adapter.getItems();
+                        for (int i = 0; i < lisarr.size(); i++) {
+                            if (lisarr.get(i).isActive()) {
+                                ProductItem item = lisarr.get(i);
+                                JSONObject jo = new JSONObject();
+                                jo.put("ProductId", item.getProductId());
+                                jo.put("SuitQty", item.getMinOrderQty());
+                                jarr.put(jo);
+                            }
                         }
+                        APIs.AddProductToCart_Suit_Buyer(this, this, jarr);
+                    } else {
+                        Intent intent = new Intent(this, LoginRegisterActivity.class);
+                        intent.putExtra(commonVariables.KEY_FOR_LOGIN, true);
+                        startActivityForResult(intent, commonVariables.REQUEST_LOGIN);
                     }
-                    APIs.AddProductToCart_Suit_Buyer(this, this, jarr);
                 } else {
-                    Intent intent = new Intent(this, LoginRegisterActivity.class);
-                    intent.putExtra(commonVariables.KEY_FOR_LOGIN, true);
-                    startActivityForResult(intent, commonVariables.REQUEST_LOGIN);
+                    AlertDialogManager.showDialog(this, "Select alteast one item to add in cart", null);
                 }
             }
         } catch (Exception e) {
@@ -465,15 +464,11 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                     String result = jobjWhole.optString("res");
                     if (resultId == 1) {
                         AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, jobjWhole.optInt("cartCount")).apply();
-                        Intent intent = new Intent(this, CartActivity.class);
+                        Intent intent = new Intent(this, CartActivityBuyer.class);
                         startActivity(intent);
                         overridePendingTransition(0, 0);
                     } else {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage(result);
-                        builder.setPositiveButton("Ok", null);
-                        builder.show();
+                        AlertDialogManager.showDialog(this, result, null);
                     }
                 }
             } else {

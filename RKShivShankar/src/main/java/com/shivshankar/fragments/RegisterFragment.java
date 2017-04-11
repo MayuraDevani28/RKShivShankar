@@ -1,8 +1,6 @@
 package com.shivshankar.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.shivshankar.LoginRegisterActivity;
 import com.shivshankar.OTPRegisterActivity;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.Validation;
@@ -41,9 +42,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
     RadioGroup radioGroup;
     private boolean isVisiblePass = false;
 
-    String regId, strDeviceUUID = commonVariables.uuid;
+    String strDeviceUUID = commonVariables.uuid;
     int stType = 1;
-    Context context;
 
     public RegisterFragment() {
     }
@@ -58,17 +58,11 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         try {
             bindViews(view);
-            context = getActivity();
-//            if (commonMethods.knowInternetOn(getActivity())) {
-//                if (TextUtils.isEmpty(regId)) {
-//                    regId = FirebaseInstanceId.getInstance().getToken();
-//                    Log.e("TAG", "ReId:!" + regId);
-//                } else {
-//                    Log.d("TAG", "Already Registered with GCM Server!");
-//                }
-//            } else {
-//                Log.d("TAG", "Internet Problem!");
-//            }
+            if (commonMethods.knowInternetOn(getActivity())) {
+                Log.e("TAGRK", "ReId:!" + FirebaseInstanceId.getInstance().getToken());
+            } else {
+                Log.d("TAGRK", "Internet Problem!");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -191,7 +185,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                     SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                     editor.putString(commonVariables.KEY_CACHE_EMAIL, email);
                     editor.apply();
-                    APIs.SellerBuyerRegister((AppCompatActivity) getActivity(), this, name, email, password, mobile, city, company, strDeviceUUID, regId, stType);
+                    APIs.SellerBuyerRegister((AppCompatActivity) getActivity(), this, name, email, password, mobile, city, company, strDeviceUUID, stType);
                 } else {
                     commonMethods.showInternetAlert(getActivity());
                 }
@@ -223,30 +217,18 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
                     } else {
                         if (resultId == 2) {
-                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                            builder.setTitle(commonVariables.appname);
-                            builder.setMessage(result);
-                            final String finalResult = result;
-                            builder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        ((LoginRegisterActivity) getActivity()).loginFragment.mEdtUsername.setText(mEdt_register_email.getText().toString().trim());
-                                        ((LoginRegisterActivity) getActivity()).viewPager.setCurrentItem(0);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                            Runnable listenerPos = () -> {
+                                try {
+                                    ((LoginRegisterActivity) getActivity()).loginFragment.mEdtUsername.setText(mEdt_register_email.getText().toString().trim());
+                                    ((LoginRegisterActivity) getActivity()).viewPager.setCurrentItem(0);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                            builder.setNegativeButton("Cancel", null);
-                            builder.show();
+                            };
+                            AlertDialogManager.showDialogCustom((AppCompatActivity) getActivity(), result, "Login", "Cancel", listenerPos, null);
 
                         } else {
-                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
-                            builder.setTitle(commonVariables.appname);
-                            builder.setMessage(result);
-                            builder.setPositiveButton("Ok", null);
-                            builder.show();
+                            AlertDialogManager.showDialog((AppCompatActivity) getActivity(), result, null);
                         }
                     }
                 }

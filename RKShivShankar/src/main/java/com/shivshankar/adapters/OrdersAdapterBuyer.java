@@ -1,9 +1,12 @@
 package com.shivshankar.adapters;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +16,20 @@ import android.widget.TextView;
 
 import com.shivshankar.R;
 import com.shivshankar.classes.Order;
+import com.shivshankar.fragments.OrderDetailFragment;
+import com.shivshankar.utills.commonVariables;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHolder> {
-    // GPSC/201516/72/1113
+public class OrdersAdapterBuyer extends RecyclerView.Adapter<OrdersAdapterBuyer.MyViewHolder> {
     private final AppCompatActivity activity;
     private final List<Order> listItems;
     Resources res;
 
-    public OrdersAdapter(AppCompatActivity activity, ArrayList<Order> listArray2) {
+
+    public OrdersAdapterBuyer(AppCompatActivity activity, ArrayList<Order> listArray2) {
 
         this.activity = activity;
         this.listItems = listArray2;
@@ -39,45 +44,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         try {
-            holder.mTv_view.setTag(R.string.position, position);
-            holder.mTv_view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TextView tv = (TextView) view;
-                    final int pos = Integer.parseInt(tv.getTag(R.string.position).toString());
-
-//                    OrderDetailFragment fragment = new OrderDetailFragment(listItems.get(pos));
-//                    try {
-//                        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-//                        fragmentManager.beginTransaction().add(R.id.container, fragment).addToBackStack(null).commit();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-
-                }
-            });
             Order order = listItems.get(position);
-            if (order.isShowShipNowBtn()) {
-                holder.mTv_ship_now.setVisibility(View.VISIBLE);
-                holder.mTv_ship_now.setTag(R.string.position, position);
-                holder.mTv_ship_now.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-//                        TextView tv = (TextView) v;
-//                        final int pos = Integer.parseInt(tv.getTag(R.string.position).toString());
-//                        Intent intent = new Intent(activity, ShipNowOrdersActivity.class);
-//                        intent.putExtra(commonVariables.INTENT_EXTRA_ORDER_ID, listItems.get(pos).getOrderId());
-//                        activity.startActivity(intent);
-//                        activity.overridePendingTransition(R.anim.fade_in_fast, R.anim.fade_out_fast);
-                    }
-                });
-            } else
-                holder.mTv_ship_now.setVisibility(View.GONE);
-
 
             String status = order.getStatus();
             holder.mTv_status.setText(status);
-            int color = R.color.gray;
+            int color = R.color.black;
             if (!status.isEmpty()) {
                 if (status.equalsIgnoreCase("In Process"))
                     color = R.color.status_in_process;
@@ -99,9 +70,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             bgShape.setColor(ContextCompat.getColor(activity, color));
 
             holder.mTv_order_no.setText(order.getOrderNo());
-            holder.mTv_order_date.setText(order.getOrderDate());
-            holder.mTv_total.setText(order.getTotal());
-            holder.mTv_c_name.setText(order.getCustomerName());
+            holder.mTv_order_date.setText("Ordered on: " + order.getOrderDate());
+            holder.mTv_total.setText(commonVariables.strCurrency_name + " " + order.getTotal());
+            holder.horizontalAdapter.setData(order.getListImages()); // List of Strings
+            holder.horizontalAdapter.setRowIndex(position);
+            holder.mTv_count.setText(order.getListImages().size() + " Items");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,7 +84,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_row_orders_buyer, parent, false);
-        return new OrdersAdapter.MyViewHolder(itemView);
+        return new OrdersAdapterBuyer.MyViewHolder(itemView);
     }
 
 
@@ -120,20 +93,44 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         return listItems.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTv_order_no, mTv_order_date, mTv_total, mTv_c_name, mTv_status, mTv_view, mTv_ship_now;
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private TextView mTv_order_no, mTv_order_date, mTv_total, mTv_status, mTv_view, mTv_count;
         LinearLayout mLl_order;
+        RecyclerView mRv_products;
+        GalleryAdapter horizontalAdapter;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mLl_order = (LinearLayout) itemView.findViewById(R.id.ll_order);
             mTv_order_no = (TextView) itemView.findViewById(R.id.tv_order_no);
             mTv_order_date = (TextView) itemView.findViewById(R.id.tv_order_date);
-            mTv_c_name = (TextView) itemView.findViewById(R.id.tv_c_name);
             mTv_total = (TextView) itemView.findViewById(R.id.tv_total);
             mTv_view = (TextView) itemView.findViewById(R.id.tv_view);
-            mTv_ship_now = (TextView) itemView.findViewById(R.id.tv_ship_now);
             mTv_status = (TextView) itemView.findViewById(R.id.tv_status);
+            mRv_products = (RecyclerView) itemView.findViewById(R.id.rv_products);
+            mTv_count = (TextView) itemView.findViewById(R.id.tv_count_products);
+
+            int i = 4;
+            if (res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                i = 6;
+            }
+            mRv_products.setLayoutManager(new GridLayoutManager(activity, i));
+            horizontalAdapter = new GalleryAdapter(activity);
+            mRv_products.setAdapter(horizontalAdapter);
+
+            mTv_view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            try {
+                OrderDetailFragment fragment = new OrderDetailFragment(listItems.get(getAdapterPosition()));
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                fragmentManager.beginTransaction().add(R.id.fl_whole, fragment).addToBackStack(null).commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }

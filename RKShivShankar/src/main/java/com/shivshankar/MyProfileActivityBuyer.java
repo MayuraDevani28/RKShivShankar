@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -28,6 +27,7 @@ import android.widget.TextView;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.CountryAdapter;
 import com.shivshankar.classes.SC3Object;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -70,7 +70,7 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_my_profile_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             try {
@@ -82,7 +82,7 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             }
 
             APIs.GetCountryList(this, this);
-            APIs.GetBuyerProfile(this, this);
+            APIs.GetBuyerProfile(null, this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -216,7 +216,7 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
                 intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-            }else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username || view == mNav_my_profile) {
+            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username || view == mNav_my_profile) {
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -237,7 +237,7 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
 //                overridePendingTransition(0, 0);
 //            }
             else if (view == mBtn_logout) {
-                commonMethods.logout(this,true);
+                commonMethods.logout(this, true);
             } else if (view == mBtn_change_password) {
                 Intent intent = new Intent(this, ChangePasswordActivityBuyer.class);
                 startActivity(intent);
@@ -322,38 +322,33 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
                         }
                     }
                     if (!strCountryCode.isEmpty()) {
-                        mSp_country_billing.setText(listCountry.get(getIndexOf(listCountry, strCountryCode)).getName());
+                        mSp_country_billing.setText(listCountry.get(commonMethods.getIndexOf(listCountry, strCountryCode)).getName());
                     }
                 } else if (strAPIName.equalsIgnoreCase("GetBuyerProfile")) {
                     JSONObject JOb = jObWhole.optJSONObject("resData");
 
                     setProfile(JOb);
                     SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                    editor.putString(commonVariables.KEY_SELLER_PROFILE, JOb.toString());
+                    editor.putString(commonVariables.KEY_BUYER_PROFILE, JOb.toString());
                     editor.apply();
 
                 } else if (strAPIName.equalsIgnoreCase("UpdateBuyerProfile")) {
                     int strresId = jObWhole.optInt("resInt");
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jObWhole.optString("res"));
+                    Runnable listener = null;
                     if (strresId == 1) {
                         try {
-                            builder.setPositiveButton("Ok", (dialog, which) -> {
+                            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                            editor.putString(commonVariables.KEY_BUYER_PROFILE, jObWhole.optString("resData"));
+                            editor.apply();
+                            listener = () -> {
                                 onBackPressed();
                                 overridePendingTransition(0, 0);
-                            });
-                            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                            editor.putString(commonVariables.KEY_SELLER_PROFILE, jObWhole.optString("resData"));
-                            editor.apply();
+                            };
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        builder.setPositiveButton("Ok", null);
                     }
-                    builder.show();
+                    AlertDialogManager.showDialog(this, jObWhole.optString("res"), listener);
                 }
             }
             commonMethods.hidesoftKeyboard(this);
@@ -383,20 +378,10 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             if (strCountryCode == null)
                 strCountryCode = "";
             if (!strCountryCode.isEmpty())
-                mSp_country_billing.setText(listCountry.get(getIndexOf(listCountry, strCountryCode)).getName());
+                mSp_country_billing.setText(listCountry.get(commonMethods.getIndexOf(listCountry, strCountryCode)).getName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private int getIndexOf(ArrayList<SC3Object> listCountry, String strCountryCode) {
-        int ccode = 254;
-        for (int i = 0; i < listCountry.size(); i++) {
-            if (listCountry.get(i).getIFSCCode().equalsIgnoreCase(strCountryCode)) {
-                ccode = i;
-            }
-        }
-        return ccode;
     }
 
     @Override
@@ -412,7 +397,7 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
     private void showCountryDialog(final EditText mEdt_country) {
 
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setContentView(R.layout.dialog_custom_bank);
         EditText inputSearch = (EditText) dialog.findViewById(R.id.inputSearch);
         ListView list = (ListView) dialog.findViewById(R.id.list_view);
         dialog.setTitle("Select Country");

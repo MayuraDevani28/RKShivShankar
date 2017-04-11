@@ -1,7 +1,6 @@
 package com.shivshankar;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shivshankar.ServerCall.APIs;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -47,15 +47,19 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        Window window = getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        try {
+            Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
+            Window window = getWindow();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            }
+            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+            View rootView = getLayoutInflater().inflate(R.layout.activity_change_password_seller, frameLayout);
+            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+            bindViews(rootView);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-        View rootView = getLayoutInflater().inflate(R.layout.activity_change_password_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
-        bindViews(rootView);
 
     }
 
@@ -84,6 +88,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
             mNav_my_profile.setOnClickListener(this);
             mNav_my_products.setOnClickListener(this);
             mNav_notification.setOnClickListener(this);
+            mNav_my_orders.setOnClickListener(this);
             mNav_change_pass.setOnClickListener(this);
 
             mEdt_current_password = (EditText) rootView.findViewById(R.id.edt_current_password);
@@ -203,11 +208,15 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ChangePasswordActivitySeller.class));
                 overridePendingTransition(0, 0);
+            } else if (view == mNav_my_orders) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyOrdersActivitySeller.class));
+                overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
             } else if (view == mTv_logout) {
                 drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this,true);
+                commonMethods.logout(this, true);
             } else if (view == mIv_close || view == mBtn_cancel) {
                 returnBack();
             } else if (view == mIv_eye_confirm_password) {
@@ -337,39 +346,15 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
                 int resId = jObjWhole.optInt("resInt");
                 String result = jObjWhole.optString("res");
                 if (strApiName.equalsIgnoreCase("SellerChangePassword") && resId == 1) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(result);
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            onBackPressed();
-                            finish();
-                            overridePendingTransition(0, 0);
-                        }
+                    AlertDialogManager.showDialog(this, result, () -> {
+                        onBackPressed();
+                        finish();
+                        overridePendingTransition(0, 0);
                     });
-                    builder.show();
-                }
-//                else if (strApiName.equalsIgnoreCase("ResendRegistrationOTP") && resId == 1) {
-//                    if (dialog != null)
-//                        dialog.dismiss();
-//
-//                    Intent intent = new Intent(ChangePasswordActivitySeller.this, ChangePasswordWithOTPActivityBuyer.class);
-//                    intent.putExtra(commonVariables.KEY_SELLER_PROFILE, strUserId);
-//                    intent.putExtra(commonVariables.KEY_OTP_MESSAGE, jObjWhole.optString("resMsg"));
-//                    startActivityForResult(intent, commonVariables.REQUEST_PASSWORD_CHANGE);
-//                    overridePendingTransition(0, 0);
-//
-//                }
-                else {
+                } else {
                     if (dialog != null)
                         dialog.dismiss();
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(result);
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, result, null);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

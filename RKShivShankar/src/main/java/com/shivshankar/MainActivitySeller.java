@@ -8,21 +8,21 @@ import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.gson.Gson;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -46,6 +46,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     View view_top;
     FrameLayout mFl_with_brand;
     Brand item;
+    boolean isBackpressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         super.onCreate(savedInstanceState);
         try {
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+//            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             Gson gson = new Gson();
@@ -95,6 +96,16 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isBackpressedOnce)
+            super.onBackPressed();
+        else {
+            isBackpressedOnce = true;
+            Toast.makeText(MainActivitySeller.this, "Press again to close " + commonVariables.appname, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void bindViews(View rootView) {
         mLl_create_brand = (LinearLayout) rootView.findViewById(ll_create_brand);
         mLl_create_brand.setOnClickListener(this);
@@ -122,6 +133,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         mNav_my_profile.setOnClickListener(this);
         mNav_my_products.setOnClickListener(this);
         mNav_notification.setOnClickListener(this);
+        mNav_my_orders.setOnClickListener(this);
         mNav_change_pass.setOnClickListener(this);
     }
 
@@ -166,6 +178,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     protected void onResume() {
         try {
             super.onResume();
+            isBackpressedOnce = false;
             if (mTv_username != null) {
                 setUserName();
             }
@@ -234,12 +247,8 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_BRAND);
                 overridePendingTransition(0, 0);
             } else if (view == mIv_delete_image) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(commonVariables.appname);
-                builder.setMessage("Do you want to delete this brand?");
-                builder.setPositiveButton("Yes", (dialog, which) -> APIs.RemoveSellerBrand(this, this, item.getBrandId() + ""));
-                builder.setNegativeButton("No", null);
-                builder.show();
+                AlertDialogManager.showDialogYesNo(this, "Do you want to delete this brand?", "Yes", () -> APIs.RemoveSellerBrand(MainActivitySeller.this, MainActivitySeller.this, item.getBrandId() + ""));
+
             } else if (view == mLl_add_product) {
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, false);
@@ -265,6 +274,10 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
             } else if (view == mNav_change_pass) {
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, ChangePasswordActivitySeller.class));
+                overridePendingTransition(0, 0);
+            } else if (view == mNav_my_orders) {
+                drawer.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(this, MyOrdersActivitySeller.class));
                 overridePendingTransition(0, 0);
             } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
                 drawer.closeDrawer(GravityCompat.START);
@@ -301,18 +314,14 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 }
                 if (strApiName.equalsIgnoreCase("RemoveSellerBrand")) {
                     int strresId = jobjWhole.optInt("resInt");
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jobjWhole.optString("res"));
+                    Runnable listener = null;
                     if (strresId == 1) {
-                        builder.setPositiveButton("Ok", (dialog, which) -> {
+                        listener = () -> {
                             AppPreferences.getPrefs().edit().putString(commonVariables.KEY_BRAND, "").apply();
                             setBrandVisibility(false, null);
-                        });
-                    } else {
-                        builder.setPositiveButton("Ok", null);
+                        };
                     }
-                    builder.show();
+                    AlertDialogManager.showDialog(this, jobjWhole.optString("res"), listener);
                 }
             } else {
                 setBrandVisibility(false, null);

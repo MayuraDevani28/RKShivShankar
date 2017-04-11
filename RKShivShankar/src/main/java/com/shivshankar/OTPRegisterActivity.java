@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shivshankar.ServerCall.APIs;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.SmsListener;
@@ -208,11 +209,7 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
                 String result = jobjWhole.optString("res");
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("ResendRegistrationOTP")) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(result);
-                    builder.setPositiveButton("Ok", null);
-                    builder.show();
+                    AlertDialogManager.showDialog(this, result,null);
                 } else if (strApiName.equalsIgnoreCase("VerifyOTP")) {
                     int resultId = jobjWhole.optInt("resInt");
                     if (resultId == 1) {
@@ -252,11 +249,7 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
                         overridePendingTransition(0, 0);
 
                     } else {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage(result);
-                        builder.setPositiveButton("Ok", null);
-                        builder.show();
+                        AlertDialogManager.showDialog(this, result,null);
                     }
                 }
             }

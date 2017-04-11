@@ -1,6 +1,7 @@
 package com.shivshankar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -11,9 +12,9 @@ import android.text.Html;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -43,6 +44,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
 
     ArrayList<Brand> listArray = new ArrayList<Brand>();
     HomeCategoryAdapterBuyer adapter;
+    boolean isBackpressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
         super.onCreate(savedInstanceState);
         try {
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_buyer, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             setupFloatingSearch();
@@ -72,7 +74,17 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
             e.printStackTrace();
         }
     }
-//overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+
+    @Override
+    public void onBackPressed() {
+        if (isBackpressedOnce) {
+            finish();
+            overridePendingTransition(0, 0);
+        } else {
+            isBackpressedOnce = true;
+            Toast.makeText(MainActivityBuyer.this, "Press again to close " + commonVariables.appname, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public void bindViews(View rootView) {
         try {
@@ -105,12 +117,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
         try {
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
-            if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivityBuyer.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_profile) {
+            if (view == mNav_my_profile) {
                 drawer.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(this, MyProfileActivityBuyer.class));
                 overridePendingTransition(0, 0);
@@ -143,7 +150,8 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
                 drawer.closeDrawer(GravityCompat.START);
                 if (mTv_logout.getText().equals("Login")) {
                     startActivity(new Intent(this, LoginRegisterActivity.class));
-                    onBackPressed();
+                    finish();
+                    overridePendingTransition(0, 0);
                 } else {
                     commonMethods.logout(this, true);
                 }
@@ -166,17 +174,15 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
                         listArray.clear();
                         for (int i = 0; i < jarray.length(); i++) {
                             JSONObject jo = jarray.optJSONObject(i);
-                            String strimg;
-                            if (i == 0)
-                                strimg = "https://2.bp.blogspot.com/-wXBht38cDw4/WEFhq2JZFYI/AAAAAAAADMI/57HnJbpCwcAYKoJvhs_ANSXh-ceOYh9pACLcB/s400/banner3%2B%25281%2529.png";
-                            else
-                                strimg = "http://www.webindia123.com/fashionfabrics/images/saree.jpg";
-
-                            listArray.add(new Brand(jo.optString("CategoryId"), jo.optString("CategoryName"), strimg));//jo.optString("CategoryImage")
+                            listArray.add(new Brand(jo.optString("CategoryId"), jo.optString("CategoryName"), jo.optString("CategoryImage")));
                         }
                         setListAdapter(listArray);
                     }
-                    AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, jobjWhole.optInt("CartCount")).apply();
+                    SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                    editor.putInt(commonVariables.CART_COUNT, jobjWhole.optInt("CartCount"));
+                    editor.putInt(commonVariables.KEY_NOTI_COUNT, jobjWhole.optInt("notificationCount"));
+                    editor.apply();
+
                     setCartAndNotiCount();
                 }
             }
@@ -203,6 +209,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
     protected void onResume() {
         super.onResume();
         try {
+            isBackpressedOnce = false;
             setupFloatingSearch();
             DataHelper.sColorSuggestions = commonMethods.getSavedSearchArray();
         } catch (Exception e) {

@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,12 +22,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.shivshankar.ProductsActivityBuyer;
 import com.shivshankar.ProductsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.ProductItem;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonVariables;
 import com.shivshankar.viewpager.ViewPagerActivity;
@@ -63,6 +62,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
     private TextInputLayout mEdt_Dupatta;
     private TextInputLayout mEdt_All_Fabrics;
     private EditText mTv_Product_Code;
+
 
     public ProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list, LinearLayout mLl_add_to_cart) {
         this.activity = activity;
@@ -104,7 +104,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
                 ProductItem product = list.get(posit);
 
                 if (view == mTv_product_info) {
-                    showPopup(list.get(getAdapterPosition()).getImageName(), list.get(getPosition()).getProductId());
+                    showPopup(list.get(getAdapterPosition()).getImageName(), product.getProductId());
                 } else {
                     if (product.isActive()) {
                         product.setActive(false);
@@ -133,61 +133,40 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
             String strImageURL = item.getImageName();
             Log.v("TAGRK", "ImageURL: " + strImageURL);
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-
                 Glide.with(activity)
                         .load(strImageURL)
                         .asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).priority(Priority.IMMEDIATE).dontAnimate().thumbnail(0.1f).override(200, 200)
                         .into(holder.mIv_product_image);
-
-//                Glide.with(activity).load(strImageURL).asBitmap().listener(new RequestListener<String, Bitmap>() {
-//                    @Override
-//                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-//                        e.printStackTrace();
-//                    Log.v("TAGRK", "Error: " + e.toString());
-//                    Log.v("TAGRK", "Model: " + model);
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                        return false;
-//                    }
-//                }).into(holder.mIv_product_image);
             }
-//            .listener(new RequestListener<String, GlideDrawable>() {
-//                @Override
-//                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-//                    e.printStackTrace();
-//                    Log.v("TAGRK", "Error: " + e.toString());
-//                    Log.v("TAGRK", "Model: " + model);
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                    return false;
-//                }
-//            })
-            if (item.isActive())//checked
+            if (item.isActive())
                 holder.mRv_checked.setVisibility(View.VISIBLE);
             else
                 holder.mRv_checked.setVisibility(View.GONE);
 
-            if (isOneChecked()) {
-                mLl_add_to_cart.setVisibility(View.VISIBLE);
-                ((ProductsActivityBuyer) activity).mRv_items.setPadding(val5, val5, val5, val28);
-            } else {
-                mLl_add_to_cart.setVisibility(View.GONE);
-                ((ProductsActivityBuyer) activity).mRv_items.setPadding(val5, val5, val5, val5);
-            }
-
+//            if (isOneChecked()) {
+//                activity.runOnUiThread(new Runnable(){
+//                    @Override
+//                    public void run() {
+//                        mLl_add_to_cart.setVisibility(View.VISIBLE);
+//                    } });
+//
+////                ((ProductsActivityBuyer) activity).mRv_items.setPadding(val5, val5, val5, val28);
+//            } else {
+//                activity.runOnUiThread(new Runnable(){
+//                    @Override
+//                    public void run() {
+//                        mLl_add_to_cart.setVisibility(View.GONE);
+//                    } });
+//
+////                ((ProductsActivityBuyer) activity).mRv_items.setPadding(val5, val5, val5, val5);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private boolean isOneChecked() {
+    public boolean isOneChecked() {
         boolean isOneChecked = false;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).isActive()) {
@@ -212,30 +191,25 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
 
                 if (strApiName.equalsIgnoreCase("RemoveProduct_Suit")) {
                     int strresId = jobjWhole.optInt("resInt");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setTitle(commonVariables.appname);
-                    builder.setMessage(jobjWhole.optString("res"));
+
                     if (strresId == 1) {
-                        builder.setPositiveButton("Ok", (dialog, which) -> {
-                            list.remove(posit);
-                            if (list.size() == 0) {
-                                ((ProductsActivitySeller) activity).setListAdapter(list);
-                            } else
-                                notifyDataSetChanged();
-                        });
+                        list.remove(posit);
+                        if (list.size() == 0) {
+                            ((ProductsActivitySeller) activity).setListAdapter(list);
+                        } else
+                            notifyDataSetChanged();
                     } else {
-                        builder.setPositiveButton("Ok", null);
+                        AlertDialogManager.showDialog(activity, jobjWhole.optString("res"),null);
                     }
-                    builder.show();
-                }
-                if (strApiName.equalsIgnoreCase("GetProductDetail_Suit_Seller")) {
+
+                } else if (strApiName.equalsIgnoreCase("GetProductDetail_Suit_Seller")) {
                     JSONObject job = jobjWhole.optJSONObject("resData");
                     // item = new Brand(job.optString("BrandId"), job.optString("BrandName"), job.optString("BrandLogo"));
                     mTv_Product_Code.setText(job.optString("ProductCode"));
                     mTv_Brand.setText(job.optString("BrandName"));
                     mTv_Category.setText(job.optString("CategoryName"));
                     mTv_Type.setText(job.optString("FabricType"));
-                    mTv_Price.setText("" + job.optInt("OfferPrice"));
+                    mTv_Price.setText(commonVariables.strCurrency_name + " " + job.optInt("OfferPrice"));
                     mTv_Min_Qty.setText("" + job.optInt("MinOrderQty"));
                     if (job.optBoolean("IsAllOver")) {
                         mLL_Fabrics.setVisibility(View.GONE);
@@ -252,22 +226,6 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
                         mTv_Bottom_Fabrics.setText(job.optString("BottomFabricName"));
                         mTv_Dupatta.setText(job.optString("DupattaFabricName"));
                     }
-                  /*  product.setBrand(item);
-                    product.setAllOver(job.optBoolean("IsAllOver"));
-                    product.setFabricId(job.optString("FabricId"));
-                    product.setFabricName(job.optString("FabricName"));
-                    product.setDupattaFabricId(job.optString("DupattaFabricId"));
-                    product.setDupattaFabricName(job.optString("DupattaFabricName"));
-                    product.setBottomFabricName(job.optString("BottomFabricId"));
-                    product.setBottomFabricName(job.optString("BottomFabricName"));
-                    product.setTopFabricId(job.optString("TopFabricId"));
-                    product.setTopFabricName(job.optString("TopFabricName"));
-                    product.setFabricType(job.optString("FabricType"));
-                    product.setCategoryId(job.optString("CategoryId"));
-                    product.setCategoryName(job.optString("CategoryName"));
-                    setData();*/
-
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -280,7 +238,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
                 activity, R.style.popupTheme);
         LayoutInflater inflater = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.popup_product_detail, null);
+        View view = inflater.inflate(R.layout.dialog_popup_product_detail, null);
 
 
         dialog.setContentView(view); // your custom view.

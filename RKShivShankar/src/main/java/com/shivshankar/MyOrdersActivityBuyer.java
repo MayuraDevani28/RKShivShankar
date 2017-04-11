@@ -3,9 +3,7 @@ package com.shivshankar;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,15 +14,16 @@ import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.shivshankar.ServerCall.APIs;
-import com.shivshankar.adapters.ProductsAdapterBuyer;
-import com.shivshankar.classes.Brand;
-import com.shivshankar.classes.ProductItem;
+import com.shivshankar.adapters.OrdersAdapterBuyer;
+import com.shivshankar.classes.Order;
+import com.shivshankar.classes.SC3Object;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -36,28 +35,23 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.shivshankar.utills.commonVariables.REQUEST_LOGIN;
 
 @SuppressLint("NewApi")
 public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult {
 
-    TextView mTv_no_data_found, mTv_title, mTv_count_items;
+    TextView mTv_no_data_found, mTv_count_items;
     Button mBtn_add_now;
     private LinearLayout mLl_no_data_found;
     public RecyclerView mRv_items;
-    LinearLayout mFl_whole, mLl_add_to_cart;
-    private ImageView mIv_filer, mIv_close;
+    FrameLayout mFl_whole;
+    private ImageView mIv_close;
     LottieAnimationView animationView2, animationView;
 
     Boolean isLogedIn = false;
-    String strCategoryIds = "", srtPriceRange = "", strFabricIds = "", strSortBy = "";
+    String total = "";
 
-    ProductsAdapterBuyer adapter;
-    ArrayList<ProductItem> listArray = new ArrayList<ProductItem>();
-    String strSearch = "", brandId = "", strFabricType = "", total = "";
-    Resources res;
+    OrdersAdapterBuyer adapter;
+    ArrayList<Order> listArray = new ArrayList<Order>();
     int pageNo = 1;
     boolean loading, isFirstScrollDone = false;
 
@@ -66,30 +60,27 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
-        View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+        View rootView = getLayoutInflater().inflate(R.layout.activity_my_orders_buyer, frameLayout);
+        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
-            res = getResources();
             bindViews(rootView);
+            APIs.GetMyOrders(this, this, pageNo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            strFabricType = getIntent().getStringExtra(commonVariables.KEY_FABRIC_TYPE);
-            Brand category = (Brand) getIntent().getSerializableExtra(commonVariables.KEY_BRAND);
-            if (category != null) {
-                brandId = category.getBrandId();
-                mTv_title.setText(WordUtils.capitalizeFully(category.getBrandName()));
+    @Override
+    public void onBackPressed() {
+
+        try {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack();
+            } else {
+                finish();
+                overridePendingTransition(0, 0);
             }
-
-            strSearch = getIntent().getStringExtra(commonVariables.KEY_SEARCH_STR);
-            if (strSearch == null)
-                strSearch = "";
-
-            APIs.GetProductList_Suit_Buyer(this, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
-
-            SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-            editor.putString(commonVariables.KEY_LAST_SORT_BY, strSortBy);
-            editor.commit();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,8 +89,6 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
     private void bindViews(View rootView) {
 
         try {
-            mIv_filer = (ImageView) findViewById(R.id.iv_filer);
-            mIv_filer.setOnClickListener(this);
             mIv_logo_nav.setOnClickListener(this);
             mIv_logo_toolbar.setOnClickListener(this);
             mTv_username.setOnClickListener(this);
@@ -112,19 +101,16 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
             mNav_our_policy.setOnClickListener(this);
             mNav_contact_us.setOnClickListener(this);
 
-            mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mIv_close = (ImageView) findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
-            mLl_add_to_cart = (LinearLayout) rootView.findViewById(R.id.ll_add_to_cart);
-            mLl_add_to_cart.setOnClickListener(this);
 
-            mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
-            mRv_items = (RecyclerView) rootView.findViewById(R.id.gv_items);
+            mFl_whole = (FrameLayout) rootView.findViewById(R.id.fl_whole);
+            mRv_items = (RecyclerView) rootView.findViewById(R.id.lv_orders);
             mRv_items.setHasFixedSize(true);
 
-            int i = 2;
+            int i = 1;
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                i = 4;
+                i = 2;
             }
             GridLayoutManager mLayoutManager = new GridLayoutManager(this, i);
             mRv_items.setLayoutManager(mLayoutManager);
@@ -152,7 +138,7 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
                             if (loading) {
                                 if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 10)) {
                                     loading = false;
-                                    APIs.GetProductList_Suit_Buyer(null, MyOrdersActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
+                                    APIs.GetMyOrders(MyOrdersActivityBuyer.this, MyOrdersActivityBuyer.this, ++pageNo);
                                 }
                             }
                         }
@@ -163,9 +149,9 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
             });
 
             mBtn_add_now = (Button) rootView.findViewById(R.id.btn_add_now);
+            mBtn_add_now.setText("Order now");
             mBtn_add_now.setOnClickListener(this);
             mTv_no_data_found = (TextView) rootView.findViewById(R.id.tv_no_data_found);
-            mTv_title.setOnClickListener(this);
 
             mTv_count_items = (TextView) rootView.findViewById(R.id.tv_no_items);
             mLl_no_data_found = (LinearLayout) rootView.findViewById(R.id.ll_no_data_found);
@@ -247,54 +233,19 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try {
-            mTv_count_items.setText("");
-            if (requestCode == commonVariables.REQUEST_FILTER_PRODUCT && resultCode == RESULT_OK && data != null) {
-                strCategoryIds = data.getExtras().getString(commonVariables.INTENT_EXTRA_KEY_FILTER_CAT);
-                if (strCategoryIds == null)
-                    strCategoryIds = "";
-                strFabricIds = data.getExtras().getString(commonVariables.INTENT_EXTRA_KEY_FILTER_FABRIC);
-                if (strFabricIds == null)
-                    strFabricIds = "";
-                srtPriceRange = data.getExtras().getString(commonVariables.INTENT_EXTRA_KEY_FILTER_PRICE);
-                if (srtPriceRange == null)
-                    srtPriceRange = "";
-                strSortBy = data.getExtras().getString(commonVariables.INTENT_EXTRA_KEY_FILTER_SORT);
-                if (strSortBy == null)
-                    strSortBy = "";
-
-                listArray.clear();
-                adapter.notifyDataSetChanged();
-                pageNo = 1;
-                APIs.GetProductList_Suit_Buyer(null, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
-            } else if (requestCode == REQUEST_LOGIN && resultCode == RESULT_OK) {
-                boolean isLoggedIn = data.getExtras().getBoolean(commonVariables.KEY_IS_LOG_IN);
-                if (isLoggedIn)
-                    mLl_add_to_cart.performClick();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void setListAdapter(ArrayList<ProductItem> listArray) {
+    private void setListAdapter(ArrayList<Order> listArray) {
         try {
             if (listArray.size() == 0) {
                 mRv_items.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
-                String strMessage = "Uhh! We you have not added any product yet. Want to add now ?";
-                if (!strSearch.isEmpty())
-                    strMessage = "<font color=\"#000\">" + "No results found for \"" + strSearch + "\"" + "</font>" + "<br />Please check the spelling or type any other keyword to search";
+                String strMessage = "Uhh! We you have no orders. Want to order now ?";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));
                 startAnim();
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
                 mRv_items.setVisibility(View.VISIBLE);
                 mFl_whole.setVisibility(View.VISIBLE);
-                adapter = new ProductsAdapterBuyer(this, listArray, mLl_add_to_cart);
+                adapter = new OrdersAdapterBuyer(this, listArray);
                 mRv_items.setAdapter(adapter);
             }
         } catch (Exception e) {
@@ -308,22 +259,7 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
         try {
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
-            if (view == mIv_filer) {
-                Intent intent = new Intent(this, FilterActivityBuyer.class);
-                intent.putExtra(commonVariables.KEY_FABRIC_TYPE, strFabricType);
-                intent.putExtra(commonVariables.KEY_BRAND, brandId);
-                intent.putExtra(commonVariables.KEY_SUIT_OR_FABRIC, 1);
-                if (!strSortBy.isEmpty())
-                    intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_SORT, strSortBy);
-                if (!strFabricIds.isEmpty())
-                    intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_FABRIC, strFabricIds);
-                if (!strCategoryIds.isEmpty())
-                    intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_CAT, strCategoryIds);
-                if (!srtPriceRange.isEmpty())
-                    intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_PRICE, srtPriceRange);
-                startActivityForResult(intent, commonVariables.REQUEST_FILTER_PRODUCT);
-                overridePendingTransition(R.anim.slide_up, R.anim.hold);
-            } else if (view == mIv_logo_toolbar) {
+            if (view == mIv_logo_toolbar) {
                 Intent intent = new Intent(this, MainActivityBuyer.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
@@ -375,26 +311,6 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
                 intent.putExtra(commonVariables.KEY_IS_BRAND, false);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-            } else if (view == mLl_add_to_cart) {
-
-                if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
-                    JSONArray jarr = new JSONArray();
-                    List<ProductItem> lisarr = adapter.getItems();
-                    for (int i = 0; i < lisarr.size(); i++) {
-                        if (lisarr.get(i).isActive()) {
-                            ProductItem item = lisarr.get(i);
-                            JSONObject jo = new JSONObject();
-                            jo.put("ProductId", item.getProductId());
-                            jo.put("SuitQty", item.getMinOrderQty());
-                            jarr.put(jo);
-                        }
-                    }
-                    APIs.AddProductToCart_Suit_Buyer(this, this, jarr);
-                } else {
-                    Intent intent = new Intent(this, LoginRegisterActivity.class);
-                    intent.putExtra(commonVariables.KEY_FOR_LOGIN, true);
-                    startActivityForResult(intent, commonVariables.REQUEST_LOGIN);
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -430,18 +346,25 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
             if (jobjWhole != null) {
 
                 String strApiName = jobjWhole.optString("api");
-                if (strApiName.equalsIgnoreCase("GetProductList_Suit_Buyer")) {
+                if (strApiName.equalsIgnoreCase("GetMyOrders")) {
 
-                    JSONObject job = jobjWhole.optJSONObject("resData");
-                    JSONArray jarray = job.optJSONArray("lstProducts");
+//                    JSONObject job = jobjWhole.optJSONObject("resData");
+                    JSONArray jarray = jobjWhole.optJSONArray("resData");
 
-                    total = job.optString("totalProductCount");
+                    total = jobjWhole.optString("TotalOrders");
+
                     mTv_count_items.setVisibility(View.VISIBLE);
-                    mTv_count_items.setText(" (" + total + " products)");
+                    mTv_count_items.setText(" (" + total + " orders)");
                     if (jarray != null) {
                         for (int i = 0; i < jarray.length(); i++) {
                             JSONObject jObjItem = jarray.optJSONObject(i);
-                            listArray.add(new ProductItem(jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("OfferPrice"), jObjItem.optString("ImageName"), "", "", "", "", "", "", "", "", "", "", "", "", "", jObjItem.optInt("MinOrderQty"), false, false, null, false));
+                            ArrayList<SC3Object> arr = new ArrayList<SC3Object>();
+                            JSONArray jarr = jObjItem.optJSONArray("lstProductimg");
+                            for (int j = 0; j < jarr.length(); j++) {
+                                JSONObject jo = jarr.getJSONObject(j);
+                                arr.add(new SC3Object(jo.optInt("ProductId"), "", "", jo.optString("ProductImages")));
+                            }
+                            listArray.add(new Order(jObjItem.optString("OrderId"), jObjItem.optString("OrderNo"), jObjItem.optString("OrderDate"), jObjItem.optString("TotalAmount"), jObjItem.optString("OrderStatus"), arr,""));
                         }
                     }
                     if (pageNo == 1) {
@@ -457,22 +380,8 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
                         }
                     }
 
-                    if (job.optInt("totalProductCount") > listArray.size())
+                    if (jobjWhole.optInt("TotalOrders") > listArray.size())
                         loading = true;
-                } else if (strApiName.equalsIgnoreCase("AddProductToCart_Suit_Buyer")) {
-                    int resultId = jobjWhole.optInt("resInt");
-                    String result = jobjWhole.optString("res");
-                    if (resultId == 1) {
-                        Intent intent = new Intent(this, CartActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(0, 0);
-                    } else {
-                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-                        builder.setTitle(commonVariables.appname);
-                        builder.setMessage(result);
-                        builder.setPositiveButton("Ok", null);
-                        builder.show();
-                    }
                 }
             } else {
                 setListAdapter(listArray);

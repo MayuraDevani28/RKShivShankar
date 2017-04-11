@@ -8,8 +8,7 @@ import java.io.Serializable;
 
 public class Brand implements Serializable {
 
-    String brandId;
-    String brandName, brandLogo;
+    String brandId,brandName, brandLogo;
 
     public Brand(String brandId, String brandName, String brandLogo) {
         this.brandId = brandId;

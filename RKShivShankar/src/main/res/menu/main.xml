@@ -7,5 +7,9 @@
         android:title="@string/action_notifications"
         app:actionLayout="@layout/component_count_noti"
         app:showAsAction="always" />
-
+    <item
+        android:id="@+id/action_clear"
+        android:title="Clear All"
+        android:visible="false"
+        app:showAsAction="always" />
 </menu>

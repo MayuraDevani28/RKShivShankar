@@ -70,18 +70,6 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
         viewPager.setOffscreenPageLimit(1);
     }
 
-    private void callCheckAppVersionAPI() {
-//        Uri uri = new Uri.Builder().scheme("http").authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-//                .path("MobileAPI/CheckAppVersion")
-//                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
-//                .appendQueryParameter("GCMRegistraionId", regId)
-//                .build();
-//        String query = uri.toString();
-//        new ServerAPICAll(null, this).execute(query);
-
-    }
-
-
     @Override
     protected void onPause() {
         super.onPause();

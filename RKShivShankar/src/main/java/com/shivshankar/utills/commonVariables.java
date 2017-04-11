@@ -13,8 +13,6 @@ public class commonVariables {
     public static final String KEY_IS_SELLER = "KEY_IS_SELLER";
     public static final String KEY_LOGIN_ID = "KEY_LOGIN_ID";
     public static final String KEY_FOR_LOGIN = "KEY_FOR_LOGIN";
-    public static final String KEY_FIRST_TIME = "KEY_FIRST_TIME";
-    public static final String KEY_PROJECTS = "KEY_PROJECTS";
     public static final String KEY_IS_LANDSCAPE = "KEY_IS_LANDSCAPE";
     public static final String KEY_NOTI_COUNT = "KEY_NOTI_COUNT";
     public static final String KEY_IS_BRAND = "KEY_IS_BRAND";
@@ -24,19 +22,16 @@ public class commonVariables {
     public static final String KEY_PASSWORD_CHANGED = "KEY_PASSWORD_CHANGED";
     public static final String KEY_CACHE_EMAIL = "KEY_CACHE_EMAIL";
     public static final String CART_COUNT = "CART_COUNT";
+    public static final String ADDRESS_SHIPPING = "ADDRESS_SHIPPING";
 
     public static final String INTENT_EXTRA_LIST_IMAGE_ARRAY = "INTENT_EXTRA_LIST_IMAGE_ARRAY";
     public static final String INTENT_EXTRA_POSITION = "INTENT_EXTRA_POSITION";
-    public static final String INTENT_EXTRA_SEARCH_STRING = "SEARCH_STRING";
     public static final String INTENT_EXTRA_KEY_FILTER_CAT = "INTENT_EXTRA_KEY_FILTER_CAT";
     public static final String INTENT_EXTRA_KEY_FILTER_PRICE = "INTENT_EXTRA_KEY_FILTER_PRICE";
     public static final String INTENT_EXTRA_KEY_FILTER_FABRIC = "INTENT_EXTRA_KEY_FILTER_FABRIC";
     public static final String INTENT_EXTRA_KEY_FILTER_SORT = "INTENT_EXTRA_KEY_FILTER_SORT";
 
     public static final String KEY_SEARCH_STR = "KEY_SEARCH_STR";
-    public static final String KEY_LAST_SORT_BY = "KEY_LAST_SORT_BY";
-    public static final java.lang.String KEY_FILTER_DATA = "KEY_FILTER_DATA";
-    public static final String KEY_PRODUCT_NAME = "KEY_PRODUCT_NAME";
     public static final java.lang.String KEY_IS_BRAND_UPDATED = "BRAND_UPDATED";
     public static final String KEY_BRAND = "KEY_BRAND";
     public static final String KEY_PRODUCT = "KEY_PRODUCT";
@@ -50,14 +45,14 @@ public class commonVariables {
     public static final String KEY_SUIT_OR_FABRIC = "KEY_SUIT_OR_FABRIC";
     public static final String INTENT_EXTRA_PAGE_NAME = "INTENT_EXTRA_PAGE_NAME";
     public static final String INTENT_EXTRA_PAGE = "INTENT_EXTRA_PAGE";
-
+    public static final String KEY_ORDER = "KEY_ORDER";
+    public static final String PREFERENCE_FIRST_RUN = "PREFERENCE_FIRST_RUN";
 
 
     public static String STRING_SERVER_URL_FOR_GET_METHOD = "rkshivshankar.vivaa.co";
 
 
     public static String SERVER_BASIC_URL = "http://rkshivshankar.vivaa.co/";
-    public static String STRING_SERVER_IMAGE_URL = "http://rkshivshankar.vivaa.co/images/";
     public static String uuid;
     public static String appname = "ShivShankar";
 
@@ -67,10 +62,10 @@ public class commonVariables {
     public static int REQUEST_ADD_MOBILE = 4;
     public static final int REQUEST_RECEIVE_MESSAGE = 5;
     public static int REQUEST_PASSWORD_CHANGE = 6;
-    public static int REQUEST_CODE_SEARCH = 7;
-    public static int REQUEST_ADD_UPDATE_BRAND = 8;
-    public static int REQUEST_ADD_UPDATE_BRAND_PRODUCT = 9;
-    public static int REQUEST_ADD_UPDATE_PRODUCT = 10;
-    public static int REQUEST_FILTER_PRODUCT = 11;
-    public static int REQUEST_LOGIN = 12;
+    public static int REQUEST_ADD_UPDATE_BRAND = 7;
+    public static int REQUEST_ADD_UPDATE_BRAND_PRODUCT = 8;
+    public static int REQUEST_ADD_UPDATE_PRODUCT = 9;
+    public static int REQUEST_FILTER_PRODUCT = 10;
+    public static int REQUEST_LOGIN = 11;
+    public static String strCurrency_name = "Rs";
 }

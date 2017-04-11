@@ -3,12 +3,14 @@ package com.shivshankar;
 import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,6 +26,7 @@ import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.NotificationListAdapter;
 import com.shivshankar.classes.NavigationItem;
 import com.shivshankar.customcontrols.SwipeDismissListViewTouchListener;
+import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
@@ -37,12 +40,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnResult, View.OnClickListener, AdapterView.OnItemClickListener {
-    boolean mAlreadyLoaded = false;
+public class NotificationsActivityBuyer extends BaseActivityCartBuyer implements OnResult, View.OnClickListener, AdapterView.OnItemClickListener {
     ListView mLv_notification;
 
     NotificationListAdapter mAdapter;
-    //    SwipeRefreshLayout swipeRefreshLayout;
     List<NavigationItem> listNavigationItems = new ArrayList<NavigationItem>();
     ImageView mIv_close;
     boolean unDoClicked = false;
@@ -62,25 +63,15 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             View rootView = getLayoutInflater().inflate(R.layout.activity_notification_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
-            APIs.callGetNotificationsAPI(this, this);
+            APIs.GetNotifications_Buyer(this, this);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void callRemoveNotificationsAPI(String strLoginId, String notificationCustBindId) {
-        Uri uri = new Uri.Builder().scheme("http")
-                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
-                .path("MobileAPI/RemoveNotifications")
-                .appendQueryParameter("loginId", strLoginId)
-                .appendQueryParameter("notificationCustBindId", notificationCustBindId)
-                .build();
-        String query = uri.toString();
-        APIs.callAPI(null, this, query);
-    }
 
     @Override
     public void onBackPressed() {
@@ -90,7 +81,7 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
 
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         try {
             super.onResume();
             if (mTv_username != null) {
@@ -124,28 +115,6 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
             mLl_no_data_found = (LinearLayout) rootView.findViewById(R.id.ll_no_data_found);
             animationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
             animationView2 = (LottieAnimationView) rootView.findViewById(R.id.animation_view2);
-//        swipeRefreshLayout = (SwipeRefreshLayout)  rootView.findViewById(R.id.swipe_refresh_layout);
-//        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light, android.R.color.holo_purple, android.R.color.holo_blue_light);
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//
-//            @Override
-//            public void onRefresh() {
-//                callGetNotificationsAPI(null, strLoginId);
-//            }
-//        });
-//        mLv_notification.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-//
-//            @Override
-//            public void onScrollChanged() {
-//                boolean scrollY = mLv_notification.getFirstVisiblePosition() > 0 ||
-//                        mLv_notification.getChildAt(0) == null ||
-//                        mLv_notification.getChildAt(0).getTop() < 0;
-//                if (scrollY)
-//                    swipeRefreshLayout.setEnabled(false);
-//                else
-//                    swipeRefreshLayout.setEnabled(true);
-//            }
-//        });
 
             coordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinatorLayout);
             SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(mLv_notification, new SwipeDismissListViewTouchListener.DismissCallbacks() {
@@ -170,23 +139,21 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
                                     mAdapter.notifyDataSetChanged();
                                 }
                             });
-                            snackbar.setCallback(new Snackbar.Callback() {
+                            snackbar.addCallback(new Snackbar.Callback() {
                                 @Override
                                 public void onDismissed(Snackbar snackbar, int event) {
                                     try {
-//                                        if (!unDoClicked)
-//                                            callRemoveNotificationsAPI(item.getNotificationCustBindId());
-                                        //                                    super.onDismissed(snackbar, event);
+                                        if (!unDoClicked)
+                                            APIs.RemoveNotifications_Buyer(NotificationsActivityBuyer.this, NotificationsActivityBuyer.this, item.getNotificationCustBindId());
+                                        super.onDismissed(snackbar, event);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                 }
                             });
 
-                            // Changing message text color
                             snackbar.setActionTextColor(Color.WHITE);
 
-                            // Changing action button text color
                             View sbView = snackbar.getView();
                             TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
                             textView.setTextColor(Color.WHITE);
@@ -209,6 +176,34 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        try {
+            if (AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0) != 0) {
+                MenuInflater menuInflater = getMenuInflater();
+                menuInflater.inflate(R.menu.cart, menu);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_clear:
+                AlertDialogManager.showDialogYesNo(this, "Do you wantto clear all notifications?", "Yes", () -> APIs.RemoveAllNotifications_Buyer(NotificationsActivityBuyer.this, NotificationsActivityBuyer.this));
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void setNotificationAdapter(List<NavigationItem> listNavigationItems) {
         mAdapter = new NotificationListAdapter(this, R.layout.adapter_row_notification, listNavigationItems);
         mLv_notification.setAdapter(mAdapter);
@@ -220,8 +215,7 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
         try {
             if (jobj != null) {
                 String strApiName = jobj.optString("api");
-                if (strApiName.equalsIgnoreCase("GetNotifications")) {
-//                    swipeRefreshLayout.setRefreshing(false);
+                if (strApiName.equalsIgnoreCase("GetNotifications_Buyer")) {
                     int resultId = jobj.optInt("notificationCount");
                     if (resultId != 0) {
                         JSONArray jsonData = jobj.optJSONArray("resData");
@@ -229,7 +223,7 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
                         if (jsonData != null) {
                             for (int i = 0; i < jsonData.length(); i++) {
                                 JSONObject jo = jsonData.optJSONObject(i);
-                                listNavigationItems.add(new NavigationItem(jo.optString("NotificationCustBindId"), jo.optString("Title"), jo.optString("Message"), jo.optString("ImageUrl"), false));
+                                listNavigationItems.add(new NavigationItem(jo.optString("NotificationCustBindId"), jo.optString("Title"), jo.optString("Message"), jo.optString("ImageUrl"), false, jo.optString("NotificationDate")));
                             }
                             setNotificationAdapter(listNavigationItems);
                         }
@@ -238,14 +232,27 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
                         mLl_no_data_found.setVisibility(View.VISIBLE);
                         startAnim();
                     }
-                } else if (strApiName.equalsIgnoreCase("RemoveNotifications")) {
+                } else if (strApiName.equalsIgnoreCase("RemoveNotifications_Buyer")) {
                     unDoClicked = false;
+                    int resultId = jobj.optInt("notificationCount");
+                    AppPreferences.getPrefs().edit().putInt(commonVariables.KEY_NOTI_COUNT, resultId).apply();
+                    if (resultId == 0) {
+                        mLv_notification.setVisibility(View.GONE);
+                        mLl_no_data_found.setVisibility(View.VISIBLE);
+                        startAnim();
+                    }
+                } else if (strApiName.equalsIgnoreCase("RemoveAllNotifications_Seller")) {
+                    AppPreferences.getPrefs().edit().putInt(commonVariables.KEY_NOTI_COUNT, 0).apply();
+                    mLv_notification.setVisibility(View.GONE);
+                    mLl_no_data_found.setVisibility(View.VISIBLE);
+                    startAnim();
                 }
             } else {
                 mLv_notification.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
                 startAnim();
             }
+            invalidateOptionsMenu();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -333,7 +340,7 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(0, 0);
-        }else if (view == mNav_my_profile) {
+        } else if (view == mNav_my_profile) {
             drawer.closeDrawer(GravityCompat.START);
             startActivity(new Intent(this, MyProfileActivityBuyer.class));
             overridePendingTransition(0, 0);
@@ -341,7 +348,7 @@ public class NotificationsActivityBuyer extends BaseActivityBuyer implements OnR
             drawer.closeDrawer(GravityCompat.START);
             startActivity(new Intent(this, MyOrdersActivityBuyer.class));
             overridePendingTransition(0, 0);
-        }  else if (view == mNav_about_us) {
+        } else if (view == mNav_about_us) {
             drawer.closeDrawer(GravityCompat.START);
             Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
             intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");

@@ -126,11 +126,17 @@ public class CMSListingActivityBuyer extends BaseActivityBuyer implements View.O
             e.printStackTrace();
         }
     }
+
     @Override
     public void onClick(View view) {
         AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
         view.startAnimation(buttonClick);
-        if (view == mNav_my_profile) {
+        if (view == mIv_logo_toolbar) {
+            Intent intent = new Intent(this, MainActivityBuyer.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        } else if (view == mNav_my_profile) {
             drawer.closeDrawer(GravityCompat.START);
             startActivity(new Intent(this, MyProfileActivityBuyer.class));
             overridePendingTransition(0, 0);
@@ -146,11 +152,6 @@ public class CMSListingActivityBuyer extends BaseActivityBuyer implements View.O
             overridePendingTransition(0, 0);
         } else if (view == mNav_our_policy) {
             drawer.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, CMSListingActivityBuyer.class);
-            intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
-            intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
-            startActivity(intent);
-            overridePendingTransition(0, 0);
         } else if (view == mNav_contact_us) {
             drawer.closeDrawer(GravityCompat.START);
             Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);

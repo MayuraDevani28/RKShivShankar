@@ -32,14 +32,16 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
     private static int posit;
     Resources res;
     String stType = "";
+    String catId;
 
-    public BrandsAdapterBuyer(AppCompatActivity activity, ArrayList<Brand> list, String stType) {
+    public BrandsAdapterBuyer(AppCompatActivity activity, ArrayList<Brand> list, String stType, String id) {
 
         this.activity = activity;
         this.list = list;
         try {
             res = activity.getResources();
             this.stType = stType;
+            catId = id;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,11 +72,17 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
                 posit = getAdapterPosition();
                 Brand item = list.get(posit);
                 if (view == mLl_brand) {
-                    Intent intent = new Intent(activity, ProductsActivityBuyer.class);
-                    intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
-                    intent.putExtra(commonVariables.KEY_BRAND, item);
-                    activity.startActivity(intent);
-                    activity.overridePendingTransition(0, 0);
+                    int cId = Integer.parseInt(catId);
+                    if (cId == 1) {
+                        Intent intent = new Intent(activity, ProductsActivityBuyer.class);
+                        intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
+                        intent.putExtra(commonVariables.KEY_BRAND, item);
+                        intent.putExtra(commonVariables.KEY_CATEGORY, catId);
+                        activity.startActivity(intent);
+                        activity.overridePendingTransition(0, 0);
+                    } else {
+
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
