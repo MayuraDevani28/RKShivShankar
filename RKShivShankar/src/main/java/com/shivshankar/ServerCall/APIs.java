@@ -154,7 +154,6 @@ public class APIs {
         }
     }
 
-
     public static class MultipartCreateBrand extends AsyncTask<String, String, String> {
         AppCompatActivity activity;
         OnResultString onresult;
@@ -997,4 +996,24 @@ public class APIs {
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
     }
+
+    public static void UpdatefcmDetails_Buyer(OnResult onresult) {
+        String strModelName = Build.MODEL;
+        String strOSVersion = Build.VERSION.RELEASE;
+        String strDeviceUUID = commonVariables.uuid;
+        String strDeviceType = "Android" + strDeviceUUID;
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("mobileapi/UpdatefcmDetails_Buyer")
+                .appendQueryParameter("strDeviceType", strDeviceType)
+                .appendQueryParameter("strDeviceUUID", strDeviceUUID)
+                .appendQueryParameter("strModelName", strModelName)
+                .appendQueryParameter("strOSVersion", strOSVersion)
+                .appendQueryParameter("GCMRegistraionId", FirebaseInstanceId.getInstance().getId())
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(null, onresult, query);
+    }
+
 }

@@ -145,7 +145,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         protected void onPostExecute(final Bitmap result) {
             super.onPostExecute(result);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(MyFirebaseMessagingService.this);
-            Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_notification);
+            Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_noti_fcm);
             Intent intent;
             if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_SELLER, false)) {
                 stackBuilder.addParentStack(MainActivitySeller.class);
@@ -160,7 +160,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             PendingIntent contentIntent = PendingIntent.getActivity(MyFirebaseMessagingService.this, requestID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(MyFirebaseMessagingService.this);
-            builder.setSmallIcon(R.drawable.ic_notification);
+            builder.setSmallIcon(R.drawable.ic_noti_fcm);
             builder.setLargeIcon(logo);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(msg));
             builder.setContentTitle(title);
@@ -214,7 +214,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setWhen(0)
                 .setVibrate(new long[]{100, 100, 0, 0});
 
-        mBuilder.setSmallIcon(R.drawable.ic_notification);
+        mBuilder.setSmallIcon(R.drawable.ic_noti_fcm);
         try {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
