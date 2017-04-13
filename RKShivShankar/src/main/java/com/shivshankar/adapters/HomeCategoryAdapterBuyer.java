@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,10 +35,10 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        LinearLayout mLl_top;
+        LinearLayout mLl_top, mLlGroup;
         private ImageView mIv_image, mIv_down;
-        private TextView mTv_name;
-        private RadioGroup mRadioGroup;
+        private TextView mTv_name, mTvDyed, mTvPrinted;
+//        private RadioGroup mRadioGroup;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -48,38 +47,47 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
                 mIv_image = (ImageView) itemView.findViewById(R.id.iv_image);
                 mTv_name = (TextView) itemView.findViewById(R.id.tv_name);
                 mIv_down = (ImageView) itemView.findViewById(R.id.iv_down);
-                mRadioGroup = (RadioGroup) itemView.findViewById(R.id.radioGroup);
+                mTvDyed = (TextView) itemView.findViewById(R.id.tvDyed);
+                mTvPrinted = (TextView) itemView.findViewById(R.id.tvPrinted);
+                mLlGroup = (LinearLayout) itemView.findViewById(R.id.llGroup);
+
                 mLl_top.setOnClickListener(this);
-                mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                        try {
-                            if (checkedId != -1) {
-                                String stType = "";
-                                if (checkedId == R.id.radioDyed) {
-                                    stType = "dyed";
-                                } else if (checkedId == R.id.radioPrinted) {
-                                    stType = "printed";
-                                }
-                                Intent intent = new Intent(activity, BrandsActivityBuyer.class);
-                                intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
-                                Gson gson = new Gson();
-                                Brand item = list.get(getLayoutPosition());
-                                String json = gson.toJson(item);
+                mTvDyed.setOnClickListener(this);
+                mTvPrinted.setOnClickListener(this);
 
-                                intent.putExtra(commonVariables.KEY_CATEGORY, json);
-
-                                activity.startActivity(intent);
-                                activity.overridePendingTransition(0, 0);
+//                mRadioGroup = (RadioGroup) itemView.findViewById(R.id.radioGroup);
+//                mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                    @Override
+//                    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+//                        try {
+//                            if (checkedId != -1) {
+//                                String stType = "";
+//                                if (checkedId == R.id.radioDyed) {
+//                                    stType = "dyed";
+//                                } else if (checkedId == R.id.radioPrinted) {
+//                                    stType = "printed";
+//                                }
+//                                Intent intent = new Intent(activity, BrandsActivityBuyer.class);
+//                                intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
+//                                Gson gson = new Gson();
+//                                Brand item = list.get(getLayoutPosition());
+//                                String json = gson.toJson(item);
+//
+//                                intent.putExtra(commonVariables.KEY_CATEGORY, json);
+//
+//                                activity.startActivity(intent);
+//                                activity.overridePendingTransition(0, 0);
+////                                radioGroup.clearCheck();
+////                                mRadioGroup.setVisibility(View.GONE);
+////                                mIv_down.setRotation(0);
 //                                radioGroup.clearCheck();
-//                                mRadioGroup.setVisibility(View.GONE);
-//                                mIv_down.setRotation(0);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+//                            }
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -90,17 +98,39 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
         public void onClick(View view) {
             try {
                 if (view == mLl_top) {
-                    if (mRadioGroup.getVisibility() == View.VISIBLE) {
-                        mRadioGroup.setVisibility(View.GONE);
+                    if (mLlGroup.getVisibility() == View.VISIBLE) {
+                        mLlGroup.setVisibility(View.GONE);
                         mIv_down.setRotation(0);
                     } else {
-                        mRadioGroup.setVisibility(View.VISIBLE);
+                        mLlGroup.setVisibility(View.VISIBLE);
                         mIv_down.setRotation(180);
                     }
+                } else if (view == mTvDyed) {
+                    click(getLayoutPosition(), "dyed");
+                } else if (view == mTvPrinted) {
+                    click(getLayoutPosition(), "printed");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void click(int layoutPosition, String stType) {
+
+        try {
+            Intent intent = new Intent(activity, BrandsActivityBuyer.class);
+            intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
+            Gson gson = new Gson();
+            Brand item = list.get(layoutPosition);
+            String json = gson.toJson(item);
+
+            intent.putExtra(commonVariables.KEY_CATEGORY, json);
+
+            activity.startActivity(intent);
+            activity.overridePendingTransition(0, 0);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

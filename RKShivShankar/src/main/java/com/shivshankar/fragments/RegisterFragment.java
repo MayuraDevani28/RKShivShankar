@@ -211,7 +211,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 if (strApiName.equalsIgnoreCase("SellerBuyerRegister")) {
                     String result = jobjWhole.optString("res");
                     int resultId = jobjWhole.optInt("resInt");
-                    if (resultId == 1) {
+                    if (resultId == 2) {
                         SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                         editor.putString(commonVariables.KEY_USER_ID_FOR_OTP, mEdt_register_email.getText().toString().trim());
                         editor.apply();
@@ -223,7 +223,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                         getActivity().overridePendingTransition(0, 0);
 
                     } else {
-                        if (resultId == 2) {
+                        if (resultId == 1) {
                             Runnable listenerPos = () -> {
                                 try {
                                     ((LoginRegisterActivity) getActivity()).loginFragment.mEdtUsername.setText(mEdt_register_email.getText().toString().trim());
@@ -239,7 +239,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                         }
                     }
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -46,7 +46,7 @@ public class commonVariables {
     public static final String INTENT_EXTRA_PAGE_NAME = "INTENT_EXTRA_PAGE_NAME";
     public static final String INTENT_EXTRA_PAGE = "INTENT_EXTRA_PAGE";
     public static final String KEY_ORDER = "KEY_ORDER";
-    public static final String PREFERENCE_FIRST_RUN = "PREFERENCE_FIRST_RUN";
+    public static final String KEY_FIRST_TIME = "KEY_FIRST_TIME";
 
 
     public static String STRING_SERVER_URL_FOR_GET_METHOD = "rkshivshankar.vivaa.co";

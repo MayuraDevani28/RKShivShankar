@@ -208,6 +208,7 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
         try {
             if (listArray.size() == 0) {
                 mRv_items.setVisibility(View.GONE);
+                mFl_whole.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
                 String strMessage = "Uhh! You have not added any brand yet. Want to add now ?";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));

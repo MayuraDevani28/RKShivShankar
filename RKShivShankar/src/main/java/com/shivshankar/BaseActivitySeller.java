@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,6 +46,7 @@ public class BaseActivitySeller extends AppCompatActivity {
     TextView mTv_noti_count, mTv_username, mTv_logout;
     ImageView mIv_logo_nav, mIv_logo_toolbar;
     File file = null;
+    View menu_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +158,7 @@ public class BaseActivitySeller extends AppCompatActivity {
         try {
             MenuInflater menuInflater = getMenuInflater();
             menuInflater.inflate(R.menu.main, menu);
-            final View menu_layout = menu.findItem(R.id.action_notifications).getActionView();
+            menu_layout = menu.findItem(R.id.action_notifications).getActionView();
             mTv_noti_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
 
             commonMethods.cartCountAnimation(this, mTv_noti_count);
@@ -168,6 +170,7 @@ public class BaseActivitySeller extends AppCompatActivity {
                 }
             };
             setNotiCount();
+            Log.v("TAGRK","OncreatedOptionsmenu base seller");
         } catch (Exception e) {
             e.printStackTrace();
         }

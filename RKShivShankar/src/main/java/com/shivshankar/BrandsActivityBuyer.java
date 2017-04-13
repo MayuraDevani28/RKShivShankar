@@ -15,7 +15,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -41,7 +40,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
     Button mBtn_add_now;
     LottieAnimationView animationView2, animationView;
     private LinearLayout mLl_no_data_found;
-    RelativeLayout mLl_rv_items;
+    LinearLayout mFl_whole;
     RecyclerView mRv_items;
     private ImageView mIv_filer;
 
@@ -135,7 +134,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
             mTv_no_data_found = (TextView) rootView.findViewById(R.id.tv_no_data_found);
             mLl_no_data_found = (LinearLayout) rootView.findViewById(R.id.ll_no_data_found);
             mLl_no_data_found.setVisibility(View.GONE);
-            mLl_rv_items = (RelativeLayout) rootView.findViewById(R.id.ll_rv_items);
+            mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
 
             mTv_count_items = (TextView) rootView.findViewById(R.id.tv_no_items);
             mTv_brand_search = (TextView) rootView.findViewById(R.id.tv_brand_search);
@@ -221,13 +220,13 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
         try {
             if (listArray.size() == 0) {
                 mLl_no_data_found.setVisibility(View.VISIBLE);
-                mLl_rv_items.setVisibility(View.GONE);
+                mFl_whole.setVisibility(View.GONE);
                 String strMessage = "Uhh! No brands found for " + strFabricType + " " + item.getBrandName();
                 startAnim();
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
-                mLl_rv_items.setVisibility(View.VISIBLE);
+                mFl_whole.setVisibility(View.VISIBLE);
                 adapter = new BrandsAdapterBuyer(this, listArray, strFabricType, item.getBrandId());
                 mRv_items.setAdapter(adapter);
             }

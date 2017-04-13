@@ -10,8 +10,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -69,6 +69,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 
     private void bindViews() {
         try {
@@ -143,8 +144,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         try {
-            MenuInflater menuInflater = getMenuInflater();
-            menuInflater.inflate(R.menu.main_buyer, menu);
+            getMenuInflater().inflate(R.menu.main_buyer, menu);
             final View menu_layout = menu.findItem(R.id.action_cart).getActionView();
             ((ImageView) menu_layout.findViewById(R.id.iv_icon)).setImageResource(R.drawable.ic_cart);
             mTv_cart_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
@@ -166,6 +166,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
                 }
             };
             setCartAndNotiCount();
+            Log.v("TAGRK", "OncreatedOptionsmenu base buyer");
         } catch (Exception e) {
             e.printStackTrace();
         }

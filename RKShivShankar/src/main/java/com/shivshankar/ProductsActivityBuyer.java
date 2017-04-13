@@ -17,7 +17,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -52,7 +51,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     Boolean isLogedIn = false;
     String strCategoryIds = "", srtPriceRange = "", strFabricIds = "", strSortBy = "";
 
-    RelativeLayout mLl_rv_items;
     ProductsAdapterBuyer adapter;
     ArrayList<ProductItem> listArray = new ArrayList<ProductItem>();
     String strSearch = "", brandId = "", strFabricType = "", total = "", strCatidSuitFabric = "";
@@ -115,7 +113,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             mLl_add_to_cart.setOnClickListener(this);
 
             mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
-            mLl_rv_items = (RelativeLayout) rootView.findViewById(R.id.ll_rv_items);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.gv_items);
             mRv_items.setHasFixedSize(true);
 
@@ -279,7 +276,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     private void setListAdapter(ArrayList<ProductItem> listArray) {
         try {
             if (listArray.size() == 0) {
-                mLl_rv_items.setVisibility(View.GONE);
+                mFl_whole.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
                 String strMessage = "Uhh! no products found. Search for products now?";
                 if (!strSearch.isEmpty())
@@ -289,7 +286,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 startAnim();
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
-                mLl_rv_items.setVisibility(View.VISIBLE);
                 mFl_whole.setVisibility(View.VISIBLE);
                 adapter = new ProductsAdapterBuyer(this, listArray, mLl_add_to_cart);
                 mRv_items.setAdapter(adapter);
@@ -451,7 +447,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                     } else {
                         if (listArray.size() != 0) {
                             mLl_no_data_found.setVisibility(View.GONE);
-                            mLl_rv_items.setVisibility(View.VISIBLE);
+                            mFl_whole.setVisibility(View.VISIBLE);
                             if (isLogedIn && adapter != null)
                                 adapter.notifyDataSetChanged();
                         }

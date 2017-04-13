@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -52,7 +51,6 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     private ImageView mIv_filer, mIv_add_product;
     LottieAnimationView animationView2, animationView;
 
-    RelativeLayout mLl_rv_items;
     private LinearLayout mLl_header, mLl_header_views;
     private MaterialBetterSpinner mSp_Category;
     private EditText mEdt_product_code;
@@ -118,7 +116,6 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
             mFl_whole = (LinearLayout) rootView.findViewById(R.id.fl_whole);
             mLl_header_whole = (LinearLayout) rootView.findViewById(R.id.ll_header_whole);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.gv_items);
-            mLl_rv_items = (RelativeLayout) rootView.findViewById(R.id.ll_rv_items);
             mRv_items.setHasFixedSize(true);
 
             int i = 2;
@@ -257,7 +254,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     public void setListAdapter(ArrayList<ProductItem> listArray) {
         try {
             if (listArray.size() == 0) {
-                mLl_rv_items.setVisibility(View.GONE);
+                mFl_whole.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
                 String strMessage = "Uhh! We you have not added any product yet. Want to add now ?";
                 if (!strSearch.isEmpty())
@@ -266,7 +263,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                 startAnim();
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
-                mLl_rv_items.setVisibility(View.VISIBLE);
+                mFl_whole.setVisibility(View.VISIBLE);
                 adapter = new ProductsAdapterSeller(this, listArray);
                 mRv_items.setAdapter(adapter);
                 mTv_count_items.setVisibility(View.VISIBLE);
@@ -414,7 +411,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                     } else {
                         if (listArray.size() != 0) {
                             mLl_no_data_found.setVisibility(View.GONE);
-                            mLl_rv_items.setVisibility(View.VISIBLE);
+                            mFl_whole.setVisibility(View.VISIBLE);
                             if (adapter != null)
                                 adapter.notifyDataSetChanged();
                         }

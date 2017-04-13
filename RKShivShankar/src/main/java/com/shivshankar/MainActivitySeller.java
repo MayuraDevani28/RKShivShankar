@@ -4,10 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.widget.ActionMenuView;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
@@ -19,6 +25,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.gson.Gson;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
@@ -54,7 +62,6 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         super.onCreate(savedInstanceState);
         try {
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_seller, frameLayout);
-//            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             Gson gson = new Gson();
@@ -65,34 +72,69 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
             else
                 APIs.GetSellerBrandList(this, this);
 
-//            try {
-//                byte[] byteArray = Base64.decode(AppPreferences.getPrefs().getString("image", ""), Base64.DEFAULT);
-//                String strBrandName = AppPreferences.getPrefs().getString(commonVariables.KEY_BRAND_NAME, "");
-//
-//                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-//                RoundedBitmapDrawable circularBitmapDrawable =
-//                        RoundedBitmapDrawableFactory.create(getResources(), bmp);
-//                circularBitmapDrawable.setCircular(true);
-//
-//                setBrandVisibility(!strBrandName.isEmpty(), circularBitmapDrawable, strBrandName);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+            if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_FIRST_TIME, true)) {
+                showGuideline();
+            }
 
-//            try {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                    swipeRefreshLayout.setProgressViewOffset(false, 0, 200);
-//                }
-//                swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_green_dark, android.R.color.holo_green_light);
-//                swipeRefreshLayout.setOnRefreshListener(() -> {
-//                    swipeRefreshLayout.setRefreshing(false);
-////                    APIs.GetHomeBannerwithText(this, this);
-//                });
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void showGuideline() {
+        try {
+            toolbar.bringToFront();
+            if (toolbar.findViewById(R.id.action_notifications) != null) {
+                final SpannableString strMenu = new SpannableString("This will open Navigation Menu, which contain quick links for Profile, Orders, Products, Notifications and Change Password."),
+                        strNotification = new SpannableString("You can see all notifications for order status, discounts, coupons and special offers after clicking here."),
+                        strCreateBrand = new SpannableString("You are create brand after clicking here."),
+                        strAddProduct = new SpannableString("You can add products anytime using this button");
+                strMenu.setSpan(new StyleSpan(Typeface.ITALIC), 15, 15 + "Navigation Menu".length(), 0);
+                strCreateBrand.setSpan(new StyleSpan(Typeface.ITALIC), 8, 8 + "create brand".length(), 0);
+                strNotification.setSpan(new StyleSpan(Typeface.ITALIC), 16, 16 + "notifications".length(), 0);
+                strAddProduct.setSpan(new StyleSpan(Typeface.ITALIC), 8, 8 + "add products".length(), 0);
+
+                final TapTargetSequence sequence = new TapTargetSequence(this)
+                        .targets(
+                                TapTarget.forToolbarNavigationIcon(toolbar, "This is Menu button", strMenu)
+                                        .id(1)
+                                        .dimColor(android.R.color.white)
+                                        .outerCircleColor(R.color.colorPrimary)
+                                        .targetCircleColor(android.R.color.white)
+                                        .textColor(android.R.color.white)
+                                        .targetRadius(50)
+                                        .cancelable(false)
+                                , TapTarget.forView(((ActionMenuView) toolbar.getChildAt(2)).getChildAt(0), "Notifications", strNotification).textColorInt(ContextCompat.getColor(this, R.color.white))
+                                        .id(2)
+                                        .dimColor(android.R.color.white)
+                                        .outerCircleColor(R.color.colorPrimary)
+                                        .targetCircleColor(android.R.color.white)
+                                        .targetRadius(50)
+                                        .textColor(android.R.color.white)
+                                , TapTarget.forView(mLl_create_brand, "Create Brand", strAddProduct)
+                                        .id(3)
+                                        .dimColor(android.R.color.white)
+                                        .outerCircleColor(R.color.colorPrimary)
+                                        .targetCircleColor(android.R.color.white)
+                                        .targetRadius(50)
+                                        .textColor(android.R.color.white)
+                                , TapTarget.forView(mLl_add_product, "Add Product", strAddProduct)
+                                        .id(4)
+                                        .dimColor(android.R.color.white)
+                                        .outerCircleColor(R.color.colorPrimary)
+                                        .targetCircleColor(android.R.color.white)
+                                        .targetRadius(50)
+                                        .textColor(android.R.color.white)
+
+                        );
+                sequence.start();
+                AppPreferences.getPrefs().edit().putBoolean(commonVariables.KEY_FIRST_TIME, false).apply();
+            }
+        } catch (Exception e) {
+            AppPreferences.getPrefs().edit().putBoolean(commonVariables.KEY_FIRST_TIME, true).apply();
+            e.printStackTrace();
+
+            Log.e("TAGRK", "Error:" + e.toString());
         }
     }
 
@@ -127,7 +169,6 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         mTv_username.setOnClickListener(this);
         mTv_logout.setOnClickListener(this);
         mLl_close.setOnClickListener(this);
-
 //        mNav_my_brands = (LinearLayout) findViewById(R.id.nav_my_brands);
 //        mNav_my_brands.setOnClickListener(this);
         mNav_my_profile.setOnClickListener(this);
@@ -169,6 +210,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 
                 commonMethods.startZommingAnim(mLl_create_brand);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -311,8 +353,8 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 
                     } else
                         setBrandVisibility(false, null);
-                }
-                if (strApiName.equalsIgnoreCase("RemoveSellerBrand")) {
+
+                } else if (strApiName.equalsIgnoreCase("RemoveSellerBrand")) {
                     int strresId = jobjWhole.optInt("resInt");
                     Runnable listener = null;
                     if (strresId == 1) {

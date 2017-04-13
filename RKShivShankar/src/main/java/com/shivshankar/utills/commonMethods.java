@@ -227,6 +227,7 @@ public class commonMethods {
         editor.putBoolean(commonVariables.KEY_IS_BRAND, false);
         editor.putBoolean(commonVariables.KEY_IS_SELLER, false);
         editor.putBoolean(commonVariables.KEY_IS_SKIPPED_LOGIN_BUYER, false);
+        editor.putBoolean(commonVariables.KEY_FIRST_TIME, false);
         editor.commit();
         Intent intent = new Intent(activity, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

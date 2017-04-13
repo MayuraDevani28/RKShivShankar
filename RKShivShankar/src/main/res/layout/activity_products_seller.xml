@@ -95,96 +95,104 @@
 
         <include layout="@layout/header_products" />
 
-        <RelativeLayout
-            android:id="@+id/ll_rv_items"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/gv_items"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:padding="1dp"
                 android:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/ll_add_to_cart"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/xml_round_app_color"
-                android:elevation="2dp"
-                android:gravity="center"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_cart1" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_no_data_found"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="25dp"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal">
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/animation_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:minHeight="70dp"
-                    app:lottie_fileName="Mobilo/R.json"
-                    app:lottie_loop="false" />
-
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/animation_view2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="-40dp"
-                    app:lottie_fileName="Mobilo/K.json"
-                    app:lottie_loop="false" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_no_data_found"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:background="@color/colorPrimary"
                 android:gravity="center"
-                android:paddingLeft="18dp"
-                android:paddingRight="18dp"
-                android:text="Uhh You have not added any brand yet. Want to add now ?"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_medium" />
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-            <Button
-                android:id="@+id/btn_add_now"
-                style="@style/ButtonStyle"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:text="NEXT"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:gravity="center_vertical"
+                    android:rotation="270"
+                    android:src="@drawable/ic_down_arrow_inround_green" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_no_data_found"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Add Now" />
+                android:layout_gravity="center"
+                android:minHeight="70dp"
+                app:lottie_fileName="Mobilo/R.json"
+                app:lottie_loop="false" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_view2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="-40dp"
+                app:lottie_fileName="Mobilo/K.json"
+                app:lottie_loop="false" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_no_data_found"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="center"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="Uhh You have not added any brand yet. Want to add now ?"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_medium" />
+
+        <Button
+            android:id="@+id/btn_add_now"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Add Now" />
     </LinearLayout>
 
 </LinearLayout>
