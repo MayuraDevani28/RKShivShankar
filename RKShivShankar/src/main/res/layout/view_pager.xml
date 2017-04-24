@@ -1,68 +1,107 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_wholee"
+    xmlns:pb="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:background="@android:color/darker_gray"
+    android:fitsSystemWindows="true">
 
-    <com.shivshankar.customcontrols.ExtendedViewPager
-        android:id="@+id/pager"
+
+    <com.liuguangqiang.swipeback.SwipeBackLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:transitionName="detail" />
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_back_pager"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_gravity="center_vertical|left"
-        android:padding="5dp"
-        android:rotation="180"
-        android:shadowColor="@color/black"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="8"
-        android:src="@drawable/ic_arrow_right" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/iv_close"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="top|left"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:rotation="180"
-        android:shadowColor="@color/black"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:tint="@color/colorPrimary"
-        android:shadowRadius="8"
-        android:src="@drawable/met_ic_close" />
 
-    <ImageView
-        android:id="@+id/iv_next_pager"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_gravity="center_vertical|right"
-        android:padding="5dp"
-        android:shadowColor="@color/black"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="8"
-        android:src="@drawable/ic_arrow_right" />
+            <com.shivshankar.customcontrols.ExtendedViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
+                android:transitionName="detail" />
 
-    <com.shivshankar.customcontrols.CirclePageIndicator
-        android:id="@+id/indicator"
-        android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/iv_back_pager"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_vertical|left"
+                android:padding="5dp"
+                android:rotation="180"
+                android:shadowColor="@color/black"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="8"
+                android:src="@drawable/ic_arrow_right" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="top|left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:rotation="180"
+                android:shadowColor="@color/black"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="8"
+                android:src="@drawable/met_ic_close"
+                android:tint="@color/colorPrimary"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_next_pager"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_vertical|right"
+                android:padding="5dp"
+                android:shadowColor="@color/black"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="8"
+                android:src="@drawable/ic_arrow_right" />
+
+            <com.shivshankar.customcontrols.CirclePageIndicator
+                android:id="@+id/indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="15dp"
+                android:padding="5dp"
+                app:fillColor="@color/red"
+                app:radius="3dp"
+                app:strokeColor="@color/yellow" />
+
+        </RelativeLayout>
+
+
+    </com.liuguangqiang.swipeback.SwipeBackLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_close"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="15dp"
-        android:padding="5dp"
-        app:fillColor="@color/red"
-        app:radius="3dp"
-        app:strokeColor="@color/yellow" />
-</FrameLayout>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp">
+
+        <com.liuguangqiang.progressbar.CircleProgressBar
+            android:id="@+id/progressbar1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            pb:background_color="@android:color/transparent"
+            pb:progress_color="@color/colorPrimary"
+            pb:stroke_width="2dp" />
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/met_ic_close" />
+
+    </RelativeLayout>
+</RelativeLayout>

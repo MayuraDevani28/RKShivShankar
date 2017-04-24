@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -122,6 +122,74 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:ellipsize="marquee"
+                        android:gravity="left|center_vertical"
+                        android:lines="1"
+                        android:text="Price"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <TextView
+                        android:id="@+id/tv_price"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:ellipsize="marquee"
+                        android:gravity="right|center_vertical"
+                        android:lines="1"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:ellipsize="marquee"
+                        android:gravity="left|center_vertical"
+                        android:lines="1"
+                        android:text="Total"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:gravity="center_vertical"
+                        android:lines="1"
+                        android:text=" :"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_total"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:ellipsize="marquee"
+                        android:gravity="right|center_vertical"
+                        android:lines="1"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -129,7 +197,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="2dp">
+                android:padding="2dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -471,137 +540,154 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
-
+        android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="2dp">
+            android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:ellipsize="marquee"
-                android:gravity="left|center_vertical"
-                android:lines="1"
-                android:text="Total Qty"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_small" />
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="2dp">
 
-            <TextView
-                android:id="@+id/tv_total_qty"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:gravity="left|center_vertical"
+                    android:lines="1"
+                    android:text="Total Qty"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+
+                <TextView
+                    android:id="@+id/tv_total_qty"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:gravity="right|center_vertical"
+                    android:lines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@color/gray_bg" />
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.9"
-                android:ellipsize="marquee"
-                android:gravity="right|center_vertical"
-                android:lines="1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_small" />
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="2dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:gravity="left|center_vertical"
+                    android:lines="1"
+                    android:text="Price"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+
+                <TextView
+                    android:id="@+id/tv_price_fabric"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:gravity="right|center_vertical"
+                    android:lines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="2dp">
+            android:orientation="horizontal">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.3"
-                android:ellipsize="marquee"
-                android:gravity="left|center_vertical"
-                android:lines="1"
-                android:text="Total Cut"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_small" />
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="2dp">
 
-            <TextView
-                android:id="@+id/tv_total_cut"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:gravity="left|center_vertical"
+                    android:lines="1"
+                    android:text="Total Cut"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+
+                <TextView
+                    android:id="@+id/tv_total_cut"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:gravity="right|center_vertical"
+                    android:lines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:background="@color/gray_bg" />
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.9"
-                android:ellipsize="marquee"
-                android:gravity="right|center_vertical"
-                android:lines="1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_small" />
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="2dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:gravity="left|center_vertical"
+                    android:lines="1"
+                    android:text="Sub Total"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+
+                <TextView
+                    android:id="@+id/tv_total_fabric"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:gravity="right|center_vertical"
+                    android:lines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="2dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:ellipsize="marquee"
-            android:gravity="left|center_vertical"
-            android:lines="1"
-            android:text="Price"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_small" />
-
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.9"
-            android:ellipsize="marquee"
-            android:gravity="right|center_vertical"
-            android:lines="1"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_small" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="2dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:ellipsize="marquee"
-            android:gravity="left|center_vertical"
-            android:lines="1"
-            android:text="Total"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_small" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:gravity="center_vertical"
-            android:lines="1"
-            android:text=" :"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_small"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_total"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.9"
-            android:ellipsize="marquee"
-            android:gravity="right|center_vertical"
-            android:lines="1"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_small" />
     </LinearLayout>
 
 

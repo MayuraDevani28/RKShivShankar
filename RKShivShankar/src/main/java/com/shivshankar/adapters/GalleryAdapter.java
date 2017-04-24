@@ -77,8 +77,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
                     @Override
                     public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
                         try {
-                            holder.imageView.setImageResource(R.color.transparent);
-                            holder.imageView.setBackgroundColor(Color.parseColor(listImages.get(position).getIFSCCode()));
+                            String color = listImages.get(position).getIFSCCode();
+                            if (color.length() == 4) {
+                                color = color + color.substring(1, 4);
+                            }
+                            holder.imageView.setBackgroundColor(Color.parseColor(color));
                         } catch (Exception e1) {
                             e1.printStackTrace();
                         }
@@ -89,21 +92,15 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
                     public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         return false;
                     }
-                })
-                        .thumbnail(0.1f).error(R.drawable.no_img)
+                }).thumbnail(0.1f).error(R.drawable.no_img)
                         .override(200, 200).into(holder.imageView);
 
             } else {
-                try {
-//                    holder.imageView.setImageResource(R.color.transparent);
-                    String color = listImages.get(position).getIFSCCode();
-                    if (color.length() == 4) {
-                        color = color + color.substring(1, 4);
-                    }
-                    holder.imageView.setBackgroundColor(Color.parseColor(color));
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+                String color = listImages.get(position).getIFSCCode();
+                if (color.length() == 4) {
+                    color = color + color.substring(1, 4);
                 }
+                holder.imageView.setBackgroundColor(Color.parseColor(color));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -219,8 +216,6 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
                         mEdt_All_Fabrics.setVisibility(View.VISIBLE);
                         mEdt_Dupatta.setVisibility(View.GONE);
                         mTv_All_Fabrics.setText(job.optString("FabricName"));
-
-
                     } else {
                         mLL_Fabrics.setVisibility(View.VISIBLE);
                         mEdt_All_Fabrics.setVisibility(View.GONE);

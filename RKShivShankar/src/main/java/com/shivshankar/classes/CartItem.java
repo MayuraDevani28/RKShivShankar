@@ -6,13 +6,13 @@ import java.util.ArrayList;
 public class CartItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    String CartId, ProductId, ProductCode, productName, BrandName, MarketPrice, OfferPrice, TotalAmount, DiscountPercent, ImageName, BodyPart, BodyFabricPart;
+    String CartId, ProductId, ProductCode, productName, BrandName, OfferPrice, TotalAmount, ImageName, BodyPart;
     ArrayList<SC3Object> Fabric_Colors;
     int CartQuantity, MinOrderQuantity, SuitFbricId, Fabric_FrontQty, Fabric_BackQty, Fabric_BajuQty, Fabric_ExtraQty;
     double FabricCuts, Fabric_FrontCut, Fabric_BackCut, Fabric_BajuCut, Fabric_ExtraCut;
     boolean IsOutOfStock, isExpanded;
 
-    public CartItem(String cartId, String productId, String productCode, String productName, String brandName, String marketPrice, String offerPrice, String totalAmount, String discountPercent, String imageName, int cartQuantity, int minOrderQuantity, boolean isOutOfStock, boolean isExpanded, int suitFbricId, String bodyPart, String bodyFabricPart, double fabricCuts,
+    public CartItem(String cartId, String productId, String productCode, String productName, String brandName, String offerPrice, String totalAmount, String imageName, int cartQuantity, int minOrderQuantity, boolean isOutOfStock, boolean isExpanded, int suitFbricId, String bodyPart, double fabricCuts,
                     int fabric_FrontQty
             , double fabric_FrontCut
             , int fabric_BackQty
@@ -27,9 +27,7 @@ public class CartItem implements Serializable {
         ProductCode = productCode;
         this.productName = productName;
         BrandName = brandName;
-        MarketPrice = marketPrice;
         OfferPrice = offerPrice;
-        DiscountPercent = discountPercent;
         TotalAmount = totalAmount;
         ImageName = imageName;
         CartQuantity = cartQuantity;
@@ -38,7 +36,6 @@ public class CartItem implements Serializable {
         this.isExpanded = isExpanded;
         SuitFbricId = suitFbricId;
         BodyPart = bodyPart;
-        BodyFabricPart = bodyFabricPart;
         FabricCuts = fabricCuts;
 
         Fabric_FrontQty = fabric_FrontQty;
@@ -134,14 +131,6 @@ public class CartItem implements Serializable {
         BodyPart = bodyPart;
     }
 
-    public String getBodyFabricPart() {
-        return BodyFabricPart;
-    }
-
-    public void setBodyFabricPart(String bodyFabricPart) {
-        BodyFabricPart = bodyFabricPart;
-    }
-
     public double getFabricCuts() {
         return FabricCuts;
     }
@@ -207,28 +196,12 @@ public class CartItem implements Serializable {
         BrandName = brandName;
     }
 
-    public String getMarketPrice() {
-        return MarketPrice;
-    }
-
-    public void setMarketPrice(String marketPrice) {
-        MarketPrice = marketPrice;
-    }
-
     public String getOfferPrice() {
         return OfferPrice;
     }
 
     public void setOfferPrice(String offerPrice) {
         OfferPrice = offerPrice;
-    }
-
-    public String getDiscountPercent() {
-        return DiscountPercent;
-    }
-
-    public void setDiscountPercent(String discountPercent) {
-        DiscountPercent = discountPercent;
     }
 
     public String getImageName() {

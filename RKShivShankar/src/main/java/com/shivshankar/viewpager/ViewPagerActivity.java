@@ -1,21 +1,30 @@
 package com.shivshankar.viewpager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
+import com.liuguangqiang.progressbar.CircleProgressBar;
 import com.liuguangqiang.swipeback.SwipeBackActivity;
 import com.liuguangqiang.swipeback.SwipeBackLayout;
 import com.shivshankar.R;
@@ -27,7 +36,7 @@ import com.shivshankar.utills.commonVariables;
 
 
 @SuppressLint("NewApi")
-public class ViewPagerActivity extends SwipeBackActivity implements OnClickListener {
+public class ViewPagerActivity extends AppCompatActivity implements OnClickListener {
 
     private static String[] IMAGES = {"ness.jpg", "squirrel.jpg"};
 
@@ -35,6 +44,9 @@ public class ViewPagerActivity extends SwipeBackActivity implements OnClickListe
     private CirclePageIndicator mIndicator;
     private ImageView mIv_backImage;
     private ImageView mIv_nextImage, mIv_close;
+    private CircleProgressBar progressBar;
+    private SwipeBackLayout swipeBackLayout;
+    private RelativeLayout rll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +61,28 @@ public class ViewPagerActivity extends SwipeBackActivity implements OnClickListe
                 exitTrans.setDuration(600);
                 getWindow().setEnterTransition(exitTrans);
             }
+            isStoragePermissionGranted();
             IMAGES = getIntent().getStringArrayExtra(commonVariables.INTENT_EXTRA_LIST_IMAGE_ARRAY);
             int pos = getIntent().getIntExtra(commonVariables.INTENT_EXTRA_POSITION, 0);
 
             final PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
             page = (ExtendedViewPager) findViewById(R.id.pager);
             mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+            progressBar = (CircleProgressBar) findViewById(R.id.progressbar1);
+            rll = (RelativeLayout) findViewById(R.id.rl_close);
+            rll.setOnClickListener(this);
+            swipeBackLayout = (SwipeBackLayout) findViewById(R.id.swipe_layout);
+            swipeBackLayout.setEnableFlingBack(false);
             page.setOffscreenPageLimit(2);
             page.setAdapter(pagerAdapter);
             page.setCurrentItem(pos);
-            setDragEdge(SwipeBackLayout.DragEdge.TOP);
+            swipeBackLayout.setOnPullToBackListener(new SwipeBackLayout.SwipeBackListener() {
+                @Override
+                public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
+                    progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
+                }
+            });
+            // setDragEdge(SwipeBackLayout.DragEdge.TOP);
             page.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -137,7 +161,7 @@ public class ViewPagerActivity extends SwipeBackActivity implements OnClickListe
                     page.setCurrentItem(0, true);
                 else
                     page.setCurrentItem(getItem(+1), true);
-            } else if (v == mIv_close)
+            } else if (v == rll)
                 onBackPressed();
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,6 +188,32 @@ public class ViewPagerActivity extends SwipeBackActivity implements OnClickListe
         @Override
         public int getCount() {
             return IMAGES.length;
+        }
+    }
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.v("","Permission is granted");
+                return true;
+            } else {
+
+                Log.v("TAGRK","Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v("TAGRK","Permission is granted");
+            return true;
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            Log.v("TAGRK","Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //resume tasks needing this permission
         }
     }
 }

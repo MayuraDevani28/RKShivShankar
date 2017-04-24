@@ -27,6 +27,8 @@ import com.shivshankar.classes.Order;
 import com.shivshankar.fragments.OrderDetailFragment;
 import com.shivshankar.utills.commonVariables;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -58,7 +60,7 @@ public class OrdersAdapterBuyer extends RecyclerView.Adapter<OrdersAdapterBuyer.
             Order order = listItems.get(position);
 
             String status = order.getStatus();
-            holder.mTv_status.setText(status);
+            holder.mTv_status.setText(WordUtils.capitalizeFully(status));
             int color = R.color.black;
             if (!status.isEmpty()) {
                 if (status.equalsIgnoreCase("In Process"))
@@ -91,24 +93,6 @@ public class OrdersAdapterBuyer extends RecyclerView.Adapter<OrdersAdapterBuyer.
                             @Override
                             protected void setResource(Bitmap resource) {
                                 try {
-//                                    Palette.PaletteAsyncListener paletteListener = new Palette.PaletteAsyncListener() {
-//                                        public void onGenerated(Palette palette) {
-//                                            try {
-//                                                GradientDrawable bgShape = (GradientDrawable) holder.mLl_order.getBackground();
-//                                                int col = palette.getVibrantColor(d);
-//                                                if (col == d) {
-//                                                    bgShape.setColor(ContextCompat.getColor(activity, gray));
-//                                                } else
-//                                                    bgShape.setColor(ColorUtils.setAlphaComponent(col, 99));
-//                                            } catch (Exception e) {
-//                                                e.printStackTrace();
-//                                            }
-//                                        }
-//                                    };
-//
-//                                    if (resource != null && !resource.isRecycled()) {
-//                                        Palette.from(resource).generate(paletteListener);
-//                                    }
                                     GradientDrawable bgShape = (GradientDrawable) holder.mLl_order.getBackground();
                                     Random rnd = new Random();
                                     int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
