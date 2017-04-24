@@ -24,8 +24,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.gson.Gson;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
@@ -70,7 +68,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 APIs.GetSellerBrandList(this, this);
 
             if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_FIRST_TIME, true)) {
-                showGuideline();
+                //showGuideline();
             }
 
         } catch (Exception e) {
@@ -78,7 +76,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         }
     }
 
-    private void showGuideline() {
+    /*private void showGuideline() {
         try {
             toolbar.bringToFront();
             if (toolbar.findViewById(R.id.action_notifications) != null) {
@@ -133,7 +131,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 
             Log.e("TAGRK", "Error:" + e.toString());
         }
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

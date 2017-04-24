@@ -22,8 +22,6 @@ import android.widget.Toast;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.arlib.floatingsearchview.util.Util;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.HomeCategoryAdapterBuyer;
 import com.shivshankar.classes.Brand;
@@ -80,7 +78,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
         }
     }
 
-    public void showGuideline() {
+    /*public void showGuideline() {
         try {
             final SpannableString strMenu = new SpannableString("This will open Navigation Menu, which contain quick links for Profile, Orders, Policy, About Us and Contact Us."),
                     strNotification = new SpannableString("You can see all notifications for order status, discounts, coupons and special offers after clicking here."),
@@ -123,7 +121,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
 
             Log.e("TAGRK", "Error:" + e.toString());
         }
-    }
+    }*/
 
     public void bindViews(View rootView) {
         try {
@@ -144,7 +142,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
     public void onResult(JSONObject jobjWhole) {
         try {
             if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_FIRST_TIME, true)) {
-                showGuideline();
+                //showGuideline();
             }
             swipeRefreshLayout.setRefreshing(false);
             if (jobjWhole != null) {

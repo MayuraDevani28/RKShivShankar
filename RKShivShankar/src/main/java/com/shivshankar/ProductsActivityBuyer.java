@@ -314,7 +314,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mLl_add_to_cart) {
-
                 if (adapter.isOneChecked()) {
                     if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
                         JSONArray jarr = new JSONArray();

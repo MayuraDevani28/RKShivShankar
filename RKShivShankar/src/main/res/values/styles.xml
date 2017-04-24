@@ -136,7 +136,7 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
-    <style name="Theme.Swipe.Back" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ThemeSwipeBack" parent="Theme.Swipe.Back">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="windowActionBar">false</item>
