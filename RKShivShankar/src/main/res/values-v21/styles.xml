@@ -14,6 +14,7 @@
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="itemTextAppearance">@style/AppTheme.ItemTextStyle</item>
         <item name="android:itemTextAppearance">@style/AppTheme.ItemTextStyle</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">

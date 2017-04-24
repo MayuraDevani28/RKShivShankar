@@ -16,6 +16,7 @@ import com.shivshankar.R;
 import com.shivshankar.classes.NavigationItem;
 
 import java.util.List;
+
 public class NotificationListAdapter extends ArrayAdapter<NavigationItem> {
 
     private Activity activity;
@@ -47,11 +48,13 @@ public class NotificationListAdapter extends ArrayAdapter<NavigationItem> {
             NavigationItem item = getItem(position);
             mTv_name.setText(item.getText());
             mTv_message.setText(item.getMessage());
-            mTv_date.setText("On "+item.getDate());
+            mTv_date.setText(item.getDate());
 
             String strImageURL = item.getImageUrl();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL).asBitmap().approximate().dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(imageView);
+                Glide.with(activity).load(strImageURL).asBitmap().approximate()
+                        .dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .thumbnail(0.1f).into(imageView);
             }
         } catch (Exception e) {
             e.printStackTrace();

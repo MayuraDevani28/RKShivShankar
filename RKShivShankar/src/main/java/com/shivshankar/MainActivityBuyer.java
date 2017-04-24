@@ -1,17 +1,20 @@
 package com.shivshankar;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.GravityCompat;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -19,6 +22,8 @@ import android.widget.Toast;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.arlib.floatingsearchview.util.Util;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.HomeCategoryAdapterBuyer;
 import com.shivshankar.classes.Brand;
@@ -35,7 +40,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClickListener, OnResult {
+public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
     LinearLayout mLl_view;
     private FloatingSearchView mSearchView;
     RecyclerView mRv_items;
@@ -52,28 +57,17 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
         super.onCreate(savedInstanceState);
         try {
             View rootView = getLayoutInflater().inflate(R.layout.activity_main_buyer, frameLayout);
-//            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
-
             setupFloatingSearch();
 
             APIs.GetBuyerHome(this, this);
-//            swipeRefreshLayout.setEnabled(true);
-//            try {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                    swipeRefreshLayout.setProgressViewOffset(false, 0, 35);
-//                }
-//                swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light, android.R.color.holo_purple, android.R.color.holo_blue_light);
-//                swipeRefreshLayout.setOnRefreshListener(() -> {
-//                    APIs.GetBuyerHome(this, this);
-//                });
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void onBackPressed() {
@@ -83,6 +77,51 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
         } else {
             isBackpressedOnce = true;
             Toast.makeText(MainActivityBuyer.this, "Press again to close " + commonVariables.appname, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void showGuideline() {
+        try {
+            final SpannableString strMenu = new SpannableString("This will open Navigation Menu, which contain quick links for Profile, Orders, Policy, About Us and Contact Us."),
+                    strNotification = new SpannableString("You can see all notifications for order status, discounts, coupons and special offers after clicking here."),
+                    strCart = new SpannableString("You can see products you have added to your cart by clicking this button.");
+            strMenu.setSpan(new StyleSpan(Typeface.ITALIC), 15, 15 + "Navigation Menu".length(), 0);
+            strCart.setSpan(new StyleSpan(Typeface.ITALIC), 44, 44 + "cart".length(), 0);
+            strNotification.setSpan(new StyleSpan(Typeface.ITALIC), 16, 16 + "notifications".length(), 0);
+
+            final TapTargetSequence sequence = new TapTargetSequence(this)
+                    .targets(
+                            TapTarget.forToolbarNavigationIcon(toolbar, "This is Menu button", strMenu)
+                                    .id(1)
+                                    .dimColor(android.R.color.white)
+                                    .outerCircleColor(R.color.colorPrimary)
+                                    .targetCircleColor(android.R.color.white)
+                                    .textColor(android.R.color.white)
+                                    .targetRadius(50)
+                                    .cancelable(false)
+                            , TapTarget.forView(((ActionMenuView) toolbar.getChildAt(2)).getChildAt(0), "Cart", strCart)
+                                    .textColorInt(ContextCompat.getColor(this, R.color.white))
+                                    .id(2)
+                                    .dimColor(android.R.color.white)
+                                    .outerCircleColor(R.color.colorPrimary)
+                                    .targetCircleColor(android.R.color.white)
+                                    .targetRadius(50)
+                                    .textColor(android.R.color.white)
+                            , TapTarget.forView(((ActionMenuView) toolbar.getChildAt(2)).getChildAt(1), "Notifications", strNotification)
+                                    .textColorInt(ContextCompat.getColor(this, R.color.white))
+                                    .id(3)
+                                    .dimColor(android.R.color.white)
+                                    .outerCircleColor(R.color.colorPrimary)
+                                    .targetCircleColor(android.R.color.white)
+                                    .targetRadius(50)
+                    );
+            sequence.start();
+            AppPreferences.getPrefs().edit().putBoolean(commonVariables.KEY_FIRST_TIME, false).apply();
+        } catch (Exception e) {
+            AppPreferences.getPrefs().edit().putBoolean(commonVariables.KEY_FIRST_TIME, true).apply();
+            e.printStackTrace();
+
+            Log.e("TAGRK", "Error:" + e.toString());
         }
     }
 
@@ -96,67 +135,6 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
             LinearLayoutManager manager = new LinearLayoutManager(this);
             mRv_items.setLayoutManager(manager);
 
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
-            mNav_about_us.setOnClickListener(this);
-            mNav_our_policy.setOnClickListener(this);
-            mNav_contact_us.setOnClickListener(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        try {
-            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
-            view.startAnimation(buttonClick);
-            if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_about_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_our_policy) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSListingActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_contact_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                if (mTv_logout.getText().equals("Login")) {
-                    startActivity(new Intent(this, LoginRegisterActivity.class));
-                    finish();
-                    overridePendingTransition(0, 0);
-                } else {
-                    commonMethods.logout(this, true);
-                }
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,6 +143,9 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
     @Override
     public void onResult(JSONObject jobjWhole) {
         try {
+            if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_FIRST_TIME, true)) {
+                showGuideline();
+            }
             swipeRefreshLayout.setRefreshing(false);
             if (jobjWhole != null) {
                 String strApiName = jobjWhole.optString("api");
@@ -184,6 +165,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
                     editor.apply();
 
                     setCartAndNotiCount();
+
                 }
             }
         } catch (Exception e) {

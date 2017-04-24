@@ -76,7 +76,10 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
             holder.mTv_product_price.setText(commonVariables.strCurrency_name + " " + item.getOfferPrice());
             String strImageURL = item.getImageName();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL).asBitmap().approximate().dontAnimate().diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(holder.mIv_product_image);
+                Glide.with(activity).load(strImageURL).asBitmap().approximate().dontAnimate()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f)
+                        .error(R.drawable.no_img)
+                        .into(holder.mIv_product_image);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,7 +144,8 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
         mTv_Min_Qty = (EditText) view.findViewById(R.id.tv_min_qty);
         mLL_Fabrics = (LinearLayout) view.findViewById(R.id.ll_top_bottom_fab);
         String[] Images = {imageName};
-        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(imageView);
+        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.1f).error(R.drawable.no_img).into(imageView);
         APIs.GetProductDetail_Suit_Seller(activity, this, productId);
 
 

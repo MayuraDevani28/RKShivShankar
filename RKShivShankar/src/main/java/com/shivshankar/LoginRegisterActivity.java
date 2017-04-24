@@ -54,21 +54,6 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
         mIv_close = (ImageView) findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
         viewPager = (WrapContentViewPager) findViewById(R.id.view_pager);
-        tabLayout = (TabLayout) findViewById(R.id.pager_tabs);
-        setupViewPager();
-    }
-
-    private void setupViewPager() {
-        pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), tabLayout);
-        loginFragment = new LoginFragment();
-        pagerAdapter.addFragment(loginFragment, "LOGIN");
-        registerFragment = new RegisterFragment();
-        pagerAdapter.addFragment(registerFragment, "REGISTER");
-
-        viewPager.setAdapter(pagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(0);
-        viewPager.setOffscreenPageLimit(1);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -85,6 +70,21 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
 
             }
         });
+        tabLayout = (TabLayout) findViewById(R.id.pager_tabs);
+        setupViewPager();
+    }
+
+    private void setupViewPager() {
+        pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), tabLayout);
+        loginFragment = new LoginFragment();
+        pagerAdapter.addFragment(loginFragment, "LOGIN");
+        registerFragment = new RegisterFragment();
+        pagerAdapter.addFragment(registerFragment, "REGISTER");
+
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(1);
     }
 
     @Override
@@ -92,10 +92,6 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
         super.onPause();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void onBackPressed() {

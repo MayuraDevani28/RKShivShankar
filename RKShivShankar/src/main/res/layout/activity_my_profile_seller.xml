@@ -40,7 +40,6 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
-        android:padding="5dp"
         android:scrollbars="none">
 
         <ScrollView
@@ -56,221 +55,238 @@
                 android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/ll_profile"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical"
-                    android:visibility="visible">
+                    android:background="@color/colorPrimary"
+                    android:padding="10dp">
 
                     <LinearLayout
-                        android:id="@+id/ll_register"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/xml_black_border_square_box"
-                        android:orientation="vertical"
-                        android:padding="10dp">
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/xml_round_white"
+                        android:gravity="center">
 
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/ti_register_first_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:textColorHint="@color/text_color_hint">
-
-                            <EditText
-                                android:id="@+id/edt_register_first_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/ic_user_app"
-                                android:drawablePadding="10dp"
-                                android:hint="Your name*"
-                                android:imeOptions="actionNext"
-                                android:inputType="textCapWords"
-                                android:textSize="@dimen/text_size_small" />
-
-                        </android.support.design.widget.TextInputLayout>
-
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/ti_register_email"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:textColorHint="@color/text_color_hint">
-
-                            <EditText
-                                android:id="@+id/edt_register_email"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/ic_mail"
-                                android:drawablePadding="10dp"
-                                android:enabled="false"
-                                android:hint="Email id*"
-                                android:imeOptions="actionNext"
-                                android:inputType="textEmailAddress"
-                                android:textSize="@dimen/text_size_small" />
-
-                        </android.support.design.widget.TextInputLayout>
-
-                        <LinearLayout
+                        <ImageView
+                            android:id="@+id/iv_brand_logo"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                            android:padding="20dp"
+                            android:src="@drawable/rkicon_greencolor" />
+                    </LinearLayout>
 
-                            <android.support.design.widget.TextInputLayout
-                                android:id="@+id/ti_otp"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:layout_weight="1"
-                                android:textColorHint="@color/text_color_hint">
+                </RelativeLayout>
 
-                                <EditText
-                                    android:id="@+id/edt_otp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:drawableLeft="@drawable/ic_mobile"
-                                    android:drawablePadding="10dp"
-                                    android:enabled="false"
-                                    android:hint="Whatsapp mobile no.*"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textCapWords"
-                                    android:textSize="@dimen/text_size_small" />
-                            </android.support.design.widget.TextInputLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@color/colorPrimary"
+                    android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/btn_add_mobile"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="2dp"
-                                android:gravity="center"
-                                android:padding="5dp"
-                                android:text="Change"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/text_size_medium"
-                                android:visibility="gone" />
-                        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:layout_weight="1"
+                        android:background="@color/white_transparent"
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/ti_register_company"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Email"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:id="@+id/edt_register_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_small" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0.5dp"
+                        android:layout_weight="1"
+                        android:background="@color/white_transparent"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Mobile"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_medium" />
+
+                        <TextView
+                            android:id="@+id/edt_otp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_small" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/white"
+                    android:animateLayoutChanges="true"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/ti_register_first_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:textColorHint="@color/text_color_hint">
+
+                        <EditText
+                            android:id="@+id/edt_register_first_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColorHint="@color/text_color_hint"
-                            android:visibility="gone">
+                            android:drawableLeft="@drawable/ic_user_app"
+                            android:drawablePadding="10dp"
+                            android:hint="Your name*"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapWords"
+                            android:textSize="@dimen/text_size_small" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/ti_register_company"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/text_color_hint"
+                        android:visibility="gone">
+
+                        <EditText
+                            android:id="@+id/edt_register_company"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_city"
+                            android:drawablePadding="10dp"
+                            android:hint="Firm name"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapWords"
+                            android:textSize="@dimen/text_size_small" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/ti_register_city"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColorHint="@color/text_color_hint">
 
                             <EditText
-                                android:id="@+id/edt_register_company"
+                                android:id="@+id/edt_register_city"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:drawableLeft="@drawable/ic_city"
                                 android:drawablePadding="10dp"
-                                android:hint="Firm name"
+                                android:hint="City"
                                 android:imeOptions="actionNext"
                                 android:inputType="textCapWords"
                                 android:textSize="@dimen/text_size_small" />
 
                         </android.support.design.widget.TextInputLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/ti_pincode"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:orientation="horizontal">
+                            android:layout_weight="1"
+                            android:textColorHint="@color/text_color_hint">
 
-                            <android.support.design.widget.TextInputLayout
-                                android:id="@+id/ti_register_city"
-                                android:layout_width="0dp"
+                            <EditText
+                                android:id="@+id/edt_pincode"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColorHint="@color/text_color_hint">
+                                android:drawableLeft="@drawable/ic_city"
+                                android:drawablePadding="10dp"
+                                android:hint="Pincode"
+                                android:imeOptions="actionNext"
+                                android:inputType="number"
+                                android:textSize="@dimen/text_size_small" />
 
-                                <EditText
-                                    android:id="@+id/edt_register_city"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:drawableLeft="@drawable/ic_city"
-                                    android:drawablePadding="10dp"
-                                    android:hint="City"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textCapWords"
-                                    android:textSize="@dimen/text_size_small" />
+                        </android.support.design.widget.TextInputLayout>
 
-                            </android.support.design.widget.TextInputLayout>
-
-                            <android.support.design.widget.TextInputLayout
-                                android:id="@+id/ti_pincode"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColorHint="@color/text_color_hint">
-
-                                <EditText
-                                    android:id="@+id/edt_pincode"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:drawableLeft="@drawable/ic_city"
-                                    android:drawablePadding="10dp"
-                                    android:hint="Pincode"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="number"
-                                    android:textSize="@dimen/text_size_small" />
-
-                            </android.support.design.widget.TextInputLayout>
-
-                        </LinearLayout>
+                    </LinearLayout>
 
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/ti_register_state"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:orientation="horizontal">
+                            android:layout_weight="1"
+                            android:textColorHint="@color/text_color_hint">
 
-                            <android.support.design.widget.TextInputLayout
-                                android:id="@+id/ti_register_state"
-                                android:layout_width="0dp"
+                            <EditText
+                                android:id="@+id/edt_register_state"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColorHint="@color/text_color_hint">
+                                android:drawableLeft="@drawable/ic_city"
+                                android:drawablePadding="10dp"
+                                android:hint="State"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapWords"
+                                android:textSize="@dimen/text_size_small" />
 
-                                <EditText
-                                    android:id="@+id/edt_register_state"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:drawableLeft="@drawable/ic_city"
-                                    android:drawablePadding="10dp"
-                                    android:hint="State"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textCapWords"
-                                    android:textSize="@dimen/text_size_small" />
+                        </android.support.design.widget.TextInputLayout>
 
-                            </android.support.design.widget.TextInputLayout>
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/ti_register_country"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColorHint="@color/text_color_hint">
 
-                            <android.support.design.widget.TextInputLayout
-                                android:id="@+id/ti_register_country"
-                                android:layout_width="0dp"
+                            <EditText
+                                android:id="@+id/edt_register_country"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:textColorHint="@color/text_color_hint">
+                                android:drawableLeft="@drawable/ic_city"
+                                android:drawablePadding="10dp"
+                                android:hint="Country"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapWords"
+                                android:textSize="@dimen/text_size_small" />
 
-                                <EditText
-                                    android:id="@+id/edt_register_country"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:drawableLeft="@drawable/ic_city"
-                                    android:drawablePadding="10dp"
-                                    android:hint="Country"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textCapWords"
-                                    android:textSize="@dimen/text_size_small" />
-
-                            </android.support.design.widget.TextInputLayout>
+                        </android.support.design.widget.TextInputLayout>
 
 
-                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -278,8 +294,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/xml_black_border_square_box"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="1dp">
 

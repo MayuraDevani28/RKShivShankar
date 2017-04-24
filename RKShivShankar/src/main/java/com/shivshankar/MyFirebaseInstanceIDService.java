@@ -16,15 +16,12 @@
 
 package com.shivshankar;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.shivshankar.ServerCall.APIs;
-import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
-import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONObject;
 
@@ -37,7 +34,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService imple
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
-        AppPreferences.getPrefs().edit().putBoolean(commonVariables.PREFERENCE_FIRST_RUN, true);
         APIs.UpdatefcmDetails_Buyer(this);
     }
 
@@ -47,9 +43,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService imple
             try {
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("UpdatefcmDetails_Buyer")) {
-                    SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                    editor.putBoolean(commonVariables.PREFERENCE_FIRST_RUN, false);
-                    editor.apply();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

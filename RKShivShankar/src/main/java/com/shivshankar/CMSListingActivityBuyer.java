@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,7 +18,6 @@ import com.shivshankar.adapters.CMSListAdapter;
 import com.shivshankar.classes.CMS;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
-import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
@@ -74,15 +72,6 @@ public class CMSListingActivityBuyer extends BaseActivityBuyer implements View.O
         }
     }
 
-    @Override
-    protected void onResume() {
-        try {
-            super.onResume();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void bindViews(View rootView) {
         try {
             mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
@@ -92,18 +81,6 @@ public class CMSListingActivityBuyer extends BaseActivityBuyer implements View.O
             LinearLayoutManager manager = new LinearLayoutManager(this);
             mGv_More.setLayoutManager(manager);
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
-
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
-            mNav_about_us.setOnClickListener(this);
-            mNav_our_policy.setOnClickListener(this);
-            mNav_contact_us.setOnClickListener(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,46 +108,10 @@ public class CMSListingActivityBuyer extends BaseActivityBuyer implements View.O
     public void onClick(View view) {
         AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
         view.startAnimation(buttonClick);
-        if (view == mIv_logo_toolbar) {
-            Intent intent = new Intent(this, MainActivityBuyer.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_my_profile) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, MyProfileActivityBuyer.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_my_orders) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, MyOrdersActivityBuyer.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_about_us) {
-            drawer.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-            intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_our_policy) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (view == mNav_contact_us) {
-            drawer.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-            intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (view == mTv_logout) {
-            drawer.closeDrawer(GravityCompat.START);
-            if (mTv_logout.getText().equals("Login")) {
-                startActivity(new Intent(this, LoginRegisterActivity.class));
-                onBackPressed();
-            } else {
-                commonMethods.logout(this, true);
-            }
-        } else if (view == mIv_close) {
+        if (view == mIv_close) {
             onBackPressed();
-        }
+        } else
+            super.onClick(view);
     }
 
     @Override

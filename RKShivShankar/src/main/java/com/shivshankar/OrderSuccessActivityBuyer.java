@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -18,14 +17,10 @@ import android.widget.TextView;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.CartAdapterBuyer;
 import com.shivshankar.classes.CartItem;
-import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
-import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -65,18 +60,6 @@ public class OrderSuccessActivityBuyer extends BaseActivityCartBuyer implements 
     private void bindViews(View rootView) {
 
         try {
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
-            mNav_about_us.setOnClickListener(this);
-            mNav_our_policy.setOnClickListener(this);
-            mNav_contact_us.setOnClickListener(this);
-
             mLl_whole = (LinearLayout) rootView.findViewById(R.id.ll_view);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.rv_items);
             mRv_items.setHasFixedSize(true);
@@ -125,7 +108,7 @@ public class OrderSuccessActivityBuyer extends BaseActivityCartBuyer implements 
                 mRv_items.setVisibility(View.GONE);
             } else {
                 mRv_items.setVisibility(View.VISIBLE);
-                adapter = new CartAdapterBuyer(this, listArray);
+                adapter = new CartAdapterBuyer(this, listArray, null, null);
                 mRv_items.setAdapter(adapter);
             }
         } catch (Exception e) {
@@ -150,72 +133,13 @@ public class OrderSuccessActivityBuyer extends BaseActivityCartBuyer implements 
         try {
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
-            if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivityBuyer.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_about_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_our_policy) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSListingActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_contact_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                if (mTv_logout.getText().equals("Login")) {
-                    startActivity(new Intent(this, LoginRegisterActivity.class));
-                    onBackPressed();
-                } else {
-                    commonMethods.logout(this, true);
-                }
-            } else if (view == mLl_confirm_order) {
+            if (view == mLl_confirm_order) {
                 onBackPressed();
-            }
+            } else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onResume() {
-        try {
-            invalidateOptionsMenu();
-            if (adapter != null)
-                adapter.notifyDataSetChanged();
-
-            if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onResume();
     }
 
     @SuppressLint("NewApi")
@@ -253,18 +177,18 @@ public class OrderSuccessActivityBuyer extends BaseActivityCartBuyer implements 
                         e.printStackTrace();
                     }
 
-                    JSONObject job = jobjWhole.optJSONObject("resData");
-                    JSONArray jarray = job.optJSONArray("lstCartItems");
-                    if (jarray != null) {
-                        for (int i = 0; i < jarray.length(); i++) {
-                            JSONObject jObjItem = jarray.optJSONObject(i);
-                            listArray.add(new CartItem(jObjItem.optString("CartId"), jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("productName"), jObjItem.optString("BrandName"), jObjItem.optString("MarketPrice"), jObjItem.optString("OfferPrice"), jObjItem.optString("TotalPrice"), jObjItem.optString("DiscountPercent"), jObjItem.optString("ImageName"), jObjItem.optInt("CartQuantity"), jObjItem.optInt("MinOrderQuantity"), jObjItem.optBoolean("IsOutOfStock"), false));
-                        }
-                    }
-                    AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, listArray.size()).apply();
-                    if (jarray == null || jarray.length() == 0)
-                        listArray.clear();
-                    setListAdapter(listArray);
+//                    JSONObject job = jobjWhole.optJSONObject("resData");
+//                    JSONArray jarray = job.optJSONArray("lstCartItems");
+//                    if (jarray != null) {
+//                        for (int i = 0; i < jarray.length(); i++) {
+//                            JSONObject jObjItem = jarray.optJSONObject(i);
+//                            listArray.add(new CartItem(jObjItem.optString("CartId"), jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("productName"), jObjItem.optString("BrandName"), jObjItem.optString("MarketPrice"), jObjItem.optString("OfferPrice"), jObjItem.optString("TotalPrice"), jObjItem.optString("DiscountPercent"), jObjItem.optString("ImageName"), jObjItem.optInt("CartQuantity"), jObjItem.optInt("MinOrderQuantity"), jObjItem.optBoolean("IsOutOfStock"), false));
+//                        }
+//                    }
+//                    AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, listArray.size()).apply();
+//                    if (jarray == null || jarray.length() == 0)
+//                        listArray.clear();
+//                    setListAdapter(listArray);
                 }
             } else {
                 setListAdapter(listArray);

@@ -9,11 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.transition.Transition;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -37,15 +35,6 @@ public class ViewPagerActivity extends SwipeBackActivity implements OnClickListe
     private CirclePageIndicator mIndicator;
     private ImageView mIv_backImage;
     private ImageView mIv_nextImage, mIv_close;
-    private static final int ACTION_TYPE_DEFAULT = 0;
-    private static final int ACTION_TYPE_UP = 1;
-    private static final int ACTION_TYPE_RIGHT = 2;
-    private static final int ACTION_TYPE_DOWN = 3;
-    private static final int ACTION_TYPE_LEFT = 4;
-    private static final int SLIDE_RANGE = 100;
-    private float mTouchStartPointX;
-    private float mTouchStartPointY;
-    private int mActionType = ACTION_TYPE_DEFAULT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +62,6 @@ public class ViewPagerActivity extends SwipeBackActivity implements OnClickListe
             page.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
                 }
 
                 @Override

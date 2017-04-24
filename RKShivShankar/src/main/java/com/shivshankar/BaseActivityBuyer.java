@@ -3,6 +3,7 @@ package com.shivshankar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,34 +11,34 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.shivshankar.customcontrols.NavDrawerViewBuyer;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import static com.shivshankar.utills.AppPreferences.getPrefs;
 
-
-public class BaseActivityBuyer extends AppCompatActivity {
+public class BaseActivityBuyer extends AppCompatActivity implements View.OnClickListener {
 
     protected FrameLayout frameLayout;
     Toolbar toolbar;
-    DrawerLayout drawer;
+    public DrawerLayout drawer;
     SwipeRefreshLayout swipeRefreshLayout;
     CoordinatorLayout main_content;
-    LinearLayout mNav_my_profile, mNav_my_orders, mNav_about_us, mNav_our_policy, mNav_contact_us, mLl_close;
+    NavDrawerViewBuyer navigationView_buyer;
+    NavigationView navView;
+    ImageView mIv_logo_toolbar;
+    TextView mTv_noti_count, mTv_cart_count;
 
-    ImageView mIv_logo_nav, mIv_logo_toolbar;
-    TextView mTv_noti_count, mTv_cart_count, mTv_username, mTv_logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +63,18 @@ public class BaseActivityBuyer extends AppCompatActivity {
             drawer.addDrawerListener(toggle);
             toggle.syncState();
 
-
+            setupViews();
             swipeRefreshLayout.setEnabled(false);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupViews() {
+        try {
+            navigationView_buyer = new NavDrawerViewBuyer(this);
+            navView.addView(navigationView_buyer);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,31 +83,14 @@ public class BaseActivityBuyer extends AppCompatActivity {
     private void bindViews() {
         try {
             frameLayout = (FrameLayout) findViewById(R.id.container);
+            navView = (NavigationView) findViewById(R.id.navigation_drawer_container);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             main_content = (CoordinatorLayout) findViewById(R.id.main_content);
 
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-
-            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
-            mNav_my_orders = (LinearLayout) findViewById(R.id.nav_my_orders);
-            mNav_about_us = (LinearLayout) findViewById(R.id.nav_about_us);
-            mNav_our_policy = (LinearLayout) findViewById(R.id.nav_our_policy);
-            mNav_contact_us = (LinearLayout) findViewById(R.id.nav_contact_us);
-
-            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
             mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
-            mTv_username = (TextView) findViewById(R.id.tv_username);
-            mTv_logout = (TextView) findViewById(R.id.tv_logout);
-            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
-
-            if (!getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
-                findViewById(R.id.v_order).setVisibility(View.GONE);
-                findViewById(R.id.v_prof).setVisibility(View.GONE);
-                mTv_logout.setText("Login");
-                mNav_my_profile.setVisibility(View.GONE);
-                mNav_my_orders.setVisibility(View.GONE);
-            }
+            mIv_logo_toolbar.setOnClickListener(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,6 +123,8 @@ public class BaseActivityBuyer extends AppCompatActivity {
                 Snackbar.make(mTv_cart_count, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
             setCartAndNotiCount();
+            navigationView_buyer.setLoginLogout();
+            navigationView_buyer.setUserName();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,8 +138,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         try {
-            MenuInflater menuInflater = getMenuInflater();
-            menuInflater.inflate(R.menu.main_buyer, menu);
+            getMenuInflater().inflate(R.menu.main_buyer, menu);
             final View menu_layout = menu.findItem(R.id.action_cart).getActionView();
             ((ImageView) menu_layout.findViewById(R.id.iv_icon)).setImageResource(R.drawable.ic_cart);
             mTv_cart_count = (TextView) menu_layout.findViewById(R.id.tv_cart_count);
@@ -166,6 +160,7 @@ public class BaseActivityBuyer extends AppCompatActivity {
                 }
             };
             setCartAndNotiCount();
+            Log.v("TAGRK", "OncreatedOptionsmenu base buyer");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -213,5 +208,21 @@ public class BaseActivityBuyer extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onClick(View view) {
+        try {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view.startAnimation(buttonClick);
+            if (view == mIv_logo_toolbar) {
+                Intent intent = new Intent(this, MainActivityBuyer.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

@@ -16,10 +16,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.shivshankar.R;
 import com.shivshankar.customcontrols.TouchImageView;
-import com.shivshankar.utills.MyRequestListener;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 
@@ -70,6 +68,7 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener 
                 Glide.with(getContext())
                         .load(strImageURL)
                         .asBitmap()
+                        .error(R.drawable.no_img_big)
                         //.placeholder(R.drawable.default_placeholder)
                         .into(new BitmapImageViewTarget(imageView) {
                             @Override

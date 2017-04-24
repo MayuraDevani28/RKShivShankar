@@ -5,12 +5,9 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.view.GravityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -45,10 +42,10 @@ import java.util.ArrayList;
 @SuppressLint("NewApi")
 public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult, View.OnFocusChangeListener {
 
-    private TextView mBtn_logout, mBtn_save_profile;//, mBtn_add_mobile;
+    private TextView mBtn_logout, mBtn_save_profile, mTv_otp, mTv_register_email;//, mBtn_add_mobile;
 
-    private EditText mEdt_register_first_name, mEdt_register_email, mEdt_register_city, mEdt_register_mobile_wholesaler, mEdt_pincode, mSp_country_billing, mSp_address_state_billing;//mEdt_register_company
-    private TextInputLayout mTI_register_first_name, mTI_register_email, mTI_register_city, mTI_register_mobile_wholesaler, mTI_pincode, mTI_country_billing, mTI_address_state_billing;
+    private EditText mEdt_register_first_name, mEdt_register_city, mEdt_pincode, mSp_country_billing, mSp_address_state_billing;//mEdt_register_company
+    private TextInputLayout mTI_register_first_name, mTI_register_city, mTI_pincode, mTI_country_billing, mTI_address_state_billing;
 
     private TextView mBtn_change_password;
     public ImageView mIv_close;
@@ -95,53 +92,23 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
         overridePendingTransition(0, 0);
     }
 
-    @Override
-    public void onResume() {
-        try {
-            if (!commonMethods.knowInternetOn(this)) {
-                Snackbar snack = Snackbar.make(mBtn_save_profile, R.string.no_internet, Snackbar.LENGTH_LONG);
-                View view = snack.getView();
-                TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
-                tv.setTextColor(Color.WHITE);
-                snack.show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onResume();
-    }
-
     private void bindViews(View rootView) {
-
-        mIv_logo_nav.setOnClickListener(this);
-        mIv_logo_toolbar.setOnClickListener(this);
-        mTv_username.setOnClickListener(this);
-        mTv_logout.setOnClickListener(this);
-        mLl_close.setOnClickListener(this);
-
-        mNav_my_profile.setOnClickListener(this);
-        mNav_my_orders.setOnClickListener(this);
-        mNav_about_us.setOnClickListener(this);
-        mNav_our_policy.setOnClickListener(this);
-        mNav_contact_us.setOnClickListener(this);
 
         mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
 
         mEdt_register_first_name = (EditText) rootView.findViewById(R.id.edt_register_first_name);
-        mEdt_register_email = (EditText) rootView.findViewById(R.id.edt_register_email);
+        mTv_register_email = (TextView) rootView.findViewById(R.id.edt_register_email);
         mEdt_register_city = (EditText) rootView.findViewById(R.id.edt_register_city);
         mEdt_pincode = (EditText) rootView.findViewById(R.id.edt_pincode);
         mSp_address_state_billing = (EditText) rootView.findViewById(R.id.edt_register_state);
-        mEdt_register_mobile_wholesaler = (EditText) rootView.findViewById(R.id.edt_otp);
+        mTv_otp = (TextView) rootView.findViewById(R.id.edt_otp);
         mSp_country_billing = (EditText) rootView.findViewById(R.id.edt_register_country);
 
         mTI_register_first_name = (TextInputLayout) rootView.findViewById(R.id.ti_register_first_name);
-        mTI_register_email = (TextInputLayout) rootView.findViewById(R.id.ti_register_email);
         mTI_register_city = (TextInputLayout) rootView.findViewById(R.id.ti_register_city);
         mTI_pincode = (TextInputLayout) rootView.findViewById(R.id.ti_pincode);
         mTI_address_state_billing = (TextInputLayout) rootView.findViewById(R.id.ti_register_state);
-        mTI_register_mobile_wholesaler = (TextInputLayout) rootView.findViewById(R.id.ti_otp);
         mTI_country_billing = (TextInputLayout) rootView.findViewById(R.id.ti_register_country);
 
 //        mBtn_add_mobile = (TextView) rootView.findViewById(R.id.btn_add_mobile);
@@ -196,55 +163,11 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
         try {
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
-            if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivityBuyer.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_about_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_our_policy) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSListingActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_contact_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username || view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                if (mTv_logout.getText().equals("Login")) {
-                    startActivity(new Intent(this, LoginRegisterActivity.class));
-                    onBackPressed();
-                } else {
-                    commonMethods.logout(this, true);
-                }
-            } else if (view == mIv_close) {
+            if (view == mIv_close) {
                 returnBack();
             } else if (view == mBtn_save_profile) {
                 updateProfile();
-            }
-//            else if (v == mBtn_add_mobile) {
-//                Intent intent = new Intent(this, AddMobileNoActivityBuyer.class);
-//                startActivityForResult(intent, commonVariables.REQUEST_ADD_MOBILE);
-//                overridePendingTransition(0, 0);
-//            }
-            else if (view == mBtn_logout) {
+            } else if (view == mBtn_logout) {
                 commonMethods.logout(this, true);
             } else if (view == mBtn_change_password) {
                 Intent intent = new Intent(this, ChangePasswordActivityBuyer.class);
@@ -252,6 +175,8 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
                 overridePendingTransition(0, 0);
             } else if (view == mSp_country_billing)
                 showCountryDialog(mSp_country_billing);
+            else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -264,15 +189,13 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             boolean fullNamerequiredError = false;
             if (!name.contains(" "))
                 fullNamerequiredError = true;
-            String email = mEdt_register_email.getText().toString().trim();
-            String mobile = mEdt_register_mobile_wholesaler.getText().toString().trim();
+            String email = mTv_register_email.getText().toString().trim();
+            String mobile = mTv_otp.getText().toString().trim();
             String city = mEdt_register_city.getText().toString().trim();
             String strPincode = mEdt_pincode.getText().toString().trim();
             String state = mSp_address_state_billing.getText().toString().trim();
             String strCountryB = mSp_country_billing.getText().toString().trim();
             mTI_register_first_name.setError(null);
-            mTI_register_email.setError(null);
-            mTI_register_mobile_wholesaler.setError(null);
             mTI_register_city.setError(null);
 
             if (Validation.isEmptyEdittext(mEdt_register_first_name)) {
@@ -371,9 +294,9 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
             }
 
             if (!strEmail.equalsIgnoreCase("null"))
-                mEdt_register_email.setText(strEmail);
+                mTv_register_email.setText(strEmail);
             if (!strMobile.equalsIgnoreCase("null"))
-                mEdt_register_mobile_wholesaler.setText(strMobile);
+                mTv_otp.setText(strMobile);
             if (!strCity.equalsIgnoreCase("null"))
                 mEdt_register_city.setText(strCity);
             if (!strPincode.equalsIgnoreCase("null"))

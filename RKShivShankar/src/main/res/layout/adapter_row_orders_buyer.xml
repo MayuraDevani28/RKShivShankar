@@ -5,174 +5,141 @@
     android:layout_marginBottom="5dp"
     android:animateLayoutChanges="true"
     android:background="@drawable/xml_gray_white_square_box"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <FrameLayout
+            android:layout_width="110dp"
+            android:layout_height="110dp">
 
-        <LinearLayout
-            android:id="@+id/ll_order"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/xml_round_yellow"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/iv_img"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Order No"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_xxsmall" />
+                android:minHeight="110dp" />
 
-            <TextView
-                android:id="@+id/tv_order_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_small"
-                android:textStyle="bold" />
-        </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/rl_images"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/xml_trans_border_square_box_black_tran"
+                android:clickable="false">
 
+                <TextView
+                    android:id="@+id/tv_count_products"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="+ 1"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:padding="2dp"
+                    android:text="More items"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_xsmall" />
+
+            </RelativeLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:orientation="vertical"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp">
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:padding="2dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="Status"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
+                    android:id="@+id/ll_order"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/xml_round_green"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text=" : "
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Order No"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_xxsmall" />
+
+                    <TextView
+                        android:id="@+id/tv_order_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_small"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:background="@drawable/ic_eye_black"
+                        android:gravity="center"
+                        android:textSize="@dimen/text_size_small"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_status"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
+                        android:layout_marginTop="5dp"
+                        android:gravity="right"
+                        android:padding="5dp"
+                        android:text="Pending"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <TextView
+                        android:id="@+id/tv_order_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="right"
+                        android:paddingRight="5dp"
+                        android:text="On 4/4/2017"
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_small" />
                 </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:padding="2dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:text="Amount"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text=" : "
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <TextView
-                        android:id="@+id/tv_total"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text=""
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-                </LinearLayout>
-
-
             </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:gravity="right|center_vertical"
-            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_order_date"
-                android:layout_width="0dp"
+                android:id="@+id/tv_total"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_marginTop="5dp"
                 android:padding="5dp"
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_small" />
 
-            <TextView
-                android:id="@+id/tv_view"
-                style="@style/ButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:gravity="center"
-                android:text="View Details"
-                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_count_products"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="5dp"
-            android:text="Total"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_small" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_products"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
     </LinearLayout>
-
 </LinearLayout>

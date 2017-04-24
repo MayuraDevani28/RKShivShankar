@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.view.GravityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,7 +35,6 @@ import com.shivshankar.utills.Validation;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +45,7 @@ import java.util.ArrayList;
  * Created by Mayura on 4/1/2017.
  */
 
-public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements View.OnClickListener, OnResult, CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener {
+public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements View.OnClickListener, OnResult, CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener {
 
     Resources res;
     boolean call = false;
@@ -71,7 +69,7 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         try {
             res = getResources();
-            View rootView = getLayoutInflater().inflate(R.layout.activity_order_form, frameLayout);
+            View rootView = getLayoutInflater().inflate(R.layout.activity_order_form_buyer, frameLayout);
             rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
@@ -168,7 +166,7 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                commonMethods.hidesoftKeyboard(OrderFormBuyerActivity.this);
+                commonMethods.hidesoftKeyboard(OrderFormActivityBuyer.this);
                 dialog.cancel();
             }
         });
@@ -262,19 +260,6 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
 
             mCB_Different_Address.setOnCheckedChangeListener(this);
 
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
-            mNav_about_us.setOnClickListener(this);
-            mNav_our_policy.setOnClickListener(this);
-            mNav_contact_us.setOnClickListener(this);
-
-
             mLl_order_summary = (LinearLayout) rootView.findViewById(R.id.ll_order_summary);
             mTv_subtotal = (TextView) rootView.findViewById(R.id.tv_subtotal);
             mTv_shipping = (TextView) rootView.findViewById(R.id.tv_shipping);
@@ -306,43 +291,6 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
-            } else if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_about_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_our_policy) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSListingActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_contact_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                if (mTv_logout.getText().equals("Login")) {
-                    startActivity(new Intent(this, LoginRegisterActivity.class));
-                    onBackPressed();
-                } else {
-                    commonMethods.logout(this, true);
-                }
             } else if (view == mSp_country_billing)
                 showCountryDialog(mSp_country_billing);
             else if (view == mSp_country_shipping)
@@ -448,25 +396,11 @@ public class OrderFormBuyerActivity extends BaseActivityCartBuyer implements Vie
                                 sstrFname, sstrAddress1, sstrAddress2, sstrPinCode, sstrCity, sstrState, sstrCity, sstrCountryCode, sstrMobile, mEdt_note.getText().toString().trim());
                     }
                 }
-            }
+            } else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onResume() {
-        try {
-            if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onResume();
     }
 
     @SuppressLint("NewApi")

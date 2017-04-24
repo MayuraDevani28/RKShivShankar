@@ -8,7 +8,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.shivshankar.ProductsActivitySeller;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
-import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.ProductItem;
-import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonVariables;
 import com.shivshankar.viewpager.ViewPagerActivity;
@@ -39,16 +35,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint({"NewApi", "ResourceAsColor"})
-public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBuyer.MyViewHolder> implements OnResult {
+public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsAdapterBuyer.MyViewHolder> implements OnResult {
 
     private final AppCompatActivity activity;
     private final ArrayList<ProductItem> list;
     private static int posit;
-    LinearLayout mLl_add_to_cart;
     Dialog dialog;
-    int val28 = 28, val5 = 5;
-    private ProductItem product;
-    private Brand item;
     private EditText mTv_Brand;
     private EditText mTv_Top_Fabrics;
     private EditText mTv_Bottom_Fabrics;
@@ -64,12 +56,9 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
     private EditText mTv_Product_Code;
 
 
-    public ProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list, LinearLayout mLl_add_to_cart) {
+    public SuitProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list) {
         this.activity = activity;
         this.list = list;
-        this.mLl_add_to_cart = mLl_add_to_cart;
-        val28 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45, activity.getResources().getDisplayMetrics());
-        val5 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, activity.getResources().getDisplayMetrics());
     }
 
     public List<ProductItem> getItems() {
@@ -110,7 +99,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
                         product.setActive(false);
                     } else
                         product.setActive(true);
-                    notifyDataSetChanged();
+                    notifyItemChanged(posit);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -135,7 +124,10 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
                 Glide.with(activity)
                         .load(strImageURL)
-                        .asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).priority(Priority.IMMEDIATE).dontAnimate().thumbnail(0.1f).override(200, 200)
+                        .asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .priority(Priority.IMMEDIATE).dontAnimate()
+                        .thumbnail(0.1f).override(200, 200)
+                        .error(R.drawable.no_img)
                         .into(holder.mIv_product_image);
             }
             if (item.isActive())
@@ -189,20 +181,7 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
             try {
                 String strApiName = jobjWhole.optString("api");
 
-                if (strApiName.equalsIgnoreCase("RemoveProduct_Suit")) {
-                    int strresId = jobjWhole.optInt("resInt");
-
-                    if (strresId == 1) {
-                        list.remove(posit);
-                        if (list.size() == 0) {
-                            ((ProductsActivitySeller) activity).setListAdapter(list);
-                        } else
-                            notifyDataSetChanged();
-                    } else {
-                        AlertDialogManager.showDialog(activity, jobjWhole.optString("res"),null);
-                    }
-
-                } else if (strApiName.equalsIgnoreCase("GetProductDetail_Suit_Seller")) {
+                if (strApiName.equalsIgnoreCase("GetProductDetail_Suit_Seller")) {
                     JSONObject job = jobjWhole.optJSONObject("resData");
                     // item = new Brand(job.optString("BrandId"), job.optString("BrandName"), job.optString("BrandLogo"));
                     mTv_Product_Code.setText(job.optString("ProductCode"));
@@ -263,7 +242,9 @@ public class ProductsAdapterBuyer extends RecyclerView.Adapter<ProductsAdapterBu
         mTv_Min_Qty = (EditText) view.findViewById(R.id.tv_min_qty);
         mLL_Fabrics = (LinearLayout) view.findViewById(R.id.ll_top_bottom_fab);
         String[] Images = {imageName};
-        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(imageView);
+        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.1f)
+                .error(R.drawable.no_img_big).into(imageView);
         APIs.GetProductDetail_Suit_Seller(activity, this, productId);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
