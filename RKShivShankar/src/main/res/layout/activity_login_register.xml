@@ -7,53 +7,56 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RelativeLayout
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#10000000"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_login_logo"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:src="@drawable/rkicon_greencolor" />
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/pager_tabs"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_login_logo"
-                android:layout_marginTop="1dp"
-                app:tabIndicatorColor="@color/colorPrimary"
-                app:tabMode="fixed"
-                app:tabPadding="5dp"
-                app:tabTextColor="@color/black" />
+                android:background="#10000000"
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_close"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_alignParentRight="true"
-                android:layout_margin="5dp"
-                android:padding="5dp"
-                android:src="@drawable/ic_close_cancel"
-                android:tint="@color/colorPrimary" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/iv_login_logo"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/rkicon_greencolor" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/pager_tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_login_logo"
+                    android:layout_marginTop="1dp"
+                    app:tabIndicatorColor="@color/colorPrimary"
+                    app:tabMode="fixed"
+                    app:tabPadding="5dp"
+                    app:tabTextColor="@color/black" />
 
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/iv_close"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_close_cancel"
+                    android:tint="@color/colorPrimary" />
+            </RelativeLayout>
+
+            <com.shivshankar.customcontrols.WrapContentViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
 </LinearLayout>
