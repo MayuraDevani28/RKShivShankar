@@ -132,7 +132,10 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
         holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
         String strImageURL = item.getImageName();
         if ((strImageURL != null) && (!strImageURL.equals(""))) {
-            Glide.with(activity).load(strImageURL).asBitmap().approximate().dontAnimate().diskCacheStrategy(DiskCacheStrategy.SOURCE).thumbnail(0.01f).into(holder.mIv_product_image);
+            Glide.with(activity).load(strImageURL).asBitmap().approximate()
+                    .dontAnimate().diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .thumbnail(0.01f)
+                    .error(R.drawable.no_img).into(holder.mIv_product_image);
         }
     }
 

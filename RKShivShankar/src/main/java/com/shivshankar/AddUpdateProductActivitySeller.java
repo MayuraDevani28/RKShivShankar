@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.GravityCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +41,6 @@ import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -181,18 +179,6 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
         mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
 
-        mIv_logo_nav.setOnClickListener(this);
-        mIv_logo_toolbar.setOnClickListener(this);
-        mTv_username.setOnClickListener(this);
-        mTv_logout.setOnClickListener(this);
-        mLl_close.setOnClickListener(this);
-
-        mNav_my_profile.setOnClickListener(this);
-        mNav_my_products.setOnClickListener(this);
-        mNav_notification.setOnClickListener(this);
-        mNav_my_orders.setOnClickListener(this);
-        mNav_change_pass.setOnClickListener(this);
-
         sv = (ScrollView) rootView.findViewById(R.id.sv);
         mIv_imageView = (ImageView) rootView.findViewById(R.id.iv_effectImg);
         mIv_brand = (ImageView) rootView.findViewById(R.id.iv_brand);
@@ -228,20 +214,6 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
             }
             return false;
         });
-    }
-
-    @Override
-    protected void onResume() {
-        try {
-            super.onResume();
-            if (mTv_username != null) {
-                String strProfile = getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -347,36 +319,6 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                     startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_BRAND_PRODUCT);
                     overridePendingTransition(0, 0);
                 }
-            } else if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivitySeller.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_products) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ProductsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_notification) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, NotificationsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_change_pass) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this, true);
             } else if (view == mIv_close) {
                 onBackPressed();
             } else if (view == mBtn_submit) {
@@ -444,7 +386,8 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                 String json = gson.toJson(product);
                 intent.putExtra(commonVariables.KEY_PRODUCT, json);
                 startActivityForResult(intent, REQUEST_ADD_UPDATE_PRODUCT);
-            }
+            } else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }

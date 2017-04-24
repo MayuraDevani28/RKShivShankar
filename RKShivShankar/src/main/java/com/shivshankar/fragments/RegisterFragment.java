@@ -63,7 +63,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
             } else {
                 Log.d("TAGRK", "Internet Problem!");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,17 +93,24 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.radioBuyer) {
-                    stType = 1;
-                    mLl_firm.setVisibility(View.GONE);
-                } else if (checkedId == R.id.radioSeller) {
-                    stType = 0;
-                    mLl_firm.setVisibility(View.VISIBLE);
+            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                try {
+                    if (checkedId == R.id.radioBuyer) {
+                        stType = 1;
+//                        ((LoginRegisterActivity) getActivity()).setRegisterVisibility(true);
+                        ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.VISIBLE);
+                        mLl_firm.setVisibility(View.GONE);
+                    } else if (checkedId == R.id.radioSeller) {
+                        stType = 0;
+//                        ((LoginRegisterActivity) getActivity()).setRegisterVisibility(false);
+                        ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.GONE);
+                        mLl_firm.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
-
     }
 
     @Override

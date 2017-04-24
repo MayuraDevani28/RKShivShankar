@@ -182,123 +182,129 @@
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_bg_transparent" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Fabric Details"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_medium" />
-
             <LinearLayout
-                android:id="@+id/ll_top_bottom_fab"
+                android:id="@+id/ll_fabric"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                android:orientation="horizontal"
-                android:padding="3dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/gray_bg_transparent" />
 
-                <android.support.design.widget.TextInputLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="5dp"
-                    android:textColorHint="@color/text_color_hint">
+                    android:padding="10dp"
+                    android:text="Fabric Details"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_medium" />
 
-                    <EditText
-                        android:id="@+id/tv_top_fabrics"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:hint="Top Fabrics"
-                        android:inputType="textCapWords"
-                        android:text=""
-                        android:textSize="@dimen/text_size_small"
-                        app:backgroundTint="@android:color/white" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
+                    android:id="@+id/ll_top_bottom_fab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="5dp"
-                    android:textColorHint="@color/text_color_hint">
+                    android:orientation="horizontal"
+                    android:padding="3dp">
 
-                    <EditText
-                        android:id="@+id/tv_bottom_fabrics"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:hint="Bottom Fabrics"
-                        android:inputType="textCapWords"
-                        android:text=""
-                        android:textSize="@dimen/text_size_small"
-                        app:backgroundTint="@android:color/white" />
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:textColorHint="@color/text_color_hint">
 
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
+                        <EditText
+                            android:id="@+id/tv_top_fabrics"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="Top Fabrics"
+                            android:inputType="textCapWords"
+                            android:text=""
+                            android:textSize="@dimen/text_size_small"
+                            app:backgroundTint="@android:color/white" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="3dp">
+                    </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:textColorHint="@color/text_color_hint">
 
-                    android:id="@+id/edt_dupatta"
+                        <EditText
+                            android:id="@+id/tv_bottom_fabrics"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="Bottom Fabrics"
+                            android:inputType="textCapWords"
+                            android:text=""
+                            android:textSize="@dimen/text_size_small"
+                            app:backgroundTint="@android:color/white" />
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="5dp"
-                    android:textColorHint="@color/text_color_hint">
+                    android:orientation="horizontal"
+                    android:padding="3dp">
 
-                    <EditText
-                        android:id="@+id/tv_dupatta"
+                    <android.support.design.widget.TextInputLayout
+
+                        android:id="@+id/edt_dupatta"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:hint="Dupatta"
-                        android:inputType="textCapWords"
-                        android:text=""
-                        android:textSize="@dimen/text_size_small"
-                        app:backgroundTint="@android:color/white" />
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:textColorHint="@color/text_color_hint">
 
-                </android.support.design.widget.TextInputLayout>
+                        <EditText
+                            android:id="@+id/tv_dupatta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="Dupatta"
+                            android:inputType="textCapWords"
+                            android:text=""
+                            android:textSize="@dimen/text_size_small"
+                            app:backgroundTint="@android:color/white" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/edt_all_fabrics"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="5dp"
-                    android:textColorHint="@color/text_color_hint">
+                    </android.support.design.widget.TextInputLayout>
 
-                    <EditText
-                        android:id="@+id/tv_all_fabrics"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/edt_all_fabrics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:hint="All Fabrics"
-                        android:inputType="textCapWords"
-                        android:textSize="@dimen/text_size_small"
-                        app:backgroundTint="@android:color/white" />
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:textColorHint="@color/text_color_hint">
 
-                </android.support.design.widget.TextInputLayout>
+                        <EditText
+                            android:id="@+id/tv_all_fabrics"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:enabled="false"
+                            android:focusable="false"
+                            android:hint="All Fabrics"
+                            android:inputType="textCapWords"
+                            android:textSize="@dimen/text_size_small"
+                            app:backgroundTint="@android:color/white" />
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

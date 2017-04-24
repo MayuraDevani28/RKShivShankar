@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,17 +26,15 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
 
     private final AppCompatActivity activity;
     private final ArrayList<Brand> list;
-    private static int posit;
 
     public HomeCategoryAdapterBuyer(AppCompatActivity activity, ArrayList<Brand> list) {
-
         this.activity = activity;
         this.list = list;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        LinearLayout mLl_top, mLlGroup;
+        FrameLayout mLl_top;
+        LinearLayout mLlGroup,mLl_top2;
         private ImageView mIv_image, mIv_down;
         private TextView mTv_name, mTvDyed, mTvPrinted;
 //        private RadioGroup mRadioGroup;
@@ -43,7 +42,8 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
         public MyViewHolder(View itemView) {
             super(itemView);
             try {
-                mLl_top = (LinearLayout) itemView.findViewById(R.id.ll_top);
+                mLl_top = (FrameLayout) itemView.findViewById(R.id.ll_top);
+                mLl_top2 = (LinearLayout) itemView.findViewById(R.id.ll_top2);
                 mIv_image = (ImageView) itemView.findViewById(R.id.iv_image);
                 mTv_name = (TextView) itemView.findViewById(R.id.tv_name);
                 mIv_down = (ImageView) itemView.findViewById(R.id.iv_down);
@@ -52,6 +52,7 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
                 mLlGroup = (LinearLayout) itemView.findViewById(R.id.llGroup);
 
                 mLl_top.setOnClickListener(this);
+                mLl_top2.setOnClickListener(this);
                 mTvDyed.setOnClickListener(this);
                 mTvPrinted.setOnClickListener(this);
 
@@ -97,7 +98,7 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
         @Override
         public void onClick(View view) {
             try {
-                if (view == mLl_top) {
+                if (view == mLl_top || view == mLl_top2) {
                     if (mLlGroup.getVisibility() == View.VISIBLE) {
                         mLlGroup.setVisibility(View.GONE);
                         mIv_down.setRotation(0);
@@ -124,9 +125,7 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
             Gson gson = new Gson();
             Brand item = list.get(layoutPosition);
             String json = gson.toJson(item);
-
             intent.putExtra(commonVariables.KEY_CATEGORY, json);
-
             activity.startActivity(intent);
             activity.overridePendingTransition(0, 0);
         } catch (Exception e) {
@@ -151,6 +150,7 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
             if ((strImageURL != null) && (!strImageURL.equals("")))
                 Glide.with(activity).load(strImageURL).asBitmap()
                         .placeholder(R.color.gray_bg_transparent)
+                        .error(R.drawable.no_img_big)
                         .centerCrop().into(holder.mIv_image);
         } catch (Exception e) {
             e.printStackTrace();

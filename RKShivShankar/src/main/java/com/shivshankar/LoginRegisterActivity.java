@@ -14,6 +14,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 import com.shivshankar.adapters.ViewPagerAdapter;
+import com.shivshankar.customcontrols.WrapContentViewPager;
 import com.shivshankar.fragments.LoginFragment;
 import com.shivshankar.fragments.RegisterFragment;
 import com.shivshankar.utills.ExceptionHandler;
@@ -22,7 +23,7 @@ import com.shivshankar.utills.commonVariables;
 @SuppressLint("NewApi")
 public class LoginRegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public ViewPager viewPager;
+    public WrapContentViewPager viewPager;
     private TabLayout tabLayout;
     public LoginFragment loginFragment;
     private RegisterFragment registerFragment;
@@ -52,7 +53,23 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
     private void bindViews() {
         mIv_close = (ImageView) findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager = (WrapContentViewPager) findViewById(R.id.view_pager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                viewPager.reMeasureCurrentPage(viewPager.getCurrentItem());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabLayout = (TabLayout) findViewById(R.id.pager_tabs);
         setupViewPager();
     }
@@ -75,10 +92,6 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
         super.onPause();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void onBackPressed() {

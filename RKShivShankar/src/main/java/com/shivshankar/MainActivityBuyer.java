@@ -1,13 +1,11 @@
 package com.shivshankar;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +15,6 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -43,7 +40,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClickListener, OnResult {
+public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
     LinearLayout mLl_view;
     private FloatingSearchView mSearchView;
     RecyclerView mRv_items;
@@ -137,67 +134,6 @@ public class MainActivityBuyer extends BaseActivityBuyer implements View.OnClick
             mRv_items = (RecyclerView) rootView.findViewById(R.id.rv_items);
             LinearLayoutManager manager = new LinearLayoutManager(this);
             mRv_items.setLayoutManager(manager);
-
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
-            mNav_about_us.setOnClickListener(this);
-            mNav_our_policy.setOnClickListener(this);
-            mNav_contact_us.setOnClickListener(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        try {
-            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
-            view.startAnimation(buttonClick);
-            if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_about_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_our_policy) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSListingActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_contact_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                if (mTv_logout.getText().equals("Login")) {
-                    startActivity(new Intent(this, LoginRegisterActivity.class));
-                    finish();
-                    overridePendingTransition(0, 0);
-                } else {
-                    commonMethods.logout(this, true);
-                }
-            }
 
         } catch (Exception e) {
             e.printStackTrace();

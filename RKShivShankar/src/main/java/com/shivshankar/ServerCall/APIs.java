@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
@@ -27,9 +26,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Mayura on 15/12/2016.
@@ -82,14 +79,10 @@ public class APIs {
         }
     }
 
-    public static void callPostAPI(AppCompatActivity activity, OnResult onresult, String url, Map<String, String> params, JSONObject job) {
+    public static void callPostAPI(AppCompatActivity activity, OnResult onresult, String url, JSONObject job) {
 
         try {
-            if (params != null) {
-                Log.d("TAGRK", url + "\n" + params.toString());
-            } else {
-                Log.d("TAGRK", url + "\n" + job.toString());
-            }
+            Log.d("TAGRK", url + "\n" + job.toString());
             try {
                 if (activity != null) {
                     mView = new DialogHorizontalView();
@@ -99,9 +92,7 @@ public class APIs {
                 e.printStackTrace();
             }
             JSONObject parameters = new JSONObject();
-            if (params != null)
-                parameters = new JSONObject(params.toString());
-            else if (job != null)
+            if (job != null)
                 parameters = job;
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.POST,
@@ -132,27 +123,33 @@ public class APIs {
                     e.printStackTrace();
                 }
             }) {
-//                @Override
-//                protected Map<String, String> getParams() {
-//                    return params;
-//                }
-                //            @Override
-                //            public Map<String, String> getHeaders() throws AuthFailureError {
-                //                HashMap<String, String> headers = new HashMap<String, String>();
-                //                headers.put("Content-Type", "application/json");
-                //                headers.put("apiKey", "xxxxxxxxxxxxxxx");
-                //                return headers;
-                //            }
             };
-            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                    0,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            jsonObjReq.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 50000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 50000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+                    error.printStackTrace();
+                }
+            });
+//            jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+//                    0,
+//                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             App.getInstance().addToRequestQueue(jsonObjReq);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     public static class MultipartCreateBrand extends AsyncTask<String, String, String> {
         AppCompatActivity activity;
@@ -451,19 +448,23 @@ public class APIs {
                                            String fname, String email, String mobile, String city, String pincode,
                                            String State, String strCountryCode) {
 
-        String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/UpdateSellerProfile";
+        try {
+            String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/UpdateSellerProfile";
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-        params.put("sellername", fname);
-        params.put("emailId", email);
-        params.put("mobileno", mobile);
-        params.put("city", city);
-        params.put("pincode", pincode);
-        params.put("state", State);
-        params.put("countrycode", strCountryCode);
+            JSONObject jo = new JSONObject();
+            jo.put("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("sellername", fname);
+            jo.put("emailId", email);
+            jo.put("mobileno", mobile);
+            jo.put("city", city);
+            jo.put("pincode", pincode);
+            jo.put("state", State);
+            jo.put("countrycode", strCountryCode);
 
-        APIs.callPostAPI(activity, onresult, query, params, null);
+            APIs.callPostAPI(activity, onresult, query, jo);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void SellerChangePassword(AppCompatActivity activity, OnResult onresult, String strPassword, String strNewPassword) {
@@ -722,19 +723,23 @@ public class APIs {
                                           String fname, String email, String mobile, String city, String pincode,
                                           String State, String strCountryCode) {
 
-        String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/UpdateBuyerProfile";
+        try {
+            String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/UpdateBuyerProfile";
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("buyerLoginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
-        params.put("buyername", fname);
-        params.put("emailId", email);
-        params.put("mobileno", mobile);
-        params.put("city", city);
-        params.put("pincode", pincode);
-        params.put("state", State);
-        params.put("countrycode", strCountryCode);
+            JSONObject jo = new JSONObject();
+            jo.put("buyerLoginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("buyername", fname);
+            jo.put("emailId", email);
+            jo.put("mobileno", mobile);
+            jo.put("city", city);
+            jo.put("pincode", pincode);
+            jo.put("state", State);
+            jo.put("countrycode", strCountryCode);
 
-        APIs.callPostAPI(activity, onresult, query, params, null);
+            APIs.callPostAPI(activity, onresult, query, jo);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -799,23 +804,20 @@ public class APIs {
         APIs.callAPI(activity, onresult, query);
     }
 
-    public static void AddProductToCart_Suit_Buyer(AppCompatActivity activity, OnResult onresult, JSONArray jarray) {
+    public static void AddProductToCart_Suit_Buyer(AppCompatActivity activity, OnResult onresult, JSONArray jarray, String strCatidSuitFabric) {
 
         String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/AddProductToCart_Suit_Buyer";
 
         try {
             JSONObject jo = new JSONObject();
             jo.put("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("SuitProductId", strCatidSuitFabric);
             jo.put("lstProduct", jarray);
 
             JSONObject jobj = new JSONObject();
             jobj.put("mdlSuitCart", jo);
 
-
-//            Map<String, String> params = new HashMap<String, String>();
-//            params.put("mdlSuitCart", jo.toString());
-
-            APIs.callPostAPI(activity, onresult, query, null, jobj);
+            APIs.callPostAPI(activity, onresult, query, jobj);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -912,10 +914,7 @@ public class APIs {
             JSONObject jobj = new JSONObject();
             jobj.put("mdlOrder", jo);
 
-//            Map<String, String> params = new HashMap<String, String>();
-//            params.put("mdlOrder", jo.toString());
-
-            APIs.callPostAPI(activity, onresult, query, null, jobj);
+            APIs.callPostAPI(activity, onresult, query, jobj);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1016,4 +1015,100 @@ public class APIs {
         APIs.callAPI(null, onresult, query);
     }
 
+    public static void GetProduct_Fabric_Buyer(AppCompatActivity activity, OnResult onresult, String brandId, int pageNo, String strCategoryIds, String srtPriceRange, String strFabricIds, String strSortBy, String strFabricType) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/GetProduct_Fabric_Buyer")
+                .appendQueryParameter("brandId", brandId)
+                .appendQueryParameter("categoryIds", strCategoryIds)
+                .appendQueryParameter("FabricType", strFabricType)
+                .appendQueryParameter("pageNo", pageNo + "")
+                .appendQueryParameter("priceRange", srtPriceRange)
+                .appendQueryParameter("fabricIds", strFabricIds)
+                .appendQueryParameter("sortBy", strSortBy)
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void AddProductToCart_Fabric_Buyer(AppCompatActivity activity, OnResult onresult, JSONArray jarray, String strCatidSuitFabric) {
+
+        String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/AddProductToCart_Fabric_Buyer";
+
+        try {
+            JSONObject jo = new JSONObject();
+            jo.put("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"));
+            jo.put("SuitProductId", strCatidSuitFabric);
+            jo.put("lstProduct", jarray);
+
+            JSONObject jobj = new JSONObject();
+            jobj.put("mdlFabricCart", jo);
+
+            APIs.callPostAPI(activity, onresult, query, jobj);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void GetProductDetail_Fabric(AppCompatActivity activity, OnResult onresult, String productId) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
+                .path("MobileAPI/GetProductDetail_Fabric")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .appendQueryParameter("productId", productId)
+                .build();
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void Update_Cart_Fabric(AppCompatActivity activity, OnResult onresult, String cartId, String qty, String minQty, String newCut, String strBodypart
+            , String Fabric_FrontQty, String Fabric_FrontCut, String Fabric_BackQty, String Fabric_BackCut, String Fabric_BajuQty, String Fabric_BajuCut
+            , String Fabric_ExtraQty, String Fabric_ExtraCut) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/Update_Cart_Fabric")
+                .appendQueryParameter("loginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0"))
+                .appendQueryParameter("CartId", cartId)
+                .appendQueryParameter("newQty", qty)
+                .appendQueryParameter("MinOdrQty", minQty)
+                .appendQueryParameter("newCut", newCut)
+                .appendQueryParameter("strBodypart", strBodypart)
+                .appendQueryParameter("Fabric_FrontQty", Fabric_FrontQty + "")
+                .appendQueryParameter("Fabric_FrontCut", Fabric_FrontCut + "")
+                .appendQueryParameter("Fabric_BackQty", Fabric_BackQty + "")
+                .appendQueryParameter("Fabric_BackCut", Fabric_BackCut + "")
+                .appendQueryParameter("Fabric_BajuQty", Fabric_BajuQty + "")
+                .appendQueryParameter("Fabric_BajuCut", Fabric_BajuCut + "")
+                .appendQueryParameter("Fabric_ExtraQty", Fabric_ExtraQty + "")
+                .appendQueryParameter("Fabric_ExtraCut", Fabric_ExtraCut + "")
+//                .appendQueryParameter("strFabricbodypart", strFabricbodypart)
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+    public static void GetProduct_ColorTypes(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetProduct_ColorTypes")
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+
+    public static void GetProduct_ColorList_Fabric(AppCompatActivity activity, OnResult onresult, String productId, int colorTypeId, int pageNo, String sortBy, String searchText) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetProduct_ColorList_Fabric")
+                .appendQueryParameter("productId", productId)
+                .appendQueryParameter("colorTypeId", colorTypeId + "")
+                .appendQueryParameter("pageNo", pageNo + "")
+                .appendQueryParameter("sortBy", sortBy)
+                .appendQueryParameter("searchText", searchText)
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
 }

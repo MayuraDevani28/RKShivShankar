@@ -7,11 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -28,10 +28,8 @@ import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
-import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -78,34 +76,8 @@ public class NotificationsActivitySeller extends BaseActivityNotiSeller implemen
     }
 
 
-    @Override
-    protected void onResume() {
-        try {
-            super.onResume();
-            if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_BUYER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void bindViews(View rootView) {
         try {
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_products.setOnClickListener(this);
-            mNav_notification.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
-            mNav_change_pass.setOnClickListener(this);
-
             mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
             mLv_notification = (ListView) rootView.findViewById(R.id.ll_notification);
@@ -321,40 +293,18 @@ public class NotificationsActivitySeller extends BaseActivityNotiSeller implemen
 
     @Override
     public void onClick(View view) {
+        AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+        view.startAnimation(buttonClick);
         if (view == mIv_logo_toolbar) {
             Intent intent = new Intent(this, MainActivitySeller.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(0, 0);
-        } else if (view == mNav_my_profile) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, MyProfileActivitySeller.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_my_products) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, ProductsActivitySeller.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_notification) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, NotificationsActivitySeller.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_change_pass) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, ChangePasswordActivitySeller.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_my_orders) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, MyOrdersActivitySeller.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (view == mTv_logout) {
-            drawer.closeDrawer(GravityCompat.START);
-            commonMethods.logout(this, true);
         } else if (view == mIv_close) {
             finish();
             overridePendingTransition(0, 0);
-        }
+        } else
+            super.onClick(view);
     }
 }
 

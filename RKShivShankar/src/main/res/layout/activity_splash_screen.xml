@@ -18,12 +18,26 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="160dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="5dp"
                 android:adjustViewBounds="true"
-                android:src="@drawable/splashscreen_logo" />
+                android:src="@drawable/rkicon_greencolor" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_large" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Synthatics"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
         <com.shivshankar.customcontrols.JumpBall

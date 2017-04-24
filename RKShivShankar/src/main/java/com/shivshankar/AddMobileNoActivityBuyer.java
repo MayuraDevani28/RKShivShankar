@@ -65,7 +65,6 @@ public class AddMobileNoActivityBuyer extends BaseActivityBuyer implements View.
         mIv_close.setOnClickListener(this);
         mBtn_cancel = (TextView) rootView.findViewById(R.id.btn_cancel_receiver);
         mBtn_cancel.setOnClickListener(this);
-
     }
 
     @Override
@@ -90,7 +89,8 @@ public class AddMobileNoActivityBuyer extends BaseActivityBuyer implements View.
                     callCheckMobileNoForRegistrationAPI(mobile);
             } else if (view == mBtn_cancel) {
                 returnBack(false);
-            }
+            } else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -134,12 +134,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, OnR
                 try {
                     if (checkedId == R.id.radioBuyer) {
                         stType = 1;
-                        ((LoginRegisterActivity) getActivity()).setRegisterVisibility(true);
+//                        ((LoginRegisterActivity) getActivity()).setRegisterVisibility(true);
                         ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.VISIBLE);
                         mLl_skip.setVisibility(View.VISIBLE);
                     } else if (checkedId == R.id.radioSeller) {
                         stType = 0;
-                        ((LoginRegisterActivity) getActivity()).setRegisterVisibility(false);
+//                        ((LoginRegisterActivity) getActivity()).setRegisterVisibility(false);
                         ((LoginRegisterActivity) getActivity()).mIv_close.setVisibility(View.GONE);
                         mLl_skip.setVisibility(View.GONE);
                     }

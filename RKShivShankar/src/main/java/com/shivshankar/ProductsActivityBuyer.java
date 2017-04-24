@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -21,14 +20,13 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.shivshankar.ServerCall.APIs;
-import com.shivshankar.adapters.ProductsAdapterBuyer;
+import com.shivshankar.adapters.SuitProductsAdapterBuyer;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
-import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -51,7 +49,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     Boolean isLogedIn = false;
     String strCategoryIds = "", srtPriceRange = "", strFabricIds = "", strSortBy = "";
 
-    ProductsAdapterBuyer adapter;
+    SuitProductsAdapterBuyer adapter;
     ArrayList<ProductItem> listArray = new ArrayList<ProductItem>();
     String strSearch = "", brandId = "", strFabricType = "", total = "", strCatidSuitFabric = "";
     Resources res;
@@ -93,17 +91,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
         try {
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setOnClickListener(this);
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
-            mNav_about_us.setOnClickListener(this);
-            mNav_our_policy.setOnClickListener(this);
-            mNav_contact_us.setOnClickListener(this);
 
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mIv_close = (ImageView) findViewById(R.id.iv_close);
@@ -287,7 +274,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
                 mFl_whole.setVisibility(View.VISIBLE);
-                adapter = new ProductsAdapterBuyer(this, listArray, mLl_add_to_cart);
+                adapter = new SuitProductsAdapterBuyer(this, listArray);
                 mRv_items.setAdapter(adapter);
             }
         } catch (Exception e) {
@@ -316,48 +303,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                     intent.putExtra(commonVariables.INTENT_EXTRA_KEY_FILTER_PRICE, srtPriceRange);
                 startActivityForResult(intent, commonVariables.REQUEST_FILTER_PRODUCT);
                 overridePendingTransition(R.anim.slide_up, R.anim.hold);
-            } else if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivityBuyer.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivityBuyer.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_about_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_our_policy) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSListingActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_contact_us) {
-                drawer.closeDrawer(GravityCompat.START);
-                Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-                intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                if (mTv_logout.getText().equals("Login")) {
-                    startActivity(new Intent(this, LoginRegisterActivity.class));
-                    onBackPressed();
-                } else {
-                    commonMethods.logout(this, true);
-                }
             } else if (view == mIv_close) {
                 Intent output = new Intent();
                 setResult(RESULT_OK, output);
@@ -383,7 +328,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                                 jarr.put(jo);
                             }
                         }
-                        APIs.AddProductToCart_Suit_Buyer(this, this, jarr);
+                        APIs.AddProductToCart_Suit_Buyer(this, this, jarr, strCatidSuitFabric);
                     } else {
                         Intent intent = new Intent(this, LoginRegisterActivity.class);
                         intent.putExtra(commonVariables.KEY_FOR_LOGIN, true);
@@ -392,31 +337,11 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 } else {
                     AlertDialogManager.showDialog(this, "Select alteast one item to add in cart", null);
                 }
-            }
+            } else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onResume() {
-        try {
-            isLogedIn = AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false);
-            if (adapter != null)
-                adapter.notifyDataSetChanged();
-
-            if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_BUYER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
-            }
-            if (mLl_no_data_found.getVisibility() == View.VISIBLE && animationView != null) {
-                startAnim();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onResume();
     }
 
     @SuppressLint("NewApi")
@@ -462,6 +387,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                         AppPreferences.getPrefs().edit().putInt(commonVariables.CART_COUNT, jobjWhole.optInt("cartCount")).apply();
                         Intent intent = new Intent(this, CartActivityBuyer.class);
                         startActivity(intent);
+                        finish();
                         overridePendingTransition(0, 0);
                     } else {
                         AlertDialogManager.showDialog(this, result, null);

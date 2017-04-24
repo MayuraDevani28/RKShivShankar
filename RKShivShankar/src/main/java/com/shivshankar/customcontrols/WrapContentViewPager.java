@@ -5,10 +5,6 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
-/**
- * Created by praful on 12-Apr-17.
- */
-
 public class WrapContentViewPager extends ViewPager {
 
     private int mCurrentPagePosition = 0;

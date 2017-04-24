@@ -1,13 +1,11 @@
 package com.shivshankar;
 
 import android.animation.Animator;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,10 +28,8 @@ import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
-import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -80,33 +76,8 @@ public class NotificationsActivityBuyer extends BaseActivityCartBuyer implements
     }
 
 
-    @Override
-    public void onResume() {
-        try {
-            super.onResume();
-            if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_BUYER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void bindViews(View rootView) {
         try {
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
-            mNav_about_us.setOnClickListener(this);
-            mNav_our_policy.setOnClickListener(this);
-            mNav_contact_us.setOnClickListener(this);
-
             mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
             mLv_notification = (ListView) rootView.findViewById(R.id.ll_notification);
@@ -335,52 +306,11 @@ public class NotificationsActivityBuyer extends BaseActivityCartBuyer implements
 
     @Override
     public void onClick(View view) {
-        if (view == mIv_logo_toolbar) {
-            Intent intent = new Intent(this, MainActivityBuyer.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_my_profile) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, MyProfileActivityBuyer.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_my_orders) {
-            drawer.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(this, MyOrdersActivityBuyer.class));
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_about_us) {
-            drawer.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-            intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "aboutus");
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_our_policy) {
-            drawer.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, CMSListingActivityBuyer.class);
-            intent.putExtra(commonVariables.INTENT_EXTRA_PAGE, "GetPolicies");
-            intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "Our Policy");
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (view == mNav_contact_us) {
-            drawer.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, CMSCallandDisplayActivityBuyer.class);
-            intent.putExtra(commonVariables.INTENT_EXTRA_PAGE_NAME, "contactus");
-            startActivity(intent);
-            overridePendingTransition(0, 0);
-        } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (view == mTv_logout) {
-            drawer.closeDrawer(GravityCompat.START);
-            if (mTv_logout.getText().equals("Login")) {
-                startActivity(new Intent(this, LoginRegisterActivity.class));
-                onBackPressed();
-            } else {
-                commonMethods.logout(this, true);
-            }
-        } else if (view == mIv_close) {
+        if (view == mIv_close) {
             finish();
             overridePendingTransition(0, 0);
-        }
+        } else
+            super.onClick(view);
     }
 }
 

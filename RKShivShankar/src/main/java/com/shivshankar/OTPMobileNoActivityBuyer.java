@@ -128,7 +128,8 @@ public class OTPMobileNoActivityBuyer extends BaseActivityBuyer implements View.
                     callVerifyOTPForNewMobileNoAPI(strOTP);
             } else if (view == mTv_resend_verification_code) {
                 callCheckMobileNoForRegistrationAPI(strMobileNo);
-            }
+            } else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }

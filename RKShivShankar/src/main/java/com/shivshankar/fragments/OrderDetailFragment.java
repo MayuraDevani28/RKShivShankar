@@ -24,6 +24,7 @@ import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.OrderProductListAdapter;
 import com.shivshankar.classes.CartItem;
 import com.shivshankar.classes.Order;
+import com.shivshankar.classes.SC3Object;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
@@ -250,8 +251,44 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
                     int len = jarray.length();
                     for (int i = 0; i < len; i++) {
                         JSONObject jObjItem = jarray.optJSONObject(i);
-                        listArray.add(new CartItem(jObjItem.optString("ProductId"), jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("productName"), jObjItem.optString("BrandName"), jObjItem.optString("Price"), jObjItem.optString("Price"), jObjItem.optString("TotalPrice"), jObjItem.optString("DiscountPercent"), jObjItem.optString("ProductImage"), jObjItem.optInt("OrderQuantity"), 0, jObjItem.optBoolean("IsOutOfStock"), false));
+                        int type = jObjItem.optInt("SuitFbricId"),
+                                catQty = jObjItem.optInt("OrderQuantity"),
+                                fabric_FrontQty = 0, fabric_BackQty = 0, fabric_BajuQty = 0, fabric_ExtraQty = 0;
+                        double fabricCuts = 0, fabric_FrontCut = 0, fabric_BackCut = 0, fabric_BajuCut = 0, fabric_ExtraCut = 0;
+                        String bodyPart = null, bodyFabricPart = null, fabric_Colors = null;
 
+
+                        if (type == 2) {
+                            JSONObject jobFabric = jObjItem.optJSONObject("lstFabricData");
+                            bodyPart = jobFabric.optString("BodyPart");
+                            bodyFabricPart = jobFabric.optString("BodyFabricPart");
+                            fabricCuts = jobFabric.optDouble("FabricCuts");
+                            catQty = jobFabric.optInt("FabricQty");
+                            fabric_FrontQty = jobFabric.optInt("Fabric_FrontQty");
+                            fabric_FrontCut = jobFabric.optDouble("Fabric_FrontCut");
+                            fabric_BackQty = jobFabric.optInt("Fabric_BackQty");
+                            fabric_BackCut = jobFabric.optDouble("Fabric_BackCut");
+                            fabric_BajuQty = jobFabric.optInt("Fabric_BajuQty");
+                            fabric_BajuCut = jobFabric.optDouble("Fabric_BajuCut");
+                            fabric_ExtraQty = jobFabric.optInt("Fabric_ExtraQty");
+                            fabric_ExtraCut = jobFabric.optDouble("Fabric_ExtraCut");
+                            fabric_Colors = jobFabric.optString("Fabric_Colors");
+
+                        }
+                        ArrayList<SC3Object> fabcol=new ArrayList<>();
+                        listArray.add(new CartItem(jObjItem.optString("CartId"),
+                                jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"),
+                                jObjItem.optString("productName"), jObjItem.optString("BrandName"),
+                                jObjItem.optString("MarketPrice"), jObjItem.optString("Price"),
+                                jObjItem.optString("TotalFabricPrice"), jObjItem.optString("DiscountPercent"),
+                                jObjItem.optString("ProductImage"), catQty,
+                                jObjItem.optInt("MinOrderQuantity"),
+                                jObjItem.optBoolean("IsOutOfStock"), false, type, bodyPart,
+                                bodyFabricPart, fabricCuts
+                                , fabric_FrontQty, fabric_FrontCut, fabric_BackQty
+                                , fabric_BackCut, fabric_BajuQty, fabric_BajuCut
+                                , fabric_ExtraQty, fabric_ExtraCut, fabcol
+                        ));
                     }
                     setListAdapter(listArray);
                 }

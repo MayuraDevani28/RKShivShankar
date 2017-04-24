@@ -1,7 +1,9 @@
 package com.shivshankar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,25 +12,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.shivshankar.utills.AppPreferences;
+import com.shivshankar.customcontrols.NavDrawerViewBuyer;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonMethods;
-import com.shivshankar.utills.commonVariables;
 
 
-public class BaseActivityCartBuyer extends AppCompatActivity {
+public class BaseActivityCartBuyer extends AppCompatActivity implements View.OnClickListener {
 
     protected FrameLayout frameLayout;
     Toolbar toolbar;
-    DrawerLayout drawer;
+    public DrawerLayout drawer;
     CoordinatorLayout main_content;
-    LinearLayout mNav_my_profile, mNav_my_orders, mNav_about_us, mNav_our_policy, mNav_contact_us, mLl_close;
+    ImageView mIv_logo_toolbar;
 
-    ImageView mIv_logo_nav, mIv_logo_toolbar;
-    TextView mTv_username, mTv_logout;
+    NavDrawerViewBuyer navigationView_buyer;
+    NavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,38 +43,7 @@ public class BaseActivityCartBuyer extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void bindViews() {
-        try {
-            frameLayout = (FrameLayout) findViewById(R.id.container);
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            main_content = (CoordinatorLayout) findViewById(R.id.main_content);
-
-            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
-            mNav_my_orders = (LinearLayout) findViewById(R.id.nav_my_orders);
-            mNav_about_us = (LinearLayout) findViewById(R.id.nav_about_us);
-            mNav_our_policy = (LinearLayout) findViewById(R.id.nav_our_policy);
-            mNav_contact_us = (LinearLayout) findViewById(R.id.nav_contact_us);
-
-            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
-            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
-            mTv_username = (TextView) findViewById(R.id.tv_username);
-            mTv_logout = (TextView) findViewById(R.id.tv_logout);
-            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
-
-            if (!AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
-                findViewById(R.id.v_order).setVisibility(View.GONE);
-                findViewById(R.id.v_prof).setVisibility(View.GONE);
-                mTv_logout.setText("Login");
-                mNav_my_profile.setVisibility(View.GONE);
-                mNav_my_orders.setVisibility(View.GONE);
-            }
+            setupViews();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,11 +53,47 @@ public class BaseActivityCartBuyer extends AppCompatActivity {
     protected void onResume() {
         try {
             super.onResume();
-            if (mNav_my_profile != null && !commonMethods.isOnline(this)) {
-                Snackbar.make(mNav_my_profile, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            if (mIv_logo_toolbar != null && !commonMethods.isOnline(this)) {
+                Snackbar.make(mIv_logo_toolbar, getString(R.string.no_internet), Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
+            navigationView_buyer.setLoginLogout();
+            navigationView_buyer.setUserName();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setupViews() {
+        try {
+            navigationView_buyer = new NavDrawerViewBuyer(this);
+            navView.addView(navigationView_buyer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void bindViews() {
+        try {
+            frameLayout = (FrameLayout) findViewById(R.id.container);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            main_content = (CoordinatorLayout) findViewById(R.id.main_content);
+            navView = (NavigationView) findViewById(R.id.navigation_drawer_container);
+
+            mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
+            mIv_logo_toolbar.setOnClickListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == mIv_logo_toolbar) {
+            Intent intent = new Intent(this, MainActivityBuyer.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
         }
     }
 

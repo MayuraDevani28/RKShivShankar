@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -21,13 +20,10 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.BrandsAdapterSeller;
 import com.shivshankar.classes.Brand;
-import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
-import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -55,7 +51,7 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         try {
             bindViews(rootView);
             mTv_title.setText("My Brands");
@@ -75,17 +71,6 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
     private void bindViews(View rootView) {
 
         try {
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_products.setOnClickListener(this);
-            mNav_notification.setOnClickListener(this);
-            mNav_change_pass.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
 
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mIv_close = (ImageView) findViewById(R.id.iv_close);
@@ -231,37 +216,7 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
         try {
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
-            if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivitySeller.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_products) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, BrandsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_notification) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, NotificationsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_change_pass) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this,true);
-            } else if (view == mIv_close) {
+            if (view == mIv_close) {
                 Intent output = new Intent();
                 setResult(RESULT_OK, output);
                 finish();
@@ -271,29 +226,24 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
                 intent.putExtra(commonVariables.KEY_IS_BRAND, true);
                 startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_BRAND);
                 overridePendingTransition(0, 0);
-            }
+            } else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onResume() {
-        try {
-            invalidateOptionsMenu();
-            if (adapter != null)
-                adapter.notifyDataSetChanged();
-
-            if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        try {
+//            invalidateOptionsMenu();
+//            if (adapter != null)
+//                adapter.notifyDataSetChanged();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        super.onResume();
+//    }
 
     @SuppressLint("NewApi")
     @Override

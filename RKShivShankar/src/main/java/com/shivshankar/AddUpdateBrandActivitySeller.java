@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
@@ -36,7 +35,6 @@ import com.shivshankar.utills.OnResultString;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -124,17 +122,6 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mBtn_submit = (TextView) rootView.findViewById(R.id.btn_submit);
 
-            mIv_logo_nav.setOnClickListener(this);
-            mIv_logo_toolbar.setOnClickListener(this);
-            mTv_username.setOnClickListener(this);
-            mTv_logout.setOnClickListener(this);
-            mLl_close.setOnClickListener(this);
-
-            mNav_my_profile.setOnClickListener(this);
-            mNav_my_products.setOnClickListener(this);
-            mNav_notification.setOnClickListener(this);
-            mNav_change_pass.setOnClickListener(this);
-            mNav_my_orders.setOnClickListener(this);
             mIv_change_image.setOnClickListener(this);
 
             mBtn_submit.setOnClickListener(this);
@@ -158,19 +145,6 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
         }
     }
 
-    @Override
-    protected void onResume() {
-        try {
-            super.onResume();
-            if (mTv_username != null) {
-                String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
-                if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null"))
-                    mTv_username.setText(WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name")));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -183,37 +157,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
         try {
             AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
             view.startAnimation(buttonClick);
-            if (view == mIv_logo_toolbar) {
-                Intent intent = new Intent(this, MainActivitySeller.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_products) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ProductsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_notification) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, NotificationsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_change_pass) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this, true);
-            } else if (view == mIv_close) {
+            if (view == mIv_close) {
                 onBackPressed();
             } else if (view == mBtn_submit) {
                 if (!(item.getBrandId() == null || item.getBrandId().isEmpty()))
@@ -253,7 +197,8 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                 }
                 startActivityForResult(intent, commonVariables.REQUEST_ADD_UPDATE_BRAND);
 //                overridePendingTransition(R.anim.slide_up, android.R.anim.fade_out);
-            }
+            } else
+                super.onClick(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -320,7 +265,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
 //                                String saveThis = Base64.encodeToString(byteArray, Base64.DEFAULT);
                                     SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                                     Gson gson = new Gson();
-                                    item = new Brand(job.optString("brandId"), mEdt_brand_name.getText().toString(), job.optString("brandLogoPath"));
+                                    item = new Brand(job.optString("itemId"), mEdt_brand_name.getText().toString(), job.optString("brandLogoPath"));
                                     String json = gson.toJson(item);
                                     editor.putString(commonVariables.KEY_BRAND, json);
                                     editor.apply();

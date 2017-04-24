@@ -3,6 +3,7 @@ package com.shivshankar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,29 +13,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.shivshankar.customcontrols.NavDrawerViewSeller;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class BaseActivityNotiSeller extends AppCompatActivity {
+public class BaseActivityNotiSeller extends AppCompatActivity implements View.OnClickListener {
     protected FrameLayout frameLayout;
 
     Toolbar toolbar;
     SwipeRefreshLayout swipeRefreshLayout;
-    DrawerLayout drawer;
+    public DrawerLayout drawer;
     CoordinatorLayout main_content;
-    LinearLayout mNav_my_profile, mNav_my_products, mNav_notification, mNav_change_pass, mNav_my_orders, mLl_close;
-    TextView mTv_username, mTv_logout;
-    ImageView mIv_logo_nav, mIv_logo_toolbar;
+    ImageView mIv_logo_toolbar;
+    NavDrawerViewSeller navigationView_seller;
+    NavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +56,17 @@ public class BaseActivityNotiSeller extends AppCompatActivity {
             drawer.addDrawerListener(toggle);
             toggle.syncState();
 
-
+            setupViews();
             swipeRefreshLayout.setEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupViews() {
+        try {
+            navigationView_seller = new NavDrawerViewSeller(this);
+            navView.addView(navigationView_seller);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,34 +82,20 @@ public class BaseActivityNotiSeller extends AppCompatActivity {
 
             swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
-            mNav_my_profile = (LinearLayout) findViewById(R.id.nav_my_profile);
-            mNav_my_products = (LinearLayout) findViewById(R.id.nav_my_products);
-            mNav_notification = (LinearLayout) findViewById(R.id.nav_notification);
-            mNav_my_orders = (LinearLayout) findViewById(R.id.nav_my_orders);
-            mNav_change_pass = (LinearLayout) findViewById(R.id.nav_change_pass);
+            navView = (NavigationView) findViewById(R.id.navigation_drawer_container);
 
-            mIv_logo_nav = (ImageView) findViewById(R.id.iv_logo_nav);
             mIv_logo_toolbar = (ImageView) findViewById(R.id.iv_logo_toolbar);
-            mTv_username = (TextView) findViewById(R.id.tv_username);
-            mTv_logout = (TextView) findViewById(R.id.tv_logout);
-            mLl_close = (LinearLayout) findViewById(R.id.ll_close);
+            mIv_logo_toolbar.setOnClickListener(this);
 
-            setUserName();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setUserName() {
-        try {
-            String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
-            if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null")) {
-                String strUname = WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name"));
-                mTv_username.setText(strUname);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected void onResume() {
+        navigationView_seller.setUserName();
+        super.onResume();
     }
 
     @Override
@@ -123,18 +115,6 @@ public class BaseActivityNotiSeller extends AppCompatActivity {
             e.printStackTrace();
         }
         return true;
-    }
-
-    @Override
-    protected void onResume() {
-        try {
-            super.onResume();
-            if (mTv_username != null) {
-                setUserName();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -165,4 +145,13 @@ public class BaseActivityNotiSeller extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view == mIv_logo_toolbar) {
+            Intent intent = new Intent(this, MainActivityBuyer.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }
+    }
 }

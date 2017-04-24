@@ -3,9 +3,12 @@ package com.shivshankar.adapters;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.shivshankar.FabricProductsActivityBuyer;
 import com.shivshankar.ProductsActivityBuyer;
 import com.shivshankar.R;
 import com.shivshankar.classes.Brand;
@@ -29,10 +33,10 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
 
     private final AppCompatActivity activity;
     private final ArrayList<Brand> list;
-    private static int posit;
     Resources res;
     String stType = "";
     String catId;
+    int d, gray;
 
     public BrandsAdapterBuyer(AppCompatActivity activity, ArrayList<Brand> list, String stType, String id) {
 
@@ -42,6 +46,8 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
             res = activity.getResources();
             this.stType = stType;
             catId = id;
+            d = ContextCompat.getColor(activity, R.color.white);
+            gray = ContextCompat.getColor(activity, R.color.gray_bg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,20 +75,24 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
         @Override
         public void onClick(View view) {
             try {
-                posit = getAdapterPosition();
-                Brand item = list.get(posit);
+                Brand item = list.get(getAdapterPosition());
                 if (view == mLl_brand) {
                     int cId = Integer.parseInt(catId);
-                    if (cId == 1) {
-                        Intent intent = new Intent(activity, ProductsActivityBuyer.class);
+                    Intent intent;
+                    if (cId == 1) {//suit
+                        intent = new Intent(activity, ProductsActivityBuyer.class);
                         intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
                         intent.putExtra(commonVariables.KEY_BRAND, item);
                         intent.putExtra(commonVariables.KEY_CATEGORY, catId);
-                        activity.startActivity(intent);
-                        activity.overridePendingTransition(0, 0);
-                    } else {
-
+                    } else {//fabric
+//                        intent = new Intent(activity, FabricColorsActivityBuyer.class);
+                        intent = new Intent(activity, FabricProductsActivityBuyer.class);
+                        intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
+                        intent.putExtra(commonVariables.KEY_BRAND, item);
+                        intent.putExtra(commonVariables.KEY_CATEGORY, catId);
                     }
+                    activity.startActivity(intent);
+                    activity.overridePendingTransition(0, 0);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -100,12 +110,6 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
         try {
-            int colpink = res.getColor(R.color.brand2);
-            int colBrand1 = res.getColor(R.color.brand1);
-            if (position % 2 == 0) {
-                holder.mLl_brand.setBackgroundColor(colBrand1);
-            } else
-                holder.mLl_brand.setBackgroundColor(colpink);
 
             final Brand item = list.get(position);
             holder.mTv_name.setText(WordUtils.capitalizeFully(item.getBrandName()));
@@ -116,10 +120,32 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
                         .centerCrop().into(new BitmapImageViewTarget(holder.mIv_imageView) {
                     @Override
                     protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        holder.mIv_imageView.setImageDrawable(circularBitmapDrawable);
+                        try {
+                            Palette.PaletteAsyncListener paletteListener = new Palette.PaletteAsyncListener() {
+                                public void onGenerated(Palette palette) {
+                                    try {
+                                        int col = palette.getVibrantColor(d);
+                                        if (col == d) {
+                                            holder.mLl_brand.setBackgroundColor(gray);
+                                        } else
+                                            holder.mLl_brand.setBackgroundColor(ColorUtils.setAlphaComponent(col, 40));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+
+                            if (resource != null && !resource.isRecycled()) {
+                                Palette.from(resource).generate(paletteListener);
+                            }
+
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            holder.mIv_imageView.setImageDrawable(circularBitmapDrawable);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
         } catch (Exception e) {

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.ActionMenuView;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -37,9 +36,7 @@ import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
-import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.shivshankar.R.id.ll_create_brand;
@@ -163,19 +160,6 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         mTv_brand_name = (TextView) rootView.findViewById(R.id.tv_brand_name);
         view_top = rootView.findViewById(R.id.view_top);
         mTv_welcome = (TextView) rootView.findViewById(R.id.tv_welcome);
-
-        mIv_logo_nav.setOnClickListener(this);
-        mIv_logo_toolbar.setOnClickListener(this);
-        mTv_username.setOnClickListener(this);
-        mTv_logout.setOnClickListener(this);
-        mLl_close.setOnClickListener(this);
-//        mNav_my_brands = (LinearLayout) findViewById(R.id.nav_my_brands);
-//        mNav_my_brands.setOnClickListener(this);
-        mNav_my_profile.setOnClickListener(this);
-        mNav_my_products.setOnClickListener(this);
-        mNav_notification.setOnClickListener(this);
-        mNav_my_orders.setOnClickListener(this);
-        mNav_change_pass.setOnClickListener(this);
     }
 
     private void setBrandVisibility(boolean b, Brand brand) {
@@ -221,9 +205,6 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         try {
             super.onResume();
             isBackpressedOnce = false;
-            if (mTv_username != null) {
-                setUserName();
-            }
             Gson gson = new Gson();
             String json = AppPreferences.getPrefs().getString(commonVariables.KEY_BRAND, "");
             item = gson.fromJson(json, Brand.class);
@@ -231,19 +212,6 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 setBrandVisibility(true, item);
 
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setUserName() {
-        try {
-            String strProfile = AppPreferences.getPrefs().getString(commonVariables.KEY_SELLER_PROFILE, "");
-            if (!strProfile.isEmpty() && !strProfile.equalsIgnoreCase("null")) {
-                String strUname = WordUtils.capitalizeFully(new JSONObject(strProfile).optString("Name"));
-                mTv_username.setText(strUname);
-                mTv_welcome.setText("Welcome " + strUname);
-            }
-        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
@@ -295,38 +263,8 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 Intent intent = new Intent(getApplicationContext(), ImagePickerActivity.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, false);
                 startActivity(intent);
-            } else if (view == mNav_my_profile) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyProfileActivitySeller.class));
-                overridePendingTransition(0, 0);
-            }
-//            else if (view == mNav_my_brands) {
-//                drawer.closeDrawer(GravityCompat.START);
-//                startActivity(new Intent(this, BrandsActivitySeller.class));
-//                overridePendingTransition(0, 0);
-//            }
-            else if (view == mNav_my_products) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ProductsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_notification) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, NotificationsActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_change_pass) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, ChangePasswordActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mNav_my_orders) {
-                drawer.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(this, MyOrdersActivitySeller.class));
-                overridePendingTransition(0, 0);
-            } else if (view == mLl_close || view == mIv_logo_nav || view == mTv_username) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else if (view == mTv_logout) {
-                drawer.closeDrawer(GravityCompat.START);
-                commonMethods.logout(this, true);
-            }
+            } else
+                super.onClick(view);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,6 +3,8 @@ package com.shivshankar.adapters;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,8 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.SC3Object;
@@ -68,8 +72,38 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
                 Glide.with(activity)
                         .load(strImageURL)
-                        .asBitmap().diskCacheStrategy(DiskCacheStrategy.RESULT).priority(Priority.IMMEDIATE).dontAnimate().thumbnail(0.1f).override(200, 200).into(holder.imageView);
+                        .asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .priority(Priority.IMMEDIATE).dontAnimate().listener(new RequestListener<String, Bitmap>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        try {
+                            holder.imageView.setImageResource(R.color.transparent);
+                            holder.imageView.setBackgroundColor(Color.parseColor(listImages.get(position).getIFSCCode()));
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        return false;
+                    }
 
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                        .thumbnail(0.1f).error(R.drawable.no_img)
+                        .override(200, 200).into(holder.imageView);
+
+            } else {
+                try {
+//                    holder.imageView.setImageResource(R.color.transparent);
+                    String color = listImages.get(position).getIFSCCode();
+                    if (color.length() == 4) {
+                        color = color + color.substring(1, 4);
+                    }
+                    holder.imageView.setBackgroundColor(Color.parseColor(color));
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,7 +177,8 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.MyViewHo
         mTv_Min_Qty = (EditText) view.findViewById(R.id.tv_min_qty);
         mLL_Fabrics = (LinearLayout) view.findViewById(R.id.ll_top_bottom_fab);
         String[] Images = {imageName};
-        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f).into(imageView);
+        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.1f).error(R.drawable.no_img).into(imageView);
         APIs.GetProductDetail_Suit_Seller(activity, this, productId);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
