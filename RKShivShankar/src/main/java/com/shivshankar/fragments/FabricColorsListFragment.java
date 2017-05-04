@@ -65,7 +65,7 @@ public class FabricColorsListFragment extends Fragment implements OnResult ,View
     public void setData(ArrayList<FabricColor> listImages) {
         try {
             if (listImages.size() != 0) {
-                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setNestedScrollingEnabled(false);
                 galleryListAdapter = new FabricColorsAdapterBuyer((AppCompatActivity) getActivity(), listImages);

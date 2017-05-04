@@ -287,13 +287,12 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
                                     catQty = jObjItem.optInt("CartQuantity"),
                                     fabric_FrontQty = 0, fabric_BackQty = 0, fabric_BajuQty = 0, fabric_ExtraQty = 0;
                             double fabricCuts = 0, fabric_FrontCut = 0, fabric_BackCut = 0, fabric_BajuCut = 0, fabric_ExtraCut = 0;
-                            String bodyPart = null, bodyFabricPart = null, fabric_Colors = null;
+                            String bodyPart = null, fabric_Colors = null;
 
                             ArrayList<SC3Object> fabcol = new ArrayList<>();
                             if (type == 2) {
                                 JSONObject jobFabric = jObjItem.optJSONObject("lstFabricData");
                                 bodyPart = jobFabric.optString("BodyPart");
-                                bodyFabricPart = jobFabric.optString("BodyFabricPart");
                                 fabricCuts = jobFabric.optDouble("FabricCuts");
                                 catQty = jobFabric.optInt("FabricQty");
                                 fabric_FrontQty = jobFabric.optInt("Fabric_FrontQty");
@@ -306,11 +305,19 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
                                 fabric_ExtraCut = jobFabric.optDouble("Fabric_ExtraCut");
 
                                 JSONArray jarr = jobFabric.optJSONArray("Fabric_Colors");
-                                for (int j = 0; j < jarr.length(); j++) {
-                                    fabcol.add(new SC3Object(jObjItem.optInt("ProductId"), "", jarr.optString(j), ""));
+                                if (jarr != null) {
+                                    for (int j = 0; j < jarr.length(); j++) {
+                                        fabcol.add(new SC3Object(jObjItem.optInt("ProductId"), "", jarr.optString(j), ""));
+                                    }
                                 }
                             }
-                            listArray.add(new CartItem(jObjItem.optString("CartId"), jObjItem.optString("ProductId"), jObjItem.optString("ProductCode"), jObjItem.optString("productName"), jObjItem.optString("BrandName"), jObjItem.optString("MarketPrice"), jObjItem.optString("OfferPrice"), jObjItem.optString("TotalPrice"), jObjItem.optString("DiscountPercent"), jObjItem.optString("ImageName"), catQty, jObjItem.optInt("MinOrderQuantity"), jObjItem.optBoolean("IsOutOfStock"), false, type, bodyPart, bodyFabricPart, fabricCuts
+                            listArray.add(new CartItem(jObjItem.optString("CartId"), jObjItem.optString("ProductId"),
+                                    jObjItem.optString("ProductCode"), jObjItem.optString("productName"),
+                                    jObjItem.optString("BrandName"),
+                                    jObjItem.optString("OfferPrice"),
+                                    jObjItem.optString("TotalPrice"),
+                                    jObjItem.optString("ImageName"), catQty, jObjItem.optInt("MinOrderQuantity"),
+                                    jObjItem.optBoolean("IsOutOfStock"), false, type, bodyPart, fabricCuts
                                     , fabric_FrontQty, fabric_FrontCut, fabric_BackQty
                                     , fabric_BackCut, fabric_BajuQty, fabric_BajuCut
                                     , fabric_ExtraQty, fabric_ExtraCut, fabcol
