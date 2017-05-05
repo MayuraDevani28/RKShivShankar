@@ -58,7 +58,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fadingEdge="none"
@@ -199,6 +199,7 @@
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/lv_order_items"
+                            android:nestedScrollingEnabled="false"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 
@@ -513,7 +514,7 @@
 
                 </LinearLayout>
             </LinearLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </RelativeLayout>
 
     <LinearLayout

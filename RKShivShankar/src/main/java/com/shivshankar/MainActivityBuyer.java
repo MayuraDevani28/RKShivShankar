@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.ActionMenuView;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.SpannableString;
@@ -132,7 +132,8 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
             editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_medium));
             mLl_view = (LinearLayout) rootView.findViewById(R.id.ll_view);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.rv_items);
-            LinearLayoutManager manager = new LinearLayoutManager(this);
+            int col =  getResources().getInteger(R.integer.col_home);
+            GridLayoutManager manager = new GridLayoutManager(this,col);
             mRv_items.setLayoutManager(manager);
 
         } catch (Exception e) {

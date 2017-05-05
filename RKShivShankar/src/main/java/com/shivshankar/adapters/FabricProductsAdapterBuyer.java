@@ -47,9 +47,8 @@ public class FabricProductsAdapterBuyer extends RecyclerView.Adapter<FabricProdu
 
     String catId;
     Dialog dialog;
-    private EditText mTv_Brand, mTv_Category, mTv_Type, mTv_Price, mTv_Min_Qty, mTv_Product_Code;
+    private EditText mTv_Brand, mTv_Category, mTv_Type, mTv_Price,  mTv_Product_Code;
     LinearLayout mLl_fabric;
-    private int mRowIndex = -1;
 
     public FabricProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list, String stType, String id) {
         this.activity = activity;
