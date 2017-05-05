@@ -1,14 +1,22 @@
 package com.shivshankar.adapters;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -21,6 +29,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.liuguangqiang.progressbar.CircleProgressBar;
+import com.liuguangqiang.swipeback.SwipeBackLayout;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.ProductItem;
@@ -54,6 +64,7 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
     private TextInputLayout mEdt_Dupatta;
     private TextInputLayout mEdt_All_Fabrics;
     private EditText mTv_Product_Code;
+    private boolean isClosing = false;
 
 
     public SuitProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list) {
@@ -226,6 +237,10 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
         //dialog.getWindow().setGravity(Gravity.BOTTOM);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.show();
+        CircleProgressBar progressBar = (CircleProgressBar) view.findViewById(R.id.progressbar1);
+        SwipeBackLayout swipeBackLayout = (SwipeBackLayout) view.findViewById(R.id.swipe_layout);
+        swipeBackLayout.setEnableFlingBack(false);
+        //swipeBackLayout.setDragEdge(SwipeBackLayout.DragEdge.TOP);
         ImageView close = (ImageView) view.findViewById(R.id.iv_close);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
         mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
@@ -246,6 +261,15 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
                 .thumbnail(0.1f)
                 .error(R.drawable.no_img_big).into(imageView);
         APIs.GetProductDetail_Suit_Seller(activity, this, productId);
+        swipeBackLayout.setOnPullToBackListener(new SwipeBackLayout.SwipeBackListener() {
+            @Override
+            public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
+                progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
+                if(progressBar.getMax()*fractionAnchor == 100){
+                    dialog.dismiss();
+                }
+            }
+        });
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -258,12 +282,19 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(activity, ViewPagerActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 i.putExtra(commonVariables.INTENT_EXTRA_LIST_IMAGE_ARRAY, Images);
                 i.putExtra(commonVariables.INTENT_EXTRA_POSITION, posit);
                 i.putExtra(commonVariables.KEY_IS_LANDSCAPE, false);
-                activity.startActivity(i);
+                ActivityOptionsCompat options =
+
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                                imageView,   // Starting view
+                                "product_image"    // The String
+                        );
+
+                ActivityCompat.startActivity(activity, i, options.toBundle());
             }
         });
-
     }
 }

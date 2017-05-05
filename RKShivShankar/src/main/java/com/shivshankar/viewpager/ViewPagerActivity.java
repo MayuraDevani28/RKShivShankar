@@ -80,6 +80,7 @@ public class ViewPagerActivity extends AppCompatActivity implements OnClickListe
                 @Override
                 public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
                     progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
+                    onBackPressed();
                 }
             });
             // setDragEdge(SwipeBackLayout.DragEdge.TOP);
@@ -139,7 +140,7 @@ public class ViewPagerActivity extends AppCompatActivity implements OnClickListe
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        ActivityCompat.finishAfterTransition(this);
     }
 
     @Override
@@ -216,4 +217,5 @@ public class ViewPagerActivity extends AppCompatActivity implements OnClickListe
             //resume tasks needing this permission
         }
     }
+
 }

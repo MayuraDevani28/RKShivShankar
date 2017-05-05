@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,6 +31,7 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
     ViewPagerAdapter pagerAdapter;
     public ImageView mIv_close;
     public boolean isForLogin = false;
+    private int currentPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,24 +56,9 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
         mIv_close = (ImageView) findViewById(R.id.iv_close);
         mIv_close.setOnClickListener(this);
         viewPager = (WrapContentViewPager) findViewById(R.id.view_pager);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                viewPager.reMeasureCurrentPage(viewPager.getCurrentItem());
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         tabLayout = (TabLayout) findViewById(R.id.pager_tabs);
         setupViewPager();
+
     }
 
     private void setupViewPager() {
@@ -83,8 +70,40 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
 
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(currentPage);
         viewPager.setOffscreenPageLimit(1);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentPage = position;
+
+                // viewPager.reMeasureCurrentPage(viewPager.getCurrentItem());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                //Log.d("onPageScrollStateChanged", String.valueOf(state));
+
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    int pageCount = pagerAdapter.getCount();
+
+                    if (viewPager.getCurrentItem() == 0){
+                        viewPager.setCurrentItem(pageCount-2,false);
+                    } else if (viewPager.getCurrentItem() == pageCount-1){
+                        viewPager.setCurrentItem(1,false);
+
+                    }
+                }
+            }
+        });
+
     }
 
     @Override
