@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
         android:id="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
         android:background="@color/colorPrimaryDark"
         android:minHeight="42dp"
         android:orientation="horizontal">
@@ -84,6 +86,7 @@
             android:src="@drawable/ic_filter" />
     </LinearLayout>
 
+    <include layout="@layout/header_products" />
 
     <LinearLayout
         android:id="@+id/fl_whole"
@@ -92,9 +95,6 @@
         android:background="@color/gray_bg_transparent"
         android:orientation="vertical"
         android:visibility="visible">
-
-        <include layout="@layout/header_products" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -187,7 +187,7 @@
 
         <Button
             android:id="@+id/btn_add_now"
-            style="@style/ButtonStyle"
+            style="@style/YellowBorderButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"

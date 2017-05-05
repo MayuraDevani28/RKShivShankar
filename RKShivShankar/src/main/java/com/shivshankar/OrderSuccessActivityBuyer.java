@@ -44,7 +44,7 @@ public class OrderSuccessActivityBuyer extends BaseActivityCartBuyer implements 
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_order_success, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         try {
             res = getResources();
             bindViews(rootView);

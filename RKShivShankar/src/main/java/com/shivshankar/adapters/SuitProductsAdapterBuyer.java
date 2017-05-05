@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.liuguangqiang.progressbar.CircleProgressBar;
+import com.liuguangqiang.swipeback.SwipeBackLayout;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.ProductItem;
@@ -41,19 +43,9 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
     private final ArrayList<ProductItem> list;
     private static int posit;
     Dialog dialog;
-    private EditText mTv_Brand;
-    private EditText mTv_Top_Fabrics;
-    private EditText mTv_Bottom_Fabrics;
-    private EditText mTv_Dupatta;
-    private EditText mTv_All_Fabrics;
-    private EditText mTv_Category;
-    private EditText mTv_Type;
-    private EditText mTv_Price;
-    private EditText mTv_Min_Qty;
+    private EditText mTv_Brand, mTv_Top_Fabrics, mTv_Bottom_Fabrics, mTv_Dupatta, mTv_All_Fabrics, mTv_Category, mTv_Type, mTv_Price, mTv_Min_Qty,mTv_Product_Code;
+    private TextInputLayout mEdt_Dupatta, mEdt_All_Fabrics;
     private LinearLayout mLL_Fabrics;
-    private TextInputLayout mEdt_Dupatta;
-    private TextInputLayout mEdt_All_Fabrics;
-    private EditText mTv_Product_Code;
 
 
     public SuitProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list) {
@@ -124,9 +116,9 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
                 Glide.with(activity)
                         .load(strImageURL)
-                        .asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .priority(Priority.IMMEDIATE).dontAnimate()
-                        .thumbnail(0.1f).override(200, 200)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//.asBitmap()
+                        .priority(Priority.IMMEDIATE)//.dontAnimate()
+                        //.thumbnail(0.1f).override(200, 200)
                         .error(R.drawable.no_img)
                         .into(holder.mIv_product_image);
             }
@@ -226,7 +218,17 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
         //dialog.getWindow().setGravity(Gravity.BOTTOM);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.show();
-        ImageView close = (ImageView) view.findViewById(R.id.iv_close);
+        CircleProgressBar progressBar = (CircleProgressBar) view.findViewById(R.id.progressbar1);
+        SwipeBackLayout swipeBackLayout = (SwipeBackLayout) view.findViewById(R.id.swipe_layout);
+        swipeBackLayout.setOnSwipeBackListener(new SwipeBackLayout.SwipeBackListener() {
+            @Override
+            public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
+                progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
+                if (progressBar.getMax() * fractionAnchor == 100)
+                    dialog.dismiss();
+            }
+        });
+        RelativeLayout close = (RelativeLayout) view.findViewById(R.id.rl_close);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
         mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
         mTv_Product_Code = (EditText) view.findViewById(R.id.tv_product_code);

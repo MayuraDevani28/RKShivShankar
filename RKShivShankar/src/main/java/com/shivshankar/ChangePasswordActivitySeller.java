@@ -54,7 +54,7 @@ public class ChangePasswordActivitySeller extends BaseActivitySeller implements 
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_change_password_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+            //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
         } catch (Exception e) {
             e.printStackTrace();

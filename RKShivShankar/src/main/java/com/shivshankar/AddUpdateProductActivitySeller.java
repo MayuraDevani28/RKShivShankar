@@ -10,12 +10,10 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -25,15 +23,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
+import com.shivshankar.utills.CircleTransform;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.OnResultString;
@@ -55,8 +51,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
     EditText mEdt_brand_name, mEdt_price, mEdt_min_qty;
     TextInputLayout mTi_brand_name, mTi_price, mTi_min_qty;
 
-    TextView mBtn_submit, mTv_title;
-    private Button mBtn_add_brand;
+    TextView mBtn_submit, mTv_title, mBtn_add_brand;
     LinearLayout mLl_top_bottom_fab;
     private MaterialBetterSpinner mSp_top_fabrics, mSp_bottom_fabrics, mSp_dupatta, mSp_all_over, mSp_Category, mSp_Type;
     CheckBox mCb_all_over;
@@ -116,8 +111,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
         try {
             byte[] byteArray = Base64.decode(getPrefs().getString("image_product", ""), Base64.DEFAULT);
             bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            RoundedBitmapDrawable circularBitmapDrawable =
-                    RoundedBitmapDrawableFactory.create(getResources(), bmp);
+            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bmp);
             circularBitmapDrawable.setCircular(true);
             mIv_imageView.setImageDrawable(circularBitmapDrawable);
             mIv_imageView.setDrawingCacheEnabled(true);
@@ -142,29 +136,19 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
             String strImageURL = product.getImageName();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
 
-                Glide.with(this).load(strImageURL).asBitmap()
-                        .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white).listener(new RequestListener<String, Bitmap>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                        Log.v("TAGRK", "Exception");
-                        e.printStackTrace();
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        Log.v("TAGRK", "Ready");
-                        return false;
-                    }
-                }).into(new BitmapImageViewTarget(mIv_imageView) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        mIv_imageView.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
+                Glide.with(this).load(strImageURL)//.asBitmap()
+                        .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white)
+                        .transform(new CircleTransform(this))
+                        .into(mIv_imageView);
+//                (new BitmapImageViewTarget(mIv_imageView) {
+//                            @Override
+//                            protected void setResource(Bitmap resource) {
+//                                RoundedBitmapDrawable circularBitmapDrawable =
+//                                        RoundedBitmapDrawableFactory.create(getResources(), resource);
+//                                circularBitmapDrawable.setCircular(true);
+//                                mIv_imageView.setImageDrawable(circularBitmapDrawable);
+//                            }
+//                        });
             }
 
 //            strFabricType = product.get;
@@ -186,7 +170,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
         mEdt_brand_name = (EditText) rootView.findViewById(R.id.edt_brand_name);
         mTi_brand_name = (TextInputLayout) rootView.findViewById(R.id.ti_brand_name);
         mBtn_submit = (TextView) rootView.findViewById(R.id.btn_submit);
-        mBtn_add_brand = (Button) findViewById(R.id.btn_add_brand);
+        mBtn_add_brand = (TextView) findViewById(R.id.btn_add_brand);
         mBtn_add_brand.setOnClickListener(this);
         mLl_top_bottom_fab = (LinearLayout) findViewById(R.id.ll_top_bottom_fab);
         mSp_top_fabrics = (MaterialBetterSpinner) findViewById(R.id.sp_top_fabrics);
@@ -261,29 +245,19 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                     String strImageURL = item.getBrandLogo();
                     if ((strImageURL != null) && (!strImageURL.equals(""))) {
                         mIv_brand.setVisibility(View.VISIBLE);
-                        Glide.with(this).load(strImageURL).asBitmap()
-                                .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white).listener(new RequestListener<String, Bitmap>() {
-                            @Override
-                            public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                                Log.v("TAGRK", "Exception");
-                                e.printStackTrace();
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                Log.v("TAGRK", "Ready");
-                                return false;
-                            }
-                        }).into(new BitmapImageViewTarget(mIv_brand) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                mIv_brand.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
+                        Glide.with(this).load(strImageURL)//.asBitmap()
+                                .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white)
+                                .transform(new CircleTransform(this))
+                                .into(mIv_brand);
+//                                .into(new BitmapImageViewTarget(mIv_brand) {
+//                                    @Override
+//                                    protected void setResource(Bitmap resource) {
+//                                        RoundedBitmapDrawable circularBitmapDrawable =
+//                                                RoundedBitmapDrawableFactory.create(getResources(), resource);
+//                                        circularBitmapDrawable.setCircular(true);
+//                                        mIv_brand.setImageDrawable(circularBitmapDrawable);
+//                                    }
+//                                });
                     } else {
                         mIv_brand.setVisibility(View.GONE);
                     }
@@ -628,21 +602,20 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                 String strAPIName = job.optString("api");
                 if (strAPIName.equalsIgnoreCase("AddUpdateProduct_Suit")) {
                     int strresId = job.optInt("resInt");
-                    Runnable listener = null;
                     if (strresId == 1) {
                         try {
-                            listener = () -> {
+                            Runnable listener = () -> {
                                 Intent intent = new Intent(getApplicationContext(), ProductsActivitySeller.class);
                                 startActivity(intent);
                                 finish();
                                 overridePendingTransition(0, 0);
                             };
+                            AlertDialogManager.showSuccessDialog(this, job.optString("res"), listener);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-
-                    AlertDialogManager.showDialog(this, job.optString("res"), listener);
+                    } else
+                        AlertDialogManager.showDialog(this, job.optString("res"), null);
                 }
             }
         } catch (Exception e) {

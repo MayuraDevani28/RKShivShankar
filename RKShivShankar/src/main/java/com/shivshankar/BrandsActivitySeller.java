@@ -10,7 +10,6 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,6 +21,7 @@ import com.shivshankar.adapters.BrandsAdapterSeller;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
@@ -34,7 +34,7 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
     TextView mTv_no_data_found, mTv_title, mTv_count_items;
     Button mBtn_add_now;
     LottieAnimationView animationView2, animationView;
-    private LinearLayout mLl_no_data_found;
+    private LinearLayout mLl_no_data_found,mLl_title;
     RecyclerView mRv_items;
     LinearLayout mFl_whole;
 
@@ -51,7 +51,7 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         try {
             bindViews(rootView);
             mTv_title.setText("My Brands");
@@ -71,7 +71,7 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
     private void bindViews(View rootView) {
 
         try {
-
+            mLl_title = (LinearLayout) rootView.findViewById(R.id.ll_title);
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mIv_close = (ImageView) findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
@@ -84,9 +84,7 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-
                 }
-
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     try {
@@ -99,6 +97,11 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
                             }
                         }
                         isFirstScrollDone = true;
+                        if (dy > 0) {
+                            if (mLl_title.getVisibility() == View.VISIBLE)
+                                commonMethods.collapse(mLl_title);
+                        } else if (mLl_title.getVisibility() == View.GONE)
+                            commonMethods.expand(mLl_title);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -47,15 +47,16 @@ public class APIs {
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                     url, null,
                     response -> {
-                        Log.d("TAGRK", response.toString());
-                        onresult.onResult(response);
                         if (mView != null)
                             mView.dismiss();
+                        Log.d("TAGRK", response.toString());
+                        onresult.onResult(response);
+
                     }, error -> {
-                VolleyLog.d("TAGRK", "Error: " + error.getMessage());
-                onresult.onResult(null);
                 if (mView != null)
                     mView.dismiss();
+                VolleyLog.d("TAGRK", "Error: " + error.getMessage());
+                onresult.onResult(null);
             });
             jsonObjReq.setRetryPolicy(new RetryPolicy() {
                 @Override

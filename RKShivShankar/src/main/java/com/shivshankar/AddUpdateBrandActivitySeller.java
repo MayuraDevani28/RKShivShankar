@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -12,19 +14,15 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
@@ -56,7 +54,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
             super.onCreate(savedInstanceState);
             View rootView = getLayoutInflater().inflate(R.layout.activity_add_brand_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//            //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             Gson gson = new Gson();
@@ -79,20 +77,9 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                 if ((strImageURL != null) && (!strImageURL.equals(""))) {
 
                     Glide.with(this).load(strImageURL).asBitmap()
-                            .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white).listener(new RequestListener<String, Bitmap>() {
-                        @Override
-                        public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                            Log.v("TAGRK", "Exception");
-                            e.printStackTrace();
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            Log.v("TAGRK", "Ready");
-                            return false;
-                        }
-                    })
+                            .placeholder(R.drawable.xml_round_white).error(R.drawable.no_img)
+//                            .transform(new CircleTransform(this))
+//                            .into(mIv_imageView);
                             .into(new BitmapImageViewTarget(mIv_imageView) {
                                 @Override
                                 protected void setResource(Bitmap resource) {
@@ -171,7 +158,12 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                     if (mIv_imageView.getDrawable() == null) {
                         AlertDialogManager.showDialog(this, "Please select brand logo", null);
                     } else {
-                        Uri tempUri = commonMethods.getImageUri(getApplicationContext(), ((RoundedBitmapDrawable) mIv_imageView.getDrawable()).getBitmap());
+                        Uri tempUri = null;
+                        Drawable drawable = mIv_imageView.getDrawable();
+                        if (drawable instanceof BitmapDrawable)
+                            tempUri = commonMethods.getImageUri(getApplicationContext(), ((BitmapDrawable) drawable).getBitmap());
+                        else if (drawable instanceof RoundedBitmapDrawable)
+                            tempUri = commonMethods.getImageUri(getApplicationContext(), ((RoundedBitmapDrawable) drawable).getBitmap());
                         file = new File(commonMethods.getRealPathFromURI(this, tempUri));
                         if (item == null || item.getBrandId() == null || item.getBrandId().isEmpty()) {
                             APIs.CreateSellerBrand(this, this, strBrandName, file, mIv_imageView);
@@ -233,8 +225,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             byte[] byteArray = Base64.decode(img, Base64.DEFAULT);
 
             bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            RoundedBitmapDrawable circularBitmapDrawable =
-                    RoundedBitmapDrawableFactory.create(getResources(), bmp);
+            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bmp);
             circularBitmapDrawable.setCircular(true);
             mIv_imageView.setImageDrawable(circularBitmapDrawable);
             mIv_imageView.setDrawingCacheEnabled(true);
@@ -252,44 +243,35 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
                 String strAPIName = job.optString("api");
                 if (strAPIName.equalsIgnoreCase("CreateSellerBrand") || strAPIName.equalsIgnoreCase("UpdateSellerBrand")) {
                     int strresId = job.optInt("resInt");
-                    Runnable listener = null;
                     if (strresId == 1) {
                         try {
-                            listener = () -> {
-                                {
+                            Runnable listener = () -> {
+                                SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
+                                Gson gson = new Gson();
+                                item = new Brand(job.optString("brandId"), mEdt_brand_name.getText().toString(), job.optString("brandLogoPath"));
+                                String json = gson.toJson(item);
+                                editor.putString(commonVariables.KEY_BRAND, json);
+                                editor.apply();
+                                if (alDialog != null)
+                                    alDialog.dismiss();
 
-//                                Intent intent = new Intent(getApplicationContext(), BrandsActivitySeller.class);
-//                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                                byte[] byteArray = stream.toByteArray();
-//                                String saveThis = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                                    SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
-                                    Gson gson = new Gson();
-                                    item = new Brand(job.optString("itemId"), mEdt_brand_name.getText().toString(), job.optString("brandLogoPath"));
-                                    String json = gson.toJson(item);
-                                    editor.putString(commonVariables.KEY_BRAND, json);
-                                    editor.apply();
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                startActivity(intent);
-                                    if (alDialog != null)
-                                        alDialog.dismiss();
-                                    Intent output = new Intent();
-                                    output.putExtra(commonVariables.KEY_IS_BRAND_UPDATED, true);
-//                                setResult(RESULT_OK, output);
-                                    if (getParent() == null) {
-                                        setResult(Activity.RESULT_OK, output);
-                                    } else {
-                                        getParent().setResult(Activity.RESULT_OK, output);
-                                    }
-                                    finish();
-                                    overridePendingTransition(0, 0);
+                                Intent output = new Intent();
+                                output.putExtra(commonVariables.KEY_IS_BRAND_UPDATED, true);
+                                if (getParent() == null) {
+                                    setResult(Activity.RESULT_OK, output);
+                                } else {
+                                    getParent().setResult(Activity.RESULT_OK, output);
                                 }
+                                finish();
+                                overridePendingTransition(0, 0);
+
                             };
+                            AlertDialogManager.showSuccessDialog(this, job.optString("res"), listener);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                    AlertDialogManager.showDialog(this, job.optString("res"), listener);
+                    } else
+                        AlertDialogManager.showDialog(this, job.optString("res"), null);
                 }
             }
         } catch (Exception e) {

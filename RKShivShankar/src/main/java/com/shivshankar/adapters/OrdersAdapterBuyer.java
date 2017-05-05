@@ -1,14 +1,11 @@
 package com.shivshankar.adapters;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.ColorUtils;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,10 +18,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.shivshankar.R;
 import com.shivshankar.classes.Order;
 import com.shivshankar.fragments.OrderDetailFragment;
+import com.shivshankar.utills.RoundedCornersTransformation;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -84,28 +81,30 @@ public class OrdersAdapterBuyer extends RecyclerView.Adapter<OrdersAdapterBuyer.
             holder.mTv_order_date.setText(order.getOrderDate());
             holder.mTv_total.setText("Total: " + commonVariables.strCurrency_name + " " + order.getTotal());
 
+            GradientDrawable bgShape = (GradientDrawable) holder.mLl_order.getBackground();
+            Random rnd = new Random();
+            color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            bgShape.setColor(ColorUtils.setAlphaComponent(color, 99));
+
             String strImageURL = order.getListImages().get(0).getImageURL();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL).asBitmap().approximate().dontAnimate()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f)
+                Glide.with(activity).load(strImageURL).asBitmap()//.dontAnimate()//.approximate()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//.thumbnail(0.1f)
                         .error(R.drawable.no_img)
-                        .into(new BitmapImageViewTarget(holder.mIv_img) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                try {
-                                    GradientDrawable bgShape = (GradientDrawable) holder.mLl_order.getBackground();
-                                    Random rnd = new Random();
-                                    int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                                    bgShape.setColor(ColorUtils.setAlphaComponent(color, 99));
-
-                                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
-                                    circularBitmapDrawable.setCornerRadius(10);
-                                    holder.mIv_img.setImageDrawable(circularBitmapDrawable);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+                        .transform(new RoundedCornersTransformation(activity,13,0, RoundedCornersTransformation.CornerType.LEFT))
+                        .into(holder.mIv_img);
+//                (new BitmapImageViewTarget(holder.mIv_img) {
+//                            @Override
+//                            protected void setResource(Bitmap resource) {
+//                                try {
+//                                    RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
+//                                    circularBitmapDrawable.setCornerRadius(10);
+//                                    holder.mIv_img.setImageDrawable(circularBitmapDrawable);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
 
 
             }
@@ -138,7 +137,7 @@ public class OrdersAdapterBuyer extends RecyclerView.Adapter<OrdersAdapterBuyer.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView mTv_order_no, mTv_order_date, mTv_total, mTv_status, mTv_view, mTv_count;
+        private TextView mTv_order_no, mTv_order_date, mTv_total, mTv_status, mTv_count;
         LinearLayout mLl_order;
         RelativeLayout mRl_images;
         ImageView mIv_img;
@@ -151,7 +150,6 @@ public class OrdersAdapterBuyer extends RecyclerView.Adapter<OrdersAdapterBuyer.
             mTv_order_no = (TextView) itemView.findViewById(R.id.tv_order_no);
             mTv_order_date = (TextView) itemView.findViewById(R.id.tv_order_date);
             mTv_total = (TextView) itemView.findViewById(R.id.tv_total);
-            mTv_view = (TextView) itemView.findViewById(R.id.tv_view);
             mTv_status = (TextView) itemView.findViewById(R.id.tv_status);
             mRl_images = (RelativeLayout) itemView.findViewById(R.id.rl_images);
             mTv_count = (TextView) itemView.findViewById(R.id.tv_count_products);
@@ -166,7 +164,6 @@ public class OrdersAdapterBuyer extends RecyclerView.Adapter<OrdersAdapterBuyer.
 //            horizontalAdapter = new GalleryAdapter(activity);
 //            mRv_products.setAdapter(horizontalAdapter);
 
-            mTv_view.setOnClickListener(this);
             mIv_img.setOnClickListener(this);
         }
 

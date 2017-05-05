@@ -15,6 +15,10 @@
         <item name="itemTextAppearance">@style/AppTheme.ItemTextStyle</item>
         <item name="android:itemTextAppearance">@style/AppTheme.ItemTextStyle</item>
 
+
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">

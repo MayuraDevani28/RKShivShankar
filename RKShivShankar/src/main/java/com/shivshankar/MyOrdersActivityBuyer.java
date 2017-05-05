@@ -11,7 +11,6 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -25,6 +24,7 @@ import com.shivshankar.classes.Order;
 import com.shivshankar.classes.SC3Object;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
@@ -37,7 +37,7 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
 
     TextView mTv_no_data_found, mTv_count_items;
     Button mBtn_add_now;
-    private LinearLayout mLl_no_data_found;
+    private LinearLayout mLl_no_data_found, mLl_title;
     public RecyclerView mRv_items;
     FrameLayout mFl_whole;
     private ImageView mIv_close;
@@ -57,7 +57,7 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_my_orders_buyer, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
             bindViews(rootView);
@@ -85,6 +85,7 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
     private void bindViews(View rootView) {
 
         try {
+            mLl_title = (LinearLayout) rootView.findViewById(R.id.ll_title);
             mIv_close = (ImageView) findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
 
@@ -125,7 +126,10 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
                                     APIs.GetMyOrders(MyOrdersActivityBuyer.this, MyOrdersActivityBuyer.this, ++pageNo);
                                 }
                             }
-                        }
+                            if (mLl_title.getVisibility() == View.VISIBLE)
+                                commonMethods.collapse(mLl_title);
+                        } else if (mLl_title.getVisibility() == View.GONE)
+                            commonMethods.expand(mLl_title);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -281,10 +285,11 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
                             JSONObject jObjItem = jarray.optJSONObject(i);
                             ArrayList<SC3Object> arr = new ArrayList<SC3Object>();
                             JSONArray jarr = jObjItem.optJSONArray("lstProductimg");
-                            for (int j = 0; j < jarr.length(); j++) {
-                                JSONObject jo = jarr.getJSONObject(j);
-                                arr.add(new SC3Object(jo.optInt("ProductId"), "", "", jo.optString("ProductImages")));
-                            }
+                            if (jarr != null)
+                                for (int j = 0; j < jarr.length(); j++) {
+                                    JSONObject jo = jarr.getJSONObject(j);
+                                    arr.add(new SC3Object(jo.optInt("ProductId"), "", "", jo.optString("ProductImages")));
+                                }
                             listArray.add(new Order(jObjItem.optString("OrderId"), jObjItem.optString("OrderNo"), jObjItem.optString("OrderDate"), jObjItem.optString("TotalAmount"), jObjItem.optString("OrderStatus"), arr, ""));
                         }
                     }

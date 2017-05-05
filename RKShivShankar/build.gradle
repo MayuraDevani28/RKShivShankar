@@ -52,6 +52,4 @@ dependencies {
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
     compile 'com.github.liuguangqiang.prettyprogressbar:library:+'
 }
-
-
 apply plugin: 'com.google.gms.google-services'

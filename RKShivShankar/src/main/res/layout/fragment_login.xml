@@ -157,7 +157,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_forget"
@@ -170,35 +170,22 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_medium" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/transparent" />
-
                 <LinearLayout
                     android:id="@+id/ll_skip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
                     android:orientation="horizontal"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="10dp">
+                    android:padding="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="right|center_vertical"
-                        android:text="SKIP"
+                        android:layout_gravity="center"
+                        android:text="Skip and Continue as Buyer"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_size_large" />
+                        android:textSize="@dimen/text_size_medium" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_arrow_right"
-                        android:tint="@color/colorPrimary" />
                 </LinearLayout>
             </LinearLayout>
 

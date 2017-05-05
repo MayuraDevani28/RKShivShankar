@@ -74,7 +74,7 @@
                 android:id="@+id/ll_brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="1dp"
                 android:background="#3AB4C3"
                 android:gravity="center"
                 android:orientation="vertical"

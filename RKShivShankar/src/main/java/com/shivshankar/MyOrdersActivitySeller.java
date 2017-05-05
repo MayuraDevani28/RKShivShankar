@@ -11,7 +11,6 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -22,8 +21,10 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.OrdersAdapterSeller;
 import com.shivshankar.classes.Order;
+import com.shivshankar.classes.SC3Object;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
@@ -36,7 +37,7 @@ public class MyOrdersActivitySeller extends BaseActivitySeller implements OnClic
 
     TextView mTv_no_data_found, mTv_title, mTv_count_items;
     Button mBtn_add_now;
-    private LinearLayout mLl_no_data_found;
+    private LinearLayout mLl_no_data_found,mLl_title;
     public RecyclerView mRv_items;
     FrameLayout mFl_whole;
     private ImageView mIv_close;
@@ -56,7 +57,7 @@ public class MyOrdersActivitySeller extends BaseActivitySeller implements OnClic
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_my_orders_buyer, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
             bindViews(rootView);
@@ -69,7 +70,7 @@ public class MyOrdersActivitySeller extends BaseActivitySeller implements OnClic
     private void bindViews(View rootView) {
 
         try {
-
+            mLl_title = (LinearLayout) rootView.findViewById(R.id.ll_title);
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mTv_title.setText("My Orders");
             mIv_close = (ImageView) findViewById(R.id.iv_close);
@@ -112,7 +113,10 @@ public class MyOrdersActivitySeller extends BaseActivitySeller implements OnClic
                                     APIs.GetOrderList_Seller(MyOrdersActivitySeller.this, MyOrdersActivitySeller.this, ++pageNo);
                                 }
                             }
-                        }
+                            if (mLl_title.getVisibility() == View.VISIBLE)
+                                commonMethods.collapse(mLl_title);
+                        } else if (mLl_title.getVisibility() == View.GONE)
+                            commonMethods.expand(mLl_title);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -270,16 +274,23 @@ public class MyOrdersActivitySeller extends BaseActivitySeller implements OnClic
 
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("GetOrderList_Seller")) {
-                    JSONObject jo = jobjWhole.optJSONObject("resData");
-                    JSONArray jarray = jo.optJSONArray("lstOrders");
-                    total = jo.optString("totalOrderCount");
+                    JSONObject joi = jobjWhole.optJSONObject("resData");
+                    JSONArray jarray = joi.optJSONArray("lstOrders");
+                    total = joi.optString("totalOrderCount");
 
                     mTv_count_items.setVisibility(View.VISIBLE);
                     mTv_count_items.setText(" (" + total + " orders)");
                     if (jarray != null) {
                         for (int i = 0; i < jarray.length(); i++) {
                             JSONObject jObjItem = jarray.optJSONObject(i);
-                            listArray.add(new Order(jObjItem.optString("OrderId"), jObjItem.optString("OrderNo"), jObjItem.optString("OrderDate"), jObjItem.optString("TotalPrice"), jObjItem.optString("OrderStatus"), null, jObjItem.optString("CustomerName")));
+                            JSONArray jarr = jObjItem.optJSONArray("lstProductimg");
+                            ArrayList<SC3Object> arr = new ArrayList<SC3Object>();
+                            if (jarr != null)
+                                for (int j = 0; j < jarr.length(); j++) {
+                                    JSONObject jo = jarr.getJSONObject(j);
+                                    arr.add(new SC3Object(jo.optInt("ProductId"), "", "", jo.optString("ProductImages")));
+                                }
+                            listArray.add(new Order(jObjItem.optString("OrderId"), jObjItem.optString("OrderNo"), jObjItem.optString("OrderDate"), jObjItem.optString("TotalPrice"), jObjItem.optString("OrderStatus"), arr, jObjItem.optString("CustomerName")));
                         }
                     }
                     if (pageNo == 1) {

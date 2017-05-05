@@ -12,7 +12,6 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +26,7 @@ import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -39,7 +39,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
 
     TextView mTv_no_data_found, mTv_title, mTv_count_items;
     Button mBtn_add_now;
-    private LinearLayout mLl_no_data_found;
+    private LinearLayout mLl_no_data_found, mLl_title;
     public RecyclerView mRv_items;
     LinearLayout mFl_whole;
     private ImageView mIv_filer, mIv_close;
@@ -49,7 +49,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
     String strSearch = "", brandId = "", strFabricType = "", total = "";
     Resources res;
     int pageNo = 1;
-    boolean loading;
+    boolean loading, isFirstScrollDone = false;
     ArrayList<ProductItem> listArray = new ArrayList<>();
     FabricProductsAdapterBuyer adapter;
 
@@ -59,7 +59,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
             res = getResources();
@@ -86,6 +86,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
     private void bindViews(View rootView) {
 
         try {
+            mLl_title = (LinearLayout) findViewById(R.id.ll_title);
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setVisibility(View.GONE);
             mIv_filer.setOnClickListener(this);
@@ -114,6 +115,42 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
             mLl_no_data_found = (LinearLayout) rootView.findViewById(R.id.ll_no_data_found);
             animationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
             animationView2 = (LottieAnimationView) rootView.findViewById(R.id.animation_view2);
+
+            mRv_items.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    try {
+                        int pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                        int visibleItemCount = mLayoutManager.getChildCount();
+                        if (isFirstScrollDone && listArray.size() != 0) {
+                            int citem = (pastVisiblesItems + visibleItemCount);
+                            if (citem != 2) {
+                                mTv_count_items.setText(" (" + citem + "/" + total + " products)");
+                            }
+                        }
+                        isFirstScrollDone = true;
+                        if (dy > 0) {
+                            int totalItemCount = mLayoutManager.getItemCount();
+                            if (loading) {
+                                if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 10)) {
+                                    loading = false;
+                                    APIs.GetProductList_Suit_Buyer(null, FabricProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
+                                }
+                            }
+                            if (mLl_title.getVisibility() == View.VISIBLE)
+                                commonMethods.collapse(mLl_title);
+                        } else if (mLl_title.getVisibility() == View.GONE)
+                            commonMethods.expand(mLl_title);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

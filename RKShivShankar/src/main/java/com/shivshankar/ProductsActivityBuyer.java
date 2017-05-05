@@ -12,7 +12,6 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +26,7 @@ import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -42,7 +42,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     Button mBtn_add_now;
     private LinearLayout mLl_no_data_found;
     public RecyclerView mRv_items;
-    LinearLayout mFl_whole, mLl_add_to_cart;
+    LinearLayout mFl_whole, mLl_add_to_cart, mLl_title;
     private ImageView mIv_filer, mIv_close;
     LottieAnimationView animationView2, animationView;
 
@@ -62,7 +62,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
             res = getResources();
@@ -89,6 +89,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     private void bindViews(View rootView) {
 
         try {
+            mLl_title = (LinearLayout) findViewById(R.id.ll_title);
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setOnClickListener(this);
 
@@ -111,9 +112,17 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             mRv_items.setLayoutManager(mLayoutManager);
 
             mRv_items.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                //                 boolean scroll_down;
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
+//                    if (scroll_down) {
+////                        mLl_title.setVisibility(View.GONE);
+//                        collapse(mLl_title);
+//                    } else {
+////                        mLl_title.setVisibility(View.VISIBLE);
+//                        expand(mLl_title);
+//                    }
                 }
 
                 @Override
@@ -136,7 +145,17 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                                     APIs.GetProductList_Suit_Buyer(null, ProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
                                 }
                             }
-                        }
+
+                            if (mLl_title.getVisibility() == View.VISIBLE)
+                                commonMethods.collapse(mLl_title);
+                        } else if (mLl_title.getVisibility() == View.GONE)
+                            commonMethods.expand(mLl_title);
+
+//                        if (dy > 42) {
+//                            scroll_down = true;
+//                        } else if (dy < -5) {
+//                            scroll_down = false;
+//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

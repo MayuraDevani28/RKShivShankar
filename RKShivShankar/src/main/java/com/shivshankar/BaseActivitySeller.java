@@ -12,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -147,7 +146,6 @@ public class BaseActivitySeller extends AppCompatActivity implements View.OnClic
                 }
             };
             setNotiCount();
-            Log.v("TAGRK", "OncreatedOptionsmenu base seller");
         } catch (Exception e) {
             e.printStackTrace();
         }

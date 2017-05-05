@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,7 +48,7 @@ public class FabricColorsActivityBuyer extends BaseActivityBuyer implements OnCl
     LottieAnimationView animationView2, animationView;
 
     String strFabricType = "", strCatidFabric, itemId = "0";
-    ArrayList<FabricColorsListFragment> listAdapter = new ArrayList<>();
+    public ArrayList<FabricColorsListFragment> listFragment = new ArrayList<>();
     ProductItem item;
 
     @Override
@@ -57,7 +56,7 @@ public class FabricColorsActivityBuyer extends BaseActivityBuyer implements OnCl
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_fabric_colors_buyer, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
             bindViews(rootView);
@@ -253,11 +252,13 @@ public class FabricColorsActivityBuyer extends BaseActivityBuyer implements OnCl
                 jo.put("ProductTotalQty", 1);
                 jo.put("ProductTotalCut", 2);
                 JSONArray arrStr = new JSONArray();
-                for (int i = 0; i < listAdapter.size(); i++) {
-                    List<FabricColor> lisarr = listAdapter.get(i).getItems();
+                for (int i = 0; i < listFragment.size(); i++) {
+                    List<FabricColor> lisarr = listFragment.get(i).getItems();
                     for (int j = 0; j < lisarr.size(); j++) {
                         if (lisarr.get(j).isActive()) {
-                            arrStr.put(lisarr.get(j).getHeaxCode());
+                            String hex = lisarr.get(j).getHeaxCode();
+                            if (!arrStr.toString().contains(hex))
+                                arrStr.put(hex);
                         }
                     }
                 }
@@ -296,13 +297,13 @@ public class FabricColorsActivityBuyer extends BaseActivityBuyer implements OnCl
                     if (l != 0) {
                         ViewPagerAdapterDetail pagerAdapter = new ViewPagerAdapterDetail(getSupportFragmentManager());
                         viewPager.setOffscreenPageLimit(l);
-                        listAdapter.clear();
+                        listFragment.clear();
                         for (int i = 0; i < l; i++) {
                             JSONObject jo = jarray.optJSONObject(i);
                             SC3Object fabricColor = new SC3Object(jo.optInt("ColorTypeId"), jo.optString("ColorType"), "", "");
                             FabricColorsListFragment fragment = new FabricColorsListFragment(fabricColor, item);
                             pagerAdapter.addFragment(fragment, fabricColor.getName());
-                            listAdapter.add(fragment);
+                            listFragment.add(fragment);
                         }
 
                         viewPager.setAdapter(pagerAdapter);

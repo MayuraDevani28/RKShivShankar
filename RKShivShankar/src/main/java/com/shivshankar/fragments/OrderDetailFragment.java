@@ -1,5 +1,7 @@
 package com.shivshankar.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,9 +43,8 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
     public Order order;
     private ImageView mIv_close, mIv_expand;
     private RecyclerView mLv_order_items;
-    private TextView mTv_order_no, mTv_order_date, mTv_total, mName, mTv_address, mTv_mobile_no, mTv_customer_name;
-    private TextView mTv_sub_total, mTv_discount_amount, mTv_discount_code_title, mTv_shipping_amount, mTv_product_total, mTv_order_status;
-    private LinearLayout mBtn_home, mLl_detail, mLl_shipping_address, mLl_discount, mLl_shipping, mLl_order;
+    private TextView mTv_order_no, mTv_order_date, mTv_total, mName, mTv_address, mTv_mobile_no, mTv_customer_name, mTv_sub_total, mTv_discount_amount, mTv_discount_code_title, mTv_shipping_amount, mTv_product_total, mTv_order_status;
+    private LinearLayout mBtn_home, mLl_detail, mLl_shipping_address, mLl_discount, mLl_shipping, mLl_order, mLl_expand;
 
 
     ArrayList<CartItem> listArray = new ArrayList<CartItem>();
@@ -97,7 +98,6 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
         try {
             mIv_close = (ImageView) rootView.findViewById(R.id.iv_close);
             mIv_expand = (ImageView) rootView.findViewById(R.id.iv_expand);
-            mIv_expand.setOnClickListener(this);
             mTv_order_no = (TextView) rootView.findViewById(R.id.tv_order_no);
             mTv_order_date = (TextView) rootView.findViewById(R.id.tv_order_date);
             mLv_order_items = (RecyclerView) rootView.findViewById(lv_order_items);
@@ -115,6 +115,8 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
             mIv_close.setOnClickListener(this);
 
             mLl_shipping_address = (LinearLayout) rootView.findViewById(R.id.ll_shipping_address);
+            mLl_expand = (LinearLayout) rootView.findViewById(R.id.ll_expand);
+            mLl_expand.setOnClickListener(this);
 
             mTv_order_status = (TextView) rootView.findViewById(R.id.tv_order_status);
             mTv_product_total = (TextView) rootView.findViewById(R.id.tv_product_total);
@@ -141,13 +143,33 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
             } else if (v == mIv_close) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.popBackStack();
-            } else if (v == mIv_expand) {
+            } else if (v == mLl_expand) {
                 if (mLv_order_items.getVisibility() == View.GONE) {
-                    mLv_order_items.setVisibility(View.VISIBLE);
-                    mIv_expand.setRotation(90);
-                } else {
-                    mLv_order_items.setVisibility(View.GONE);
+//                    mLv_order_items.setVisibility(View.VISIBLE);
                     mIv_expand.setRotation(270);
+                    mLv_order_items.animate()
+                            .translationY(0).alpha(1)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                    super.onAnimationStart(animation);
+                                    mLv_order_items.setAlpha(0);
+                                    mLv_order_items.setVisibility(View.VISIBLE);
+                                }
+                            });
+                } else {
+//                    mLv_order_items.setVisibility(View.GONE);
+                    mIv_expand.setRotation(90);
+                    mLv_order_items.animate()
+                            .translationYBy(-mLv_order_items.getHeight()).alpha(0)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    mLv_order_items.setAlpha(0);
+                                    mLv_order_items.setVisibility(View.GONE);
+                                }
+                            });
                 }
             }
         } catch (Exception e) {
@@ -278,10 +300,10 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
                             fabric_ExtraQty = jobFabric.optInt("Fabric_ExtraQty");
                             fabric_ExtraCut = jobFabric.optDouble("Fabric_ExtraCut");
                             fabric_Colors = jobFabric.optString("Fabric_Colors");
-                            JSONArray jarr = jobFabric.optJSONArray("Fabric_Colors");
+                            JSONArray jarr = jobFabric.optJSONArray("lstcolors");
                             if (jarr != null) {
                                 for (int j = 0; j < jarr.length(); j++) {
-                                    fabcol.add(new SC3Object(jObjItem.optInt("ProductId"), "", jarr.optString(j), ""));
+                                    fabcol.add(new SC3Object(jObjItem.optInt("ProductId"), "", jarr.optJSONObject(j).optString("ColorCode"), jarr.optJSONObject(j).optString("ColorImage")));
                                 }
                             }
                         }

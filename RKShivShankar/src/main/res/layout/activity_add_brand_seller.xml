@@ -59,7 +59,7 @@
                 android:id="@+id/ll_brand"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="1dp"
                 android:background="#3AB4C3"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -69,19 +69,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:background="@drawable/xml_round_white"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:id="@+id/iv_effectImg"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="fitXY" />
-
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/iv_effectImg"
+                        android:layout_width="145dp"
+                        android:layout_height="145dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/xml_round_white_transparent" />
 
                     <ImageView
                         android:id="@+id/iv_change_image"

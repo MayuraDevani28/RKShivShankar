@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,10 +17,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.liuguangqiang.progressbar.CircleProgressBar;
+import com.liuguangqiang.swipeback.SwipeBackLayout;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.CartItem;
@@ -67,14 +75,7 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
             holder.mTv_brand_name.setSelected(true);
             holder.mTv_brand_name.setText(WordUtils.capitalize(item.getProductCode() + " (" + item.getBrandName() + ")"));
 
-            if (item.getSuitFbricId() == 1) {
-                holder.mLl_suit.setVisibility(View.VISIBLE);
-                holder.mLl_fabric.setVisibility(View.GONE);
-                holder.mLl_qty_cut.setVisibility(View.GONE);
-                holder.mTv_price.setText(commonVariables.strCurrency_name + " " + item.getOfferPrice());
-                holder.mTv_total.setText(commonVariables.strCurrency_name + " " + item.getTotalAmount());
-                holder.mTv_qty.setText(item.getCartQuantity() + "");
-            } else {
+            if (item.getSuitFbricId() == 2) {
                 try {
                     holder.mLl_qty_cut.setVisibility(View.VISIBLE);
                     holder.mLl_suit.setVisibility(View.GONE);
@@ -120,12 +121,19 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                holder.mLl_suit.setVisibility(View.VISIBLE);
+                holder.mLl_fabric.setVisibility(View.GONE);
+                holder.mLl_qty_cut.setVisibility(View.GONE);
+                holder.mTv_price.setText(commonVariables.strCurrency_name + " " + item.getOfferPrice());
+                holder.mTv_total.setText(commonVariables.strCurrency_name + " " + item.getTotalAmount());
+                holder.mTv_qty.setText(item.getCartQuantity() + "");
             }
 
             String strImageURL = item.getImageName();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL).asBitmap().approximate().dontAnimate()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f)
+                Glide.with(activity).load(strImageURL)//.dontAnimate()//.asBitmap().approximate()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//.thumbnail(0.1f)
                         .error(R.drawable.no_img)
                         .into(holder.mIv_product_image);
             }
@@ -143,7 +151,7 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
         if (cut2.endsWith(".0"))
             cut2 = cut2.substring(0, cut2.length() - 2);
 
-        mTv_front.setText("Qty: " + qty + "\n" + "Cut: " + cut2);
+        mTv_front.setText("Qty: " + qty + ", " + "Cut: " + cut2);
     }
 
     @Override
@@ -203,7 +211,7 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
             if (item.getSuitFbricId() == 1) {
                 showPopup(item.getImageName(), item.getProductId());
             } else
-                showPopupFabric(item.getImageName(), item.getProductId());
+                showPopupFabric(item.getImageName(), item.getProductId(),"#FFFFFF");
 
         }
     }
@@ -216,14 +224,23 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.dialog_popup_product_detail, null);
 
-
         dialog.setContentView(view); // your custom view.
         dialog.setCancelable(true);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         //dialog.getWindow().setGravity(Gravity.BOTTOM);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.show();
-        ImageView close = (ImageView) view.findViewById(R.id.iv_close);
+        CircleProgressBar progressBar = (CircleProgressBar) view.findViewById(R.id.progressbar1);
+        SwipeBackLayout swipeBackLayout = (SwipeBackLayout) view.findViewById(R.id.swipe_layout);
+        swipeBackLayout.setOnSwipeBackListener(new SwipeBackLayout.SwipeBackListener() {
+            @Override
+            public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
+                progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
+                if (progressBar.getMax() * fractionAnchor == 100)
+                    dialog.dismiss();
+            }
+        });
+        RelativeLayout close = (RelativeLayout) view.findViewById(R.id.rl_close);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
         mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
         mTv_Product_Code = (EditText) view.findViewById(R.id.tv_product_code);
@@ -239,8 +256,8 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
         mTv_Min_Qty = (EditText) view.findViewById(R.id.tv_min_qty);
         mLL_Fabrics = (LinearLayout) view.findViewById(R.id.ll_top_bottom_fab);
         String[] Images = {imageName};
-        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)
-                .thumbnail(0.1f).error(R.drawable.no_img).into(imageView);
+        Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)//.thumbnail(0.1f)
+                .error(R.drawable.no_img).into(imageView);
         APIs.GetProductDetail_Suit_Seller(activity, this, productId);
 
 
@@ -264,7 +281,7 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
 
     }
 
-    private void showPopupFabric(String imageName, String productId) {
+    private void showPopupFabric(String strImageURL, String productId,String hexCode) {
         try {
             dialog = new Dialog(
                     activity, R.style.popupTheme);
@@ -278,19 +295,56 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
             dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
             dialog.show();
-            ImageView close = (ImageView) view.findViewById(R.id.iv_close);
+            CircleProgressBar progressBar = (CircleProgressBar) view.findViewById(R.id.progressbar1);
+            SwipeBackLayout swipeBackLayout = (SwipeBackLayout) view.findViewById(R.id.swipe_layout);
+            swipeBackLayout.setOnSwipeBackListener(new SwipeBackLayout.SwipeBackListener() {
+                @Override
+                public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
+                    progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
+                    if (progressBar.getMax() * fractionAnchor == 100)
+                        dialog.dismiss();
+                }
+            });
+            RelativeLayout close = (RelativeLayout) view.findViewById(R.id.rl_close);
             ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
             mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
             mTv_Product_Code = (EditText) view.findViewById(R.id.tv_product_code);
             mTv_Category = (EditText) view.findViewById(R.id.tv_category);
             mTv_Type = (EditText) view.findViewById(R.id.tv_type);
             mTv_Price = (EditText) view.findViewById(R.id.tv_price);
-            mTv_Min_Qty = (EditText) view.findViewById(R.id.tv_min_qty);
+            view.findViewById(R.id.ti_qty).setVisibility(View.GONE);
+
             mLl_fabric = (LinearLayout) view.findViewById(R.id.ll_fabric);
             mLl_fabric.setVisibility(View.GONE);
-            String[] Images = {imageName};
-            Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .thumbnail(0.1f).error(R.drawable.no_img_big).into(imageView);
+            String[] Images = {strImageURL};
+//            Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)//.thumbnail(0.1f)
+//                    .error(R.drawable.no_img_big).into(imageView);
+            if ((strImageURL != null) && (!strImageURL.equals(""))) {
+
+                Glide.with(activity).load(strImageURL).diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.IMMEDIATE)
+                        .error(R.drawable.no_img_big)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                try {
+                                    imageView.setBackgroundColor(Color.parseColor(hexCode));
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                return false;
+                            }
+                        })
+                        .into(imageView);
+
+            } else {
+                imageView.setBackgroundColor(Color.parseColor(hexCode));
+            }
+
             APIs.GetProductDetail_Fabric(activity, this, productId);
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -348,8 +402,8 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
                     mTv_Brand.setText(job.optString("BrandName"));
                     mTv_Category.setText(job.optString("CategoryName"));
                     mTv_Type.setText(job.optString("FabricType"));
-                    mTv_Price.setText(commonVariables.strCurrency_name + " " + job.optString("OfferPrice"));
-                    mTv_Min_Qty.setText("" + job.optInt("MinOrderQty"));
+                    mTv_Price.setText(commonVariables.strCurrency_name + " " + job.optString("OfferPrice")+"/mtr");
+//                    mTv_Min_Qty.setText("" + job.optInt("MinOrderQty"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
