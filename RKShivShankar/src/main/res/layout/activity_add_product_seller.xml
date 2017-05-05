@@ -114,7 +114,7 @@
                     <ImageView
                         android:id="@+id/iv_brand"
                         android:layout_width="40dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:scaleType="fitXY"
                         android:visibility="gone" />
 
@@ -136,12 +136,15 @@
 
                     </android.support.design.widget.TextInputLayout>
 
-                    <Button
+                    <TextView
                         android:id="@+id/btn_add_brand"
-                        style="@style/ButtonStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Add" />
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Add Brand"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout

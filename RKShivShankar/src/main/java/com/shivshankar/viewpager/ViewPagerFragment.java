@@ -2,7 +2,6 @@ package com.shivshankar.viewpager;
 
 import android.app.DownloadManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.shivshankar.R;
 import com.shivshankar.customcontrols.TouchImageView;
 
@@ -67,17 +64,18 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener 
                // Glide.with(getActivity()).load(strImageURL).asBitmap().error(R.drawable.camera).into(imageView);
                 Glide.with(getContext())
                         .load(strImageURL)
-                        .asBitmap()
+                    //    .asBitmap()
                         .error(R.drawable.no_img_big)
                         //.placeholder(R.drawable.default_placeholder)
-                        .into(new BitmapImageViewTarget(imageView) {
-                            @Override
-                            public void onResourceReady(Bitmap  drawable, GlideAnimation anim) {
-                                super.onResourceReady(drawable, anim);
-                                //progressBar.setVisibility(View.GONE);
-                                imageView.setImageBitmap(drawable);
-                            }
-                        });
+                        .into(imageView);
+//                new BitmapImageViewTarget(imageView) {
+//                            @Override
+//                            public void onResourceReady(Bitmap  drawable, GlideAnimation anim) {
+//                                super.onResourceReady(drawable, anim);
+//                                //progressBar.setVisibility(View.GONE);
+//                                imageView.setImageBitmap(drawable);
+//                            }
+//                        });
 //                commonVariables.imageLoader.displayImage(imageToolTipURL, imageView, commonVariables.options_3d_loader);
 //                , new SimpleImageLoadingListener() {
 //                    @Override

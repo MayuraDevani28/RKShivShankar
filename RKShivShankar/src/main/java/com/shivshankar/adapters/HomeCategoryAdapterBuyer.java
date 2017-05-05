@@ -148,7 +148,7 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
             holder.mTv_name.setText(WordUtils.capitalizeFully(item.getBrandName()));
             String strImageURL = item.getBrandLogo();
             if ((strImageURL != null) && (!strImageURL.equals("")))
-                Glide.with(activity).load(strImageURL).asBitmap()
+                Glide.with(activity).load(strImageURL)//.asBitmap()
                         .placeholder(R.color.gray_bg_transparent)
                         .error(R.drawable.no_img_big)
                         .centerCrop().into(holder.mIv_image);

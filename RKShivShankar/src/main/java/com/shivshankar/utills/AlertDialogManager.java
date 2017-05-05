@@ -45,6 +45,34 @@ public class AlertDialogManager {
         });
     }
 
+    public static void showSuccessDialog(AppCompatActivity activity, String message, Runnable block1) {
+        Dialog dialog = new Dialog(activity, R.style.popupTheme);
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.dialog_custom_alert_dialog, null);
+
+        dialog.setContentView(view);
+        dialog.setCancelable(false);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimationFade;
+        dialog.show();
+
+        view.findViewById(R.id.iv_close).setVisibility(View.GONE);
+        TextView mBtn_Done = (TextView) view.findViewById(R.id.btn_done);
+        TextView mTv_message = (TextView) view.findViewById(R.id.tv_message);
+        view.findViewById(R.id.fl_success).setVisibility(View.VISIBLE);
+        mTv_message.setText(message);
+
+        mBtn_Done.setOnClickListener(view1 -> {
+            AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
+            view1.startAnimation(buttonClick);
+
+            if (block1 != null) {
+                block1.run();
+            }
+            dialog.dismiss();
+        });
+    }
+
     public static void showDialogYesNo(AppCompatActivity activity, String message, String strBtnText, Runnable block1) {
         Dialog dialog = new Dialog(activity, R.style.popupTheme);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

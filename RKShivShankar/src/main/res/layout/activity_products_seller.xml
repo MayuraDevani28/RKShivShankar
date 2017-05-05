@@ -86,6 +86,7 @@
             android:src="@drawable/ic_filter" />
     </LinearLayout>
 
+    <include layout="@layout/header_products" />
 
     <LinearLayout
         android:id="@+id/fl_whole"
@@ -94,9 +95,6 @@
         android:background="@color/gray_bg_transparent"
         android:orientation="vertical"
         android:visibility="visible">
-
-        <include layout="@layout/header_products" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -190,7 +188,7 @@
 
         <Button
             android:id="@+id/btn_add_now"
-            style="@style/ButtonStyle"
+            style="@style/YellowBorderButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"

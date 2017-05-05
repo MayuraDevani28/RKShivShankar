@@ -2,10 +2,7 @@ package com.shivshankar.adapters;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.gson.Gson;
 import com.shivshankar.AddUpdateBrandActivitySeller;
 import com.shivshankar.BrandsActivitySeller;
@@ -25,6 +21,7 @@ import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
+import com.shivshankar.utills.CircleTransform;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonVariables;
 
@@ -38,14 +35,15 @@ public class BrandsAdapterSeller extends RecyclerView.Adapter<BrandsAdapterSelle
     private final AppCompatActivity activity;
     private final ArrayList<Brand> list;
     private static int posit;
-    Resources res;
+    int d, gray;
 
     public BrandsAdapterSeller(AppCompatActivity activity, ArrayList<Brand> list) {
 
         this.activity = activity;
         this.list = list;
         try {
-            res = activity.getResources();
+            d = ContextCompat.getColor(activity, R.color.white);
+            gray = ContextCompat.getColor(activity, R.color.gray_bg);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,7 +63,7 @@ public class BrandsAdapterSeller extends RecyclerView.Adapter<BrandsAdapterSelle
                             AppPreferences.getPrefs().edit().putString(commonVariables.KEY_BRAND, "").apply();
                             ((BrandsActivitySeller) activity).setListAdapter(list);
                         } else
-                            notifyDataSetChanged();
+                            notifyItemRemoved(posit);
                     } else {
                         AlertDialogManager.showDialog(activity, jobjWhole.optString("res"), null);
                     }
@@ -148,28 +146,20 @@ public class BrandsAdapterSeller extends RecyclerView.Adapter<BrandsAdapterSelle
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
         try {
-            int colpink = res.getColor(R.color.brand2);
-            int colBrand1 = res.getColor(R.color.brand1);
-            if (position % 2 == 0) {
-                holder.mLl_brand.setBackgroundColor(colBrand1);
-            } else
-                holder.mLl_brand.setBackgroundColor(colpink);
+//            int colpink = res.getColor(R.color.brand2);
+//            int colBrand1 = res.getColor(R.color.brand1);
+//            if (position % 2 == 0) {
+//                holder.mLl_brand.setBackgroundColor(colBrand1);
+//            } else
+//                holder.mLl_brand.setBackgroundColor(colpink);
 
             final Brand item = list.get(position);
             holder.mTv_name.setText(WordUtils.capitalizeFully(item.getBrandName()));
             String strImageURL = item.getBrandLogo();
             if ((strImageURL != null) && (!strImageURL.equals("")))
-                Glide.with(activity).load(strImageURL).asBitmap()
+                Glide.with(activity).load(strImageURL)//.asBitmap()
                         .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white)
-                        .centerCrop().into(new BitmapImageViewTarget(holder.mIv_imageView) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        holder.mIv_imageView.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
+                        .centerCrop().transform(new CircleTransform(activity)).into(holder.mIv_imageView);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
@@ -13,6 +14,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +24,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.liuguangqiang.progressbar.CircleProgressBar;
+import com.liuguangqiang.swipeback.SwipeBackLayout;
 import com.shivshankar.CartActivityBuyer;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
@@ -50,7 +59,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
 
     private final AppCompatActivity activity;
     private final ArrayList<CartItem> list;
-    private static int posit;
+    private int posit;
 
     Dialog dialog;
     private EditText mTv_Brand, mTv_Top_Fabrics, mTv_Bottom_Fabrics, mTv_Dupatta, mTv_All_Fabrics, mTv_Category, mTv_Type, mTv_Price, mTv_Min_Qty, mTv_Product_Code;
@@ -210,14 +219,14 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                         try {
                             int position = getAdapterPosition();
                             CartItem product = list.get(position);
+                            mRadioGroup1.clearCheck();
+                            mRadioGroup2.clearCheck();
                             if (VAL_BODY[i].equalsIgnoreCase("Top")) {
                                 mRadioGroup1.setVisibility(View.VISIBLE);
                                 mRadioGroup2.setVisibility(View.VISIBLE);
 
-                                mRadioGroup1.clearCheck();
-                                mRadioGroup2.clearCheck();
                                 mLl_front.setVisibility(View.GONE);
-                                mLl_qty_cut.setVisibility(View.VISIBLE);
+//                                mLl_qty_cut.setVisibility(View.VISIBLE);
 
                             } else {
                                 product.setFabric_FrontQty(0);
@@ -231,16 +240,19 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
 
                                 mRadioGroup1.setVisibility(View.GONE);
                                 mRadioGroup2.setVisibility(View.GONE);
-                                mRadioGroup1.clearCheck();
-                                mRadioGroup2.clearCheck();
 
                                 mLl_front.setVisibility(View.VISIBLE);
-                                mLl_qty_cut.setVisibility(View.GONE);
+//                                if (VAL_BODY[i].contains("SELECT"))
+//                                    mLl_qty_cut.setVisibility(View.VISIBLE);
+//                                else
+//                                    mLl_qty_cut.setVisibility(View.GONE);
+                                setChecked(0, product);
                             }
                             if (!VAL_BODY[i].contains("SELECT") &&
                                     !VAL_BODY[i].equalsIgnoreCase(list.get(position).getBodyPart())) {
                                 list.get(position).setBodyPart(VAL_BODY[i]);
 
+                                posit = position;
                                 APIs.Update_Cart_Fabric(activity, CartAdapterBuyer.this, product.getCartId(), product.getCartQuantity() + "", product.getMinOrderQuantity() + "", product.getFabricCuts() + "", product.getBodyPart(),
                                         product.getFabric_FrontQty() + "", product.getFabric_FrontCut() + "", product.getFabric_BackQty() + "",
                                         product.getFabric_BackCut() + "", product.getFabric_BajuQty() + "", product.getFabric_BajuCut() + ""
@@ -304,9 +316,9 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                         CartItem item = list.get(position);
 
                         if (checkedId == R.id.radioFront) {
-                            setChecked(1, position, item);
+                            setChecked(1, item);
                         } else {
-                            setChecked(2, position, item);
+                            setChecked(2, item);
                         }
                     }
                 } catch (Exception e) {
@@ -330,9 +342,9 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                         CartItem item = list.get(position);
 
                         if (checkedId == R.id.radioBaju) {
-                            setChecked(3, position, item);
+                            setChecked(3, item);
                         } else {
-                            setChecked(4, position, item);
+                            setChecked(4, item);
                         }
                     }
                 } catch (Exception e) {
@@ -341,7 +353,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
             }
         };
 
-        private void setChecked(int i, int position, CartItem item) {
+        private void setChecked(int i, CartItem item) {
             mTv_qty_fabric.setVisibility(View.GONE);
             mTv_cut_fabric.setVisibility(View.GONE);
             mTv_qty_fabric_back.setVisibility(View.GONE);
@@ -351,7 +363,12 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
             mTv_qty_fabric_extra.setVisibility(View.GONE);
             mTv_cut_fabric_extra.setVisibility(View.GONE);
 
-            if (i == 1) {
+            if (i == 0) {
+                mTv_qty_fabric.setText(item.getCartQuantity() + "");
+                setCutEdit(item.getFabricCuts(), mTv_cut_fabric);
+                mTv_qty_fabric.setVisibility(View.VISIBLE);
+                mTv_cut_fabric.setVisibility(View.VISIBLE);
+            } else if (i == 1) {
                 mTv_qty_fabric.setText(item.getFabric_FrontQty() + "");
                 setCutEdit(item.getFabric_FrontCut(), mTv_cut_fabric);
                 mTv_qty_fabric.setVisibility(View.VISIBLE);
@@ -390,7 +407,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     if (product.getSuitFbricId() == 1) {//suit
                         showPopup(list.get(getAdapterPosition()).getImageName(), product.getProductId());
                     } else
-                        showPopupFabric(list.get(getAdapterPosition()).getImageName(), product.getProductId());
+                        showPopupFabric(list.get(getAdapterPosition()).getImageName(), product.getProductId(),"#FFFFFF");
                 } else if (view == mIv_delete) {
                     AlertDialogManager.showDialogYesNo(activity, "Do you want to delete this product?", "Yes", () -> APIs.RemoveCartProduct(activity, CartAdapterBuyer.this, product.getProductId()));
                 } else if (view == mBtn_update) {
@@ -531,10 +548,10 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                         holder.mSp_body.setSelection(getIndexOf(BodyPart));
                         if (BodyPart.equalsIgnoreCase("Top")) {
                             holder.mLl_front.setVisibility(View.GONE);
-                            holder.mLl_qty_cut.setVisibility(View.VISIBLE);
+//                            holder.mLl_qty_cut.setVisibility(View.VISIBLE);
                         } else {
                             holder.mLl_front.setVisibility(View.VISIBLE);
-                            holder.mLl_qty_cut.setVisibility(View.GONE);
+//                            holder.mLl_qty_cut.setVisibility(View.GONE);
                         }
                     }
                 } catch (Exception e) {
@@ -544,9 +561,9 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
 
             String strImageURL = item.getImageName();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                Glide.with(activity).load(strImageURL)
-                        .asBitmap().approximate().dontAnimate()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).thumbnail(0.1f)
+                Glide.with(activity).load(strImageURL)//.dontAnimate()
+                        //.asBitmap().approximate()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//.thumbnail(0.1f)
                         .error(R.drawable.no_img).into(holder.mIv_product_image);
             }
 
@@ -613,8 +630,8 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     mTv_Brand.setText(job.optString("BrandName"));
                     mTv_Category.setText(job.optString("CategoryName"));
                     mTv_Type.setText(job.optString("FabricType"));
-                    mTv_Price.setText(commonVariables.strCurrency_name + " " + job.optString("OfferPrice"));
-                    mTv_Min_Qty.setText("" + job.optInt("MinOrderQty"));
+                    mTv_Price.setText(commonVariables.strCurrency_name + " " + job.optString("OfferPrice") + "/mtr");
+//                    mTv_Min_Qty.setText("" + job.optInt("MinOrderQty"));
                 } else if (strApiName.equalsIgnoreCase("RemoveCartProduct")) {
                     int strresId = jobjWhole.optInt("resInt");
 
@@ -624,7 +641,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                         if (list.size() == 0) {
                             ((CartActivityBuyer) activity).setListAdapter(list, SP_BODY, VAL_BODY);
                         } else
-                            notifyDataSetChanged();
+                            notifyItemRemoved(posit);
                     } else {
                         AlertDialogManager.showDialog(activity, jobjWhole.optString("res"), null);
                     }
@@ -635,19 +652,24 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     if (strresId == 1) {
                         list.get(posit).setCartQuantity(jobjWhole.optJSONObject("resData").optInt("CartQuantity"));
                         list.get(posit).setTotalAmount(jobjWhole.optJSONObject("resData").optString("TotalPrice"));
-                        notifyDataSetChanged();
+                        notifyItemChanged(posit);
                     } else {
                         AlertDialogManager.showDialog(activity, jobjWhole.optString("res"), null);
                     }
 
                 } else if (strApiName.equalsIgnoreCase("Update_Cart_Fabric")) {
                     int strresId = jobjWhole.optInt("resInt");
+                    for (int i = 0; i < list.size(); i++) {
+                        CartItem ob = list.get(i);
+                        Log.v("TAGRK", "Front:" + ob.getFabric_FrontQty() + " " + ob.getFabric_FrontCut() + "\nBack:" + ob.getFabric_BackQty() + " " + ob.getFabric_BackCut() + "\nBaju:" + ob.getFabric_BajuQty() + " " + ob.getFabric_BajuCut() + "\nOther:" + ob.getFabric_BajuQty() + " " + ob.getFabric_BajuCut() + "\nTotal:" + ob.getCartQuantity() + " " + ob.getFabricCuts());
+                    }
                     if (strresId == 1) {
                         CartItem item = list.get(posit);
                         JSONObject jo = jobjWhole.optJSONObject("resData");
                         item.setCartQuantity(jo.optInt("FabricQty"));
                         item.setTotalAmount(jo.optString("TotalPrice"));
                         item.setFabricCuts(jo.optDouble("FabricCuts"));
+                        item.setBodyPart(jo.optString("BodyPart"));
 
                         item.setFabric_FrontCut(jo.optDouble("Fabric_FrontCut"));
                         item.setFabric_FrontQty(jo.optInt("Fabric_FrontQty"));
@@ -660,8 +682,14 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
 
                         item.setCartQuantity(jo.optInt("FabricQty"));
                         item.setFabricCuts(jo.optDouble("FabricCuts"));
-
                         list.set(posit, item);
+
+                        Log.v("TAGRK", "--------------------------------- posit:" + posit);
+                        for (int i = 0; i < list.size(); i++) {
+                            CartItem ob = list.get(i);
+                            Log.v("TAGRK", "Front:" + ob.getFabric_FrontQty() + " " + ob.getFabric_FrontCut() + "\nBack:" + ob.getFabric_BackQty() + " " + ob.getFabric_BackCut() + "\nBaju:" + ob.getFabric_BajuQty() + " " + ob.getFabric_BajuCut() + "\nOther:" + ob.getFabric_BajuQty() + " " + ob.getFabric_BajuCut() + "\nTotal:" + ob.getCartQuantity() + " " + ob.getFabricCuts());
+                        }
+
                         notifyItemChanged(posit);
                     } else {
                         AlertDialogManager.showDialog(activity, jobjWhole.optString("res"), null);
@@ -690,7 +718,17 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
             //dialog.getWindow().setGravity(Gravity.BOTTOM);
             dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
             dialog.show();
-            ImageView close = (ImageView) view.findViewById(R.id.iv_close);
+            CircleProgressBar progressBar = (CircleProgressBar) view.findViewById(R.id.progressbar1);
+            SwipeBackLayout swipeBackLayout = (SwipeBackLayout) view.findViewById(R.id.swipe_layout);
+            swipeBackLayout.setOnSwipeBackListener(new SwipeBackLayout.SwipeBackListener() {
+                @Override
+                public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
+                    progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
+                    if (progressBar.getMax() * fractionAnchor == 100)
+                        dialog.dismiss();
+                }
+            });
+            RelativeLayout close = (RelativeLayout) view.findViewById(R.id.rl_close);
             ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
             mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
             mTv_Product_Code = (EditText) view.findViewById(R.id.tv_product_code);
@@ -706,8 +744,8 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
             mTv_Min_Qty = (EditText) view.findViewById(R.id.tv_min_qty);
             mLL_Fabrics = (LinearLayout) view.findViewById(R.id.ll_top_bottom_fab);
             String[] Images = {imageName};
-            Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .thumbnail(0.1f).error(R.drawable.no_img_big).into(imageView);
+            Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)//.thumbnail(0.1f)
+                    .error(R.drawable.no_img_big).into(imageView);
             APIs.GetProductDetail_Suit_Seller(activity, this, productId);
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -733,7 +771,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
 
     }
 
-    private void showPopupFabric(String imageName, String productId) {
+    private void showPopupFabric(String strImageURL, String productId,String hexCode) {
         try {
             dialog = new Dialog(
                     activity, R.style.popupTheme);
@@ -747,19 +785,56 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
             dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
             dialog.show();
-            ImageView close = (ImageView) view.findViewById(R.id.iv_close);
+            CircleProgressBar progressBar = (CircleProgressBar) view.findViewById(R.id.progressbar1);
+            SwipeBackLayout swipeBackLayout = (SwipeBackLayout) view.findViewById(R.id.swipe_layout);
+            swipeBackLayout.setOnSwipeBackListener(new SwipeBackLayout.SwipeBackListener() {
+                @Override
+                public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
+                    progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
+                    if (progressBar.getMax() * fractionAnchor == 100)
+                        dialog.dismiss();
+                }
+            });
+            RelativeLayout close = (RelativeLayout) view.findViewById(R.id.rl_close);
             ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
             mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
             mTv_Product_Code = (EditText) view.findViewById(R.id.tv_product_code);
             mTv_Category = (EditText) view.findViewById(R.id.tv_category);
             mTv_Type = (EditText) view.findViewById(R.id.tv_type);
             mTv_Price = (EditText) view.findViewById(R.id.tv_price);
-            mTv_Min_Qty = (EditText) view.findViewById(R.id.tv_min_qty);
+            view.findViewById(R.id.ti_qty).setVisibility(View.GONE);
+
             mLl_fabric = (LinearLayout) view.findViewById(R.id.ll_fabric);
             mLl_fabric.setVisibility(View.GONE);
-            String[] Images = {imageName};
-            Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .thumbnail(0.1f).error(R.drawable.no_img_big).into(imageView);
+            String[] Images = {strImageURL};
+//            Glide.with(activity).load(imageName).diskCacheStrategy(DiskCacheStrategy.ALL)//.thumbnail(0.1f)
+//                    .error(R.drawable.no_img_big).into(imageView);
+            if ((strImageURL != null) && (!strImageURL.equals(""))) {
+
+                Glide.with(activity).load(strImageURL).diskCacheStrategy(DiskCacheStrategy.ALL).priority(Priority.IMMEDIATE)
+                        .error(R.drawable.no_img_big)
+                        .listener(new RequestListener<String, GlideDrawable>() {
+                            @Override
+                            public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                try {
+                                    imageView.setBackgroundColor(Color.parseColor(hexCode));
+                                } catch (Exception e1) {
+                                    e1.printStackTrace();
+                                }
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                return false;
+                            }
+                        })
+                        .into(imageView);
+
+            } else {
+                imageView.setBackgroundColor(Color.parseColor(hexCode));
+            }
+
             APIs.GetProductDetail_Fabric(activity, this, productId);
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -772,7 +847,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                 public void onClick(View v) {
                     Intent i = new Intent(activity, ViewPagerActivity.class);
                     i.putExtra(commonVariables.INTENT_EXTRA_LIST_IMAGE_ARRAY, Images);
-                    i.putExtra(commonVariables.INTENT_EXTRA_POSITION, posit);
+                    i.putExtra(commonVariables.INTENT_EXTRA_POSITION, 0);
                     i.putExtra(commonVariables.KEY_IS_LANDSCAPE, false);
                     activity.startActivity(i);
                 }

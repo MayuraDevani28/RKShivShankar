@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="5dp"
-    android:background="@drawable/xml_button_white_square_box"
+    android:background="@drawable/xml_black_border_square_box"
     android:minHeight="40dp"
     android:minWidth="40dp"
     android:padding="1dp"

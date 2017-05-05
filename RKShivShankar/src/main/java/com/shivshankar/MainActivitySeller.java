@@ -3,12 +3,9 @@ package com.shivshankar;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.ActionMenuView;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -23,12 +20,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.gson.Gson;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
+import com.shivshankar.utills.CircleTransform;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
@@ -68,7 +68,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 APIs.GetSellerBrandList(this, this);
 
             if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_FIRST_TIME, true)) {
-                //showGuideline();
+                showGuideline();
             }
 
         } catch (Exception e) {
@@ -76,7 +76,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
         }
     }
 
-    /*private void showGuideline() {
+    private void showGuideline() {
         try {
             toolbar.bringToFront();
             if (toolbar.findViewById(R.id.action_notifications) != null) {
@@ -131,7 +131,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 
             Log.e("TAGRK", "Error:" + e.toString());
         }
-    }*/
+    }
 
     @Override
     public void onBackPressed() {
@@ -168,17 +168,24 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 mLl_create_brand.setVisibility(View.GONE);
                 String strImageURL = brand.getBrandLogo();
                 if ((strImageURL != null) && (!strImageURL.equals(""))) {
-                    Glide.with(this).load(strImageURL).asBitmap()
-                            .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white)
-                            .centerCrop().into(new BitmapImageViewTarget(mIv_imageView) {
-                        @Override
-                        protected void setResource(Bitmap resource) {
-                            RoundedBitmapDrawable circularBitmapDrawable =
-                                    RoundedBitmapDrawableFactory.create(getResources(), resource);
-                            circularBitmapDrawable.setCircular(true);
-                            mIv_imageView.setImageDrawable(circularBitmapDrawable);
-                        }
-                    });
+                    Glide.with(this).load(strImageURL)//.asBitmap()//.dontAnimate()//.approximate()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)//.thumbnail(0.1f)
+                            .error(R.drawable.no_img)
+                            .transform(new CircleTransform(this))
+                            .into(mIv_imageView);
+
+//                    Glide.with(this).load(strImageURL).asBitmap()
+//                            .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white)
+//                            .transform(new CircleTransform(this))
+//                            .centerCrop().into(mIv_imageView);
+//                    (new BitmapImageViewTarget(mIv_imageView) {
+//                        @Override
+//                        protected void setResource(Bitmap resource) {
+//                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
+//                            circularBitmapDrawable.setCircular(true);
+//                            mIv_imageView.setImageDrawable(circularBitmapDrawable);
+//                        }
+//                    });
                 }
                 mIv_imageView.setDrawingCacheEnabled(true);
                 mTv_brand_name.setText(brand.getBrandName());
@@ -292,14 +299,14 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
 
                 } else if (strApiName.equalsIgnoreCase("RemoveSellerBrand")) {
                     int strresId = jobjWhole.optInt("resInt");
-                    Runnable listener = null;
                     if (strresId == 1) {
-                        listener = () -> {
+                        Runnable listener = () -> {
                             AppPreferences.getPrefs().edit().putString(commonVariables.KEY_BRAND, "").apply();
                             setBrandVisibility(false, null);
                         };
-                    }
-                    AlertDialogManager.showDialog(this, jobjWhole.optString("res"), listener);
+                        AlertDialogManager.showSuccessDialog(this, jobjWhole.optString("res"), listener);
+                    } else
+                        AlertDialogManager.showDialog(this, jobjWhole.optString("res"), null);
                 }
             } else {
                 setBrandVisibility(false, null);

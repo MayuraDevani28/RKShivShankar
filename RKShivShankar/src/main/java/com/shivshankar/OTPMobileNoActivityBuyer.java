@@ -51,7 +51,7 @@ public class OTPMobileNoActivityBuyer extends BaseActivityBuyer implements View.
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_otp_mobile_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
+            //rootView.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_right));
             bindViews(rootView);
 
             strMobileNo = getIntent().getStringExtra(commonVariables.KEY_MOBILE_NO);

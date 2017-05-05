@@ -10,7 +10,6 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +22,7 @@ import com.shivshankar.adapters.BrandsAdapterBuyer;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -36,7 +36,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
     TextView mTv_no_data_found, mTv_title, mTv_count_items, mTv_brand_search;
     Button mBtn_add_now;
     LottieAnimationView animationView2, animationView;
-    private LinearLayout mLl_no_data_found;
+    private LinearLayout mLl_no_data_found, mLl_title;
     LinearLayout mFl_whole;
     RecyclerView mRv_items;
     private ImageView mIv_filer;
@@ -55,7 +55,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         try {
             Gson gson = new Gson();
             String json = getIntent().getStringExtra(commonVariables.KEY_CATEGORY);
@@ -78,7 +78,7 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
     private void bindViews(View rootView) {
 
         try {
-
+            mLl_title = (LinearLayout) rootView.findViewById(R.id.ll_title);
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
             mIv_close = (ImageView) findViewById(R.id.iv_close);
             mIv_close.setOnClickListener(this);
@@ -107,6 +107,11 @@ public class BrandsActivityBuyer extends BaseActivityBuyer implements OnClickLis
                             }
                         }
                         isFirstScrollDone = true;
+                        if (dy > 0) {
+                            if (mLl_title.getVisibility() == View.VISIBLE)
+                                commonMethods.collapse(mLl_title);
+                        } else if (mLl_title.getVisibility() == View.GONE)
+                            commonMethods.expand(mLl_title);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

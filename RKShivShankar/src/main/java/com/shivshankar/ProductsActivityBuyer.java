@@ -11,21 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Transformation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.SuitProductsAdapterBuyer;
 import com.shivshankar.classes.Brand;
@@ -34,6 +26,7 @@ import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -49,7 +42,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     Button mBtn_add_now;
     private LinearLayout mLl_no_data_found;
     public RecyclerView mRv_items;
-    LinearLayout mFl_whole, mLl_add_to_cart;
+    LinearLayout mFl_whole, mLl_add_to_cart, mLl_title;
     private ImageView mIv_filer, mIv_close;
     LottieAnimationView animationView2, animationView;
 
@@ -62,7 +55,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     Resources res;
     int pageNo = 1;
     boolean loading, isFirstScrollDone = false;
-    private LinearLayout mLl_title;
 
 
     @Override
@@ -70,7 +62,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+//        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
             res = getResources();
@@ -97,8 +89,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
     private void bindViews(View rootView) {
 
         try {
-
-            mLl_title = (LinearLayout) rootView.findViewById(R.id.ll_title);
+            mLl_title = (LinearLayout) findViewById(R.id.ll_title);
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setOnClickListener(this);
 
@@ -121,9 +112,17 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             mRv_items.setLayoutManager(mLayoutManager);
 
             mRv_items.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                //                 boolean scroll_down;
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
+//                    if (scroll_down) {
+////                        mLl_title.setVisibility(View.GONE);
+//                        collapse(mLl_title);
+//                    } else {
+////                        mLl_title.setVisibility(View.VISIBLE);
+//                        expand(mLl_title);
+//                    }
                 }
 
                 @Override
@@ -140,31 +139,23 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                         isFirstScrollDone = true;
                         if (dy > 0) {
                             int totalItemCount = mLayoutManager.getItemCount();
-                            if (mLl_title.getVisibility() == View.VISIBLE) {
-                                collapse(mLl_title);
-                            }
-                            // ViewPropertyAnimator.animate(mLl_title).cancel();
-                            //ViewPropertyAnimator.animate(mLl_title).translationY(-mLl_title.getHeight()).setDuration(500).start();
-                            // mLl_title.setVisibility(View.GONE);
-                            //mLl_title.animate().translationY(-mLl_title.getHeight()).setInterpolator(new AccelerateInterpolator(1));
-                            // mLl_title.setVisibility(View.GONE);
-                            //slideToTop(mLl_title);
                             if (loading) {
                                 if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 10)) {
                                     loading = false;
                                     APIs.GetProductList_Suit_Buyer(null, ProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
                                 }
                             }
-                        } else {
-                            if (mLl_title.getVisibility() == View.GONE) {
-                                expand(mLl_title);
-                            }
-                            // ViewPropertyAnimator.animate(mLl_title).cancel();
-                            //ViewPropertyAnimator.animate(mLl_title).translationY(0).setDuration(500).start();
-                            //slideToTop(mLl_title);
-                            //mLl_title.setVisibility(View.VISIBLE);
-                            // mLl_title.animate().translationY(0).setInterpolator(new DecelerateInterpolator(1));
-                        }
+
+                            if (mLl_title.getVisibility() == View.VISIBLE)
+                                commonMethods.collapse(mLl_title);
+                        } else if (mLl_title.getVisibility() == View.GONE)
+                            commonMethods.expand(mLl_title);
+
+//                        if (dy > 42) {
+//                            scroll_down = true;
+//                        } else if (dy < -5) {
+//                            scroll_down = false;
+//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -342,6 +333,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 startActivity(intent);
                 overridePendingTransition(0, 0);
             } else if (view == mLl_add_to_cart) {
+
                 if (adapter.isOneChecked()) {
                     if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_LOG_IN, false)) {
                         JSONArray jarr = new JSONArray();
@@ -426,58 +418,6 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void expand(final View v) {
-        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        final int targetHeight = v.getMeasuredHeight();
-
-        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
-        v.getLayoutParams().height = 1;
-        v.setVisibility(View.VISIBLE);
-        Animation a = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                v.getLayoutParams().height = interpolatedTime == 1
-                        ? ViewGroup.LayoutParams.WRAP_CONTENT
-                        : (int) (targetHeight * interpolatedTime);
-                v.requestLayout();
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        // 1dp/ms
-        a.setDuration(((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density)) * 6);
-        v.startAnimation(a);
-    }
-
-    public static void collapse(final View v) {
-        final int initialHeight = v.getMeasuredHeight();
-
-        Animation a = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if (interpolatedTime == 1) {
-                    v.setVisibility(View.GONE);
-                } else {
-                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
-                    v.requestLayout();
-                }
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        // 1dp/ms
-        a.setDuration(((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density)) * 6);
-        v.startAnimation(a);
     }
 }
 

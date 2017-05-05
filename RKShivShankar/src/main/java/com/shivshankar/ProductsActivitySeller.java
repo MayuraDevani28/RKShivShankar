@@ -12,7 +12,6 @@ import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +25,7 @@ import com.shivshankar.adapters.ProductsAdapterSeller;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
@@ -42,7 +42,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
 
     TextView mTv_no_data_found, mTv_title, mTv_count_items, mTv_go;
     Button mBtn_add_now;
-    private LinearLayout mLl_no_data_found, mFl_whole, mLl_header_whole;
+    private LinearLayout mLl_no_data_found, mFl_whole, mLl_header_whole, mLl_title;
     RecyclerView mRv_items;
     private ImageView mIv_filer, mIv_add_product;
     LottieAnimationView animationView2, animationView;
@@ -69,7 +69,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
             res = getResources();
@@ -86,6 +86,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
     private void bindViews(View rootView) {
 
         try {
+            mLl_title = (LinearLayout) rootView.findViewById(R.id.ll_title);
             mIv_filer = (ImageView) findViewById(R.id.iv_filer);
             mIv_filer.setOnClickListener(this);
             mIv_add_product = (ImageView) findViewById(R.id.iv_add_product);
@@ -111,6 +112,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
             mRv_items.setLayoutManager(mLayoutManager);
 
             mRv_items.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
@@ -137,7 +139,11 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                                     APIs.GetProductList_Suit_Seller(ProductsActivitySeller.this, ProductsActivitySeller.this, strCategory, ++pageNo, strSearch);
                                 }
                             }
-                        }
+                            if (mLl_title.getVisibility() == View.VISIBLE)
+                                commonMethods.collapse(mLl_title);
+                        } else if (mLl_title.getVisibility() == View.GONE)
+                            commonMethods.expand(mLl_title);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -240,6 +246,11 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
         try {
             if (listArray.size() == 0) {
                 mFl_whole.setVisibility(View.GONE);
+                if (strCategory.isEmpty() && mEdt_product_code.getText().toString().trim().isEmpty()) {
+                    mLl_header_whole.setVisibility(View.GONE);
+                } else {
+                    mLl_header_whole.setVisibility(View.VISIBLE);
+                }
                 mLl_no_data_found.setVisibility(View.VISIBLE);
                 String strMessage = "Uhh! We you have not added any product yet. Want to add now ?";
                 if (!strSearch.isEmpty())
@@ -249,6 +260,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
             } else {
                 mLl_no_data_found.setVisibility(View.GONE);
                 mFl_whole.setVisibility(View.VISIBLE);
+                mRv_items.setVisibility(View.VISIBLE);
                 adapter = new ProductsAdapterSeller(this, listArray);
                 mRv_items.setAdapter(adapter);
                 mTv_count_items.setVisibility(View.VISIBLE);

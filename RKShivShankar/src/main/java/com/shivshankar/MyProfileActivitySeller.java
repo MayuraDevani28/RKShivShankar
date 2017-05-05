@@ -15,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -67,7 +66,7 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_my_profile_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+            //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             try {
@@ -264,22 +263,22 @@ public class MyProfileActivitySeller extends BaseActivitySeller implements OnCli
                 } else if (strAPIName.equalsIgnoreCase("UpdateSellerProfile")) {
                     int strresId = jObWhole.optInt("resInt");
 
-                    Runnable listener = null;
                     if (strresId == 1) {
                         try {
                             SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                             editor.putString(commonVariables.KEY_SELLER_PROFILE, jObWhole.optString("resData"));
                             editor.apply();
 
-                            listener = () -> {
+                            Runnable listener = () -> {
                                 onBackPressed();
                                 overridePendingTransition(0, 0);
                             };
+                            AlertDialogManager.showSuccessDialog(this, jObWhole.optString("res"), listener);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                    AlertDialogManager.showDialog(this, jObWhole.optString("res"), listener);
+                    } else
+                        AlertDialogManager.showDialog(this, jObWhole.optString("res"), null);
                 }
             }
             commonMethods.hidesoftKeyboard(this);

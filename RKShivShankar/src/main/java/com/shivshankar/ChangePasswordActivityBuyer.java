@@ -14,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -55,7 +54,7 @@ public class ChangePasswordActivityBuyer extends BaseActivityBuyer implements On
             }
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             View rootView = getLayoutInflater().inflate(R.layout.activity_change_password_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+            //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
         } catch (Exception e) {
             e.printStackTrace();

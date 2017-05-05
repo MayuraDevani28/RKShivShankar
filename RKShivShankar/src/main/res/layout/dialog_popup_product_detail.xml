@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <com.liuguangqiang.swipeback.SwipeBackLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_layout"
@@ -7,15 +6,16 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:layout_margin="20dp"
-            android:background="@drawable/xml_popup_square_box">
+            android:background="@drawable/xml_white_square_box">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -23,14 +23,45 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                <ImageView
-                    android:id="@+id/image_gallery"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
-                    android:adjustViewBounds="true"
-                    android:minHeight="280dp" />
+                    android:layout_marginBottom="5dp">
+
+                    <ImageView
+                        android:id="@+id/image_gallery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:minHeight="280dp" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/xml_button_white_square_box"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@color/yellow"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_edit"
+                            android:tint="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="Edit" />
+                    </LinearLayout>
+                </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -166,6 +197,7 @@
 
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/ti_qty"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -316,6 +348,7 @@
 
             </LinearLayout>
         </ScrollView>
+
         <RelativeLayout
             android:id="@+id/rl_close"
             android:layout_width="wrap_content"
@@ -326,22 +359,23 @@
 
             <com.liuguangqiang.progressbar.CircleProgressBar
                 android:id="@+id/progressbar1"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerInParent="true"
                 app:background_color="@android:color/transparent"
                 app:progress_color="@color/colorPrimary"
                 app:stroke_width="2dp" />
 
             <ImageView
                 android:id="@+id/iv_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="43dp"
+                android:layout_height="43dp"
                 android:adjustViewBounds="true"
+                android:layout_centerInParent="true"
                 android:padding="5dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_error" />
 
         </RelativeLayout>
-
     </RelativeLayout>
 </com.liuguangqiang.swipeback.SwipeBackLayout>

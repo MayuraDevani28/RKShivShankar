@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,7 +58,7 @@ public class NotificationsActivityBuyer extends BaseActivityCartBuyer implements
             window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             View rootView = getLayoutInflater().inflate(R.layout.activity_notification_seller, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+            //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             APIs.GetNotifications_Buyer(this, this);
@@ -101,35 +100,7 @@ public class NotificationsActivityBuyer extends BaseActivityCartBuyer implements
                         for (final int position : reverseSortedPositions) {
                             final NavigationItem item = mAdapter.getItem(position);
                             mAdapter.remove(item);
-                            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Notification's gone !", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    unDoClicked = true;
-                                    item.setUnDoClicked(true);
-                                    mAdapter.insert(item, position);
-                                    mAdapter.notifyDataSetChanged();
-                                }
-                            });
-                            snackbar.addCallback(new Snackbar.Callback() {
-                                @Override
-                                public void onDismissed(Snackbar snackbar, int event) {
-                                    try {
-                                        if (!unDoClicked)
-                                            APIs.RemoveNotifications_Buyer(NotificationsActivityBuyer.this, NotificationsActivityBuyer.this, item.getNotificationCustBindId());
-                                        super.onDismissed(snackbar, event);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-
-                            snackbar.setActionTextColor(Color.WHITE);
-
-                            View sbView = snackbar.getView();
-                            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-                            textView.setTextColor(Color.WHITE);
-
-                            snackbar.show();
+                            removeNoti(item, position);
                         }
 
                         mAdapter.notifyDataSetChanged();
@@ -311,6 +282,46 @@ public class NotificationsActivityBuyer extends BaseActivityCartBuyer implements
             overridePendingTransition(0, 0);
         } else
             super.onClick(view);
+    }
+
+    public void removeNoti(NavigationItem item, int position) {
+        try {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Notification's gone !", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    unDoClicked = true;
+                    item.setUnDoClicked(true);
+                    mAdapter.insert(item, position);
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+            snackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    try {
+                        if (!unDoClicked)
+                            APIs.RemoveNotifications_Buyer(NotificationsActivityBuyer.this, NotificationsActivityBuyer.this, item.getNotificationCustBindId());
+                        super.onDismissed(snackbar, event);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            snackbar.setActionTextColor(Color.WHITE);
+
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(Color.WHITE);
+
+            snackbar.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void callRemoveNoti(NavigationItem item) {
+        APIs.RemoveNotifications_Buyer(NotificationsActivityBuyer.this, NotificationsActivityBuyer.this, item.getNotificationCustBindId());
     }
 }
 

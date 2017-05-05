@@ -2,7 +2,6 @@ package com.shivshankar.viewpager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -20,12 +19,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.liuguangqiang.progressbar.CircleProgressBar;
-import com.liuguangqiang.swipeback.SwipeBackActivity;
 import com.liuguangqiang.swipeback.SwipeBackLayout;
 import com.shivshankar.R;
 import com.shivshankar.customcontrols.CirclePageIndicator;
@@ -71,11 +68,12 @@ public class ViewPagerActivity extends AppCompatActivity implements OnClickListe
             progressBar = (CircleProgressBar) findViewById(R.id.progressbar1);
             rll = (RelativeLayout) findViewById(R.id.rl_close);
             rll.setOnClickListener(this);
-            swipeBackLayout = (SwipeBackLayout) findViewById(R.id.swipe_layout);
-            swipeBackLayout.setEnableFlingBack(false);
+
             page.setOffscreenPageLimit(2);
             page.setAdapter(pagerAdapter);
             page.setCurrentItem(pos);
+            swipeBackLayout = (SwipeBackLayout) findViewById(R.id.swipe_layout);
+            swipeBackLayout.setEnableFlingBack(false);
             swipeBackLayout.setOnPullToBackListener(new SwipeBackLayout.SwipeBackListener() {
                 @Override
                 public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {

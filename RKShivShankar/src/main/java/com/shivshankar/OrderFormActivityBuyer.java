@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -70,7 +69,7 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
         try {
             res = getResources();
             View rootView = getLayoutInflater().inflate(R.layout.activity_order_form_buyer, frameLayout);
-            rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+            //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
 
             if (listCountry.size() == 0)

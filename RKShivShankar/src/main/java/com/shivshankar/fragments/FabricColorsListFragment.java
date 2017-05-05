@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.shivshankar.FabricColorsActivityBuyer;
 import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.FabricColorsAdapterBuyer;
@@ -32,7 +32,7 @@ public class FabricColorsListFragment extends Fragment implements OnResult ,View
 
     RecyclerView recyclerView;
 
-    private FabricColorsAdapterBuyer galleryListAdapter;
+    public FabricColorsAdapterBuyer galleryListAdapter;
     SC3Object fabricColor;
     ProductItem productItem;
     int pageNo = 1;
@@ -68,7 +68,7 @@ public class FabricColorsListFragment extends Fragment implements OnResult ,View
                 recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setNestedScrollingEnabled(false);
-                galleryListAdapter = new FabricColorsAdapterBuyer((AppCompatActivity) getActivity(), listImages);
+                galleryListAdapter = new FabricColorsAdapterBuyer((FabricColorsActivityBuyer) getActivity(), listImages);
                 recyclerView.setAdapter(galleryListAdapter);
                 recyclerView.setVisibility(View.VISIBLE);
                 mLl_no_data_found.setVisibility(View.GONE);

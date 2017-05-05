@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,7 +46,7 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
     RecyclerView mRv_items;
     LottieAnimationView animationView2, animationView;
 
-    private LinearLayout mLl_order_summary, mLl_confirm_order, mLl_shipping;
+    private LinearLayout mLl_order_summary, mLl_confirm_order, mLl_shipping, mLl_top_titles;
     private TextView mTv_subtotal, mTv_shipping, mTv_grand_total;
 
     String[] SP_BODY = {"Select"};
@@ -62,7 +61,7 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_cart, frameLayout);
-        rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
+        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
         try {
             res = getResources();
             bindViews(rootView);
@@ -108,7 +107,7 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
             mLl_confirm_order = (LinearLayout) rootView.findViewById(R.id.ll_confirm_order);
             mLl_confirm_order.setOnClickListener(this);
             mLl_shipping = (LinearLayout) rootView.findViewById(R.id.ll_shipping);
-
+            mLl_top_titles = (LinearLayout) rootView.findViewById(R.id.ll_top_titles);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -215,11 +214,13 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
                 mRv_items.setVisibility(View.GONE);
                 mLl_order_summary.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
+                mLl_top_titles.setVisibility(View.GONE);
                 String strMessage = "Uhh! Your Cart is Empty. Want to add now ?";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));
                 startAnim();
             } else {
                 mLl_order_summary.setVisibility(View.VISIBLE);
+                mLl_top_titles.setVisibility(View.VISIBLE);
                 mLl_no_data_found.setVisibility(View.GONE);
                 mRv_items.setVisibility(View.VISIBLE);
                 adapter = new CartAdapterBuyer(this, listArray, SP_BODY, VAL_BODY);
@@ -304,10 +305,10 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
                                 fabric_ExtraQty = jobFabric.optInt("Fabric_ExtraQty");
                                 fabric_ExtraCut = jobFabric.optDouble("Fabric_ExtraCut");
 
-                                JSONArray jarr = jobFabric.optJSONArray("Fabric_Colors");
+                                JSONArray jarr = jobFabric.optJSONArray("lstcolors");
                                 if (jarr != null) {
                                     for (int j = 0; j < jarr.length(); j++) {
-                                        fabcol.add(new SC3Object(jObjItem.optInt("ProductId"), "", jarr.optString(j), ""));
+                                        fabcol.add(new SC3Object(jObjItem.optInt("ProductId"), "", jarr.optJSONObject(j).optString("ColorCode"), jarr.optJSONObject(j).optString("ColorImage")));
                                     }
                                 }
                             }
