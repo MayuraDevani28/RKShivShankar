@@ -147,7 +147,7 @@ public class AddUpdateBrandActivitySeller extends BaseActivitySeller implements 
             if (view == mIv_close) {
                 onBackPressed();
             } else if (view == mBtn_submit) {
-                if (item != null &&!(item.getBrandId() == null || item.getBrandId().isEmpty()))
+                if (item!=null && !(item.getBrandId() == null || item.getBrandId().isEmpty()))
                     file = null;
                 else
                     file = ImagePickerActivity.mFileTemp;
