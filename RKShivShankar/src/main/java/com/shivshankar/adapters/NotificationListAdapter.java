@@ -60,6 +60,7 @@ public class NotificationListAdapter extends ArrayAdapter<NavigationItem> {
             mTv_date.setText(item.getDate());
 
             String strImageURL = item.getImageUrl();
+
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
                 Glide.with(activity).load(strImageURL)//.asBitmap().approximate().thumbnail(0.1f).dontAnimate()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
