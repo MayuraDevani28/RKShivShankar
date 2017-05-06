@@ -3,12 +3,13 @@ package com.shivshankar.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,7 +44,7 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
     public Order order;
     private ImageView mIv_close, mIv_expand;
     private RecyclerView mLv_order_items;
-    private TextView mTv_order_no, mTv_order_date, mTv_total, mName, mTv_address, mTv_mobile_no, mTv_customer_name, mTv_sub_total, mTv_discount_amount, mTv_discount_code_title, mTv_shipping_amount, mTv_product_total, mTv_order_status;
+    private TextView mTv_order_no, mTv_order_date, mTv_total, mName, mTv_address, mTv_mobile_no, mTv_customer_name, mTv_sub_total, mTv_discount_amount, mTv_discount_code_title, mTv_shipping_amount, mTv_product_total, mTv_order_status, mTv_payment_method;
     private LinearLayout mBtn_home, mLl_detail, mLl_shipping_address, mLl_discount, mLl_shipping, mLl_order, mLl_expand;
 
 
@@ -102,7 +103,12 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
             mTv_order_date = (TextView) rootView.findViewById(R.id.tv_order_date);
             mLv_order_items = (RecyclerView) rootView.findViewById(lv_order_items);
             mLv_order_items.setNestedScrollingEnabled(false);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            int i = 1;
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                i = 2;
+            }
+            GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), i);
+
             mLv_order_items.setLayoutManager(layoutManager);
 
             mTv_total = (TextView) rootView.findViewById(R.id.tv_total);
@@ -118,6 +124,7 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
             mLl_expand = (LinearLayout) rootView.findViewById(R.id.ll_expand);
             mLl_expand.setOnClickListener(this);
 
+            mTv_payment_method = (TextView) rootView.findViewById(R.id.tv_payment_method);
             mTv_order_status = (TextView) rootView.findViewById(R.id.tv_order_status);
             mTv_product_total = (TextView) rootView.findViewById(R.id.tv_product_total);
             mTv_sub_total = (TextView) rootView.findViewById(R.id.tv_sub_total);
@@ -245,6 +252,7 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
                     JSONObject jObjAll = jObWhole.optJSONObject("resData");
 
                     mTv_customer_name.setText(jObjAll.optString("CustomerName"));
+                    mTv_payment_method.setText(jObjAll.optString("PaymentOption"));
                     mTv_total.setText(commonVariables.strCurrency_name + " " + jObjAll.optString("SubTotal"));
 
                     mTv_sub_total.setText(commonVariables.strCurrency_name + " " + jObjAll.optString("SubTotal"));

@@ -151,7 +151,7 @@ public class HomeCategoryAdapterBuyer extends RecyclerView.Adapter<HomeCategoryA
                 Glide.with(activity).load(strImageURL)//.asBitmap()
                         .placeholder(R.color.gray_bg_transparent)
                         .error(R.drawable.no_img_big)
-                        .centerCrop().into(holder.mIv_image);
+                        .into(holder.mIv_image);//.centerCrop()
         } catch (Exception e) {
             e.printStackTrace();
         }

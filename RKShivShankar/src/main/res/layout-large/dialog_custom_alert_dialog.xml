@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/xml_popup_square_box"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="100dp"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_small" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btn_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:background="@drawable/xml_button_yellow_bg"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:layout_gravity="right"
+                android:paddingTop="10dp"
+                android:text="No"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/btn_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_margin="15dp"
+                android:background="@drawable/xml_green_border_square_box"
+                android:paddingBottom="10dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingTop="10dp"
+                android:text="Ok"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="60dp"
+        android:adjustViewBounds="true"
+        android:padding="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_error" />
+
+    <FrameLayout
+        android:id="@+id/fl_success"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/xml_round_white"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:background="@drawable/xml_round_green"
+            android:padding="12dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_checked" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/iv_center"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:adjustViewBounds="true"
+        android:padding="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_done"
+        android:visibility="gone" />
+</RelativeLayout>

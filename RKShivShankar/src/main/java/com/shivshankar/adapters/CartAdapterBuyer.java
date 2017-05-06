@@ -80,19 +80,24 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
         return list;
     }
 
-    public boolean isQtyRemaining() {
-        boolean b = false;
+    public int isQtyRemaining() {
+        int b = 0;
         for (int i = 0; i < list.size(); i++) {
             CartItem item = list.get(i);
             if (item.getSuitFbricId() == 2) {
                 if (item.getBodyPart().equalsIgnoreCase("Top")) {
                     if (isAllCutZero(item) || iaAllQtyZero(item)) {
-                        b = true;
+                        b = 1;
+                        break;
                     }
+                } else if (item.getBodyPart().contains("SELECT") || item.getBodyPart().contains("null")) {
+                    b = 2;
+                    break;
                 } else if (item.getCartQuantity() == 0 || item.getFabricCuts() == 0) {
-                    b = true;
+                    b = 1;
+                    break;
                 }
-                break;
+
             }
         }
         return b;
@@ -407,7 +412,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     if (product.getSuitFbricId() == 1) {//suit
                         showPopup(list.get(getAdapterPosition()).getImageName(), product.getProductId());
                     } else
-                        showPopupFabric(list.get(getAdapterPosition()).getImageName(), product.getProductId(),"#FFFFFF");
+                        showPopupFabric(list.get(getAdapterPosition()).getImageName(), product.getProductId(), "#FFFFFF");
                 } else if (view == mIv_delete) {
                     AlertDialogManager.showDialogYesNo(activity, "Do you want to delete this product?", "Yes", () -> APIs.RemoveCartProduct(activity, CartAdapterBuyer.this, product.getProductId()));
                 } else if (view == mBtn_update) {
@@ -771,7 +776,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
 
     }
 
-    private void showPopupFabric(String strImageURL, String productId,String hexCode) {
+    private void showPopupFabric(String strImageURL, String productId, String hexCode) {
         try {
             dialog = new Dialog(
                     activity, R.style.popupTheme);

@@ -30,8 +30,8 @@
                     android:drawableLeft="@drawable/ic_user_app"
                     android:drawablePadding="10dp"
                     android:hint="username"
+                    android:singleLine="true"
                     android:imeOptions="actionNext"
-                    android:lines="1"
                     android:maxLines="1"
                     android:textSize="@dimen/text_size_small" />
 
@@ -59,7 +59,6 @@
                         android:hint="Password"
                         android:imeOptions="actionGo"
                         android:inputType="textPassword"
-                        android:lines="1"
                         android:maxLines="1"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"

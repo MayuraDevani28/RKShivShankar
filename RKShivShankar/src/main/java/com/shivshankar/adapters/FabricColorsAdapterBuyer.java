@@ -80,7 +80,6 @@ public class FabricColorsAdapterBuyer extends RecyclerView.Adapter<FabricColorsA
 //                }
 //                notifyItemChanged(posit);
 
-
                     for (int i = 0; i < activity.listFragment.size(); i++) {
                         FabricColorsListFragment fragmentList = activity.listFragment.get(i);
                         List<FabricColor> lisarr = fragmentList.getItems();

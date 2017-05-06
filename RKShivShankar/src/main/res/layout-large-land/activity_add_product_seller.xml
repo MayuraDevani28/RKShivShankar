@@ -24,7 +24,6 @@
             android:src="@drawable/ic_close_white" />
 
         <TextView
-            android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -55,13 +54,14 @@
             android:layout_height="0.0dip"
             android:layout_weight="1.0"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:padding="5dp">
 
             <LinearLayout
                 android:id="@+id/ll_brand"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/xml_gray_square_box"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -98,9 +98,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:layout_weight="1"
                 android:background="@drawable/xml_white_square_box"
                 android:orientation="vertical"
                 android:padding="10dp">
