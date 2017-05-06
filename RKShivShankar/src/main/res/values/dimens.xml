@@ -24,4 +24,9 @@
     <dimen name="fab_stroke_width">1dp</dimen>
     <dimen name="fab_actions_spacing">8dp</dimen>
     <dimen name="fab_labels_margin">8dp</dimen>
+
+    <dimen name="login_padding">30dp</dimen>
+
+
+    <integer name="col_home">1</integer>
 </resources>

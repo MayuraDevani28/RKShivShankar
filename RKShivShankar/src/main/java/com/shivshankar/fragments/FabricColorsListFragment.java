@@ -2,6 +2,7 @@ package com.shivshankar.fragments;
 
 import android.animation.Animator;
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -65,7 +66,11 @@ public class FabricColorsListFragment extends Fragment implements OnResult ,View
     public void setData(ArrayList<FabricColor> listImages) {
         try {
             if (listImages.size() != 0) {
-                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+                int i = 3;
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    i = 6;
+                }
+                recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), i));
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setNestedScrollingEnabled(false);
                 galleryListAdapter = new FabricColorsAdapterBuyer((FabricColorsActivityBuyer) getActivity(), listImages);
