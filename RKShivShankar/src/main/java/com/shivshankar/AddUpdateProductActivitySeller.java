@@ -131,7 +131,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
     private void setProductData(ProductItem product) {
         try {
             mEdt_min_qty.setText(product.getMinOrderQty() + "");
-            mEdt_price.setText(commonVariables.strCurrency_name + " " + product.getOfferPrice());
+            mEdt_price.setText(product.getOfferPrice());
 
             String strImageURL = product.getImageName();
             if ((strImageURL != null) && (!strImageURL.equals(""))) {

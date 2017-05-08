@@ -881,7 +881,7 @@ public class APIs {
         APIs.callAPI(activity, onresult, query);
     }
 
-    public static void AddUpdateOrder_Suit(AppCompatActivity activity, OnResult onresult, String orderId, String strDeviceType, String strDeviceUUID, String strModelName, String strOSVersion, String bstrFname, String bstrAddress1, String bstrAddress2, String bstrPinCode, String bstrCity, String bstrState, String bstrCity1, String bstrCountryCode, String bstrMobile, String sstrFname, String sstrAddress1, String sstrAddress2, String sstrPinCode, String sstrCity, String sstrState, String sstrCity1, String sstrCountryCode, String sstrMobile, String note) {
+    public static void AddUpdateOrder_Suit(AppCompatActivity activity, OnResult onresult, String orderId, String strDeviceType, String strDeviceUUID, String strModelName, String strOSVersion, String bstrFname, String bstrAddress1, String bstrAddress2, String bstrPinCode, String bstrCity, String bstrState, String bstrCity1, String bstrCountryCode, String bstrMobile, String sstrFname, String sstrAddress1, String sstrAddress2, String sstrPinCode, String sstrCity, String sstrState, String sstrCity1, String sstrCountryCode, String sstrMobile, String note,String PaymentGatewayKey) {
         String query = commonVariables.SERVER_BASIC_URL + "MobileAPI/AddUpdateOrder_Suit";
 
         try {
@@ -911,6 +911,7 @@ public class APIs {
             jo.put("sCountryCode", sstrCountryCode);
             jo.put("sMobileNo", sstrMobile);
             jo.put("customerNote", note);
+            jo.put("PaymentGatewayKey",PaymentGatewayKey);
 
             JSONObject jobj = new JSONObject();
             jobj.put("mdlOrder", jo);
@@ -1107,6 +1108,16 @@ public class APIs {
                 .appendQueryParameter("pageNo", pageNo + "")
                 .appendQueryParameter("sortBy", sortBy)
                 .appendQueryParameter("searchText", searchText)
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+
+
+    public static void GetPaymentGateway(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetPaymentGateway")
                 .build();
 
         String query = uri.toString();

@@ -106,7 +106,10 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
 
             int i = 2;
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                i = 4;
+                if (commonMethods.isTablet(this))
+                    i = 6;
+                else
+                    i = 4;
             }
             GridLayoutManager mLayoutManager = new GridLayoutManager(this, i);
             mRv_items.setLayoutManager(mLayoutManager);

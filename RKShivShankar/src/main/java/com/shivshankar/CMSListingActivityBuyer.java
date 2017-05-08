@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
@@ -78,8 +78,10 @@ public class CMSListingActivityBuyer extends BaseActivityBuyer implements View.O
             mIv_close.setOnClickListener(this);
 
             mGv_More = (RecyclerView) rootView.findViewById(R.id.gv_more);
-            LinearLayoutManager manager = new LinearLayoutManager(this);
-            mGv_More.setLayoutManager(manager);
+
+            GridLayoutManager layoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.col_home));
+            mGv_More.setLayoutManager(layoutManager);
+
             mTv_title = (TextView) rootView.findViewById(R.id.tv_title);
 
         } catch (Exception e) {

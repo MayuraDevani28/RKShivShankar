@@ -32,6 +32,7 @@ import com.shivshankar.R;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.classes.CartItem;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 import com.shivshankar.viewpager.ViewPagerActivity;
 
@@ -198,12 +199,16 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
             mRv_products = (RecyclerView) itemView.findViewById(R.id.rv_products);
             int i = 6;
             if (res.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                i = 8;
+                if (commonMethods.isTablet(activity))
+                    i = 10;
+                else
+                    i = 8;
             }
             mRv_products.setLayoutManager(new GridLayoutManager(activity, i));
             horizontalAdapter = new GalleryAdapter(activity);
             mRv_products.setAdapter(horizontalAdapter);
         }
+
 
         @Override
         public void onClick(View view) {
@@ -211,7 +216,7 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
             if (item.getSuitFbricId() == 1) {
                 showPopup(item.getImageName(), item.getProductId());
             } else
-                showPopupFabric(item.getImageName(), item.getProductId(),"#FFFFFF");
+                showPopupFabric(item.getImageName(), item.getProductId(), "#FFFFFF");
 
         }
     }
@@ -281,7 +286,7 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
 
     }
 
-    private void showPopupFabric(String strImageURL, String productId,String hexCode) {
+    private void showPopupFabric(String strImageURL, String productId, String hexCode) {
         try {
             dialog = new Dialog(
                     activity, R.style.popupTheme);
@@ -402,7 +407,7 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
                     mTv_Brand.setText(job.optString("BrandName"));
                     mTv_Category.setText(job.optString("CategoryName"));
                     mTv_Type.setText(job.optString("FabricType"));
-                    mTv_Price.setText(commonVariables.strCurrency_name + " " + job.optString("OfferPrice")+"/mtr");
+                    mTv_Price.setText(commonVariables.strCurrency_name + " " + job.optString("OfferPrice") + "/mtr");
 //                    mTv_Min_Qty.setText("" + job.optInt("MinOrderQty"));
                 }
             } catch (Exception e) {

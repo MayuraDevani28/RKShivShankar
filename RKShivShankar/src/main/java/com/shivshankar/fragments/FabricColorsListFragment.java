@@ -22,6 +22,7 @@ import com.shivshankar.classes.FabricColor;
 import com.shivshankar.classes.ProductItem;
 import com.shivshankar.classes.SC3Object;
 import com.shivshankar.utills.OnResult;
+import com.shivshankar.utills.commonMethods;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FabricColorsListFragment extends Fragment implements OnResult ,View.OnClickListener {
+public class FabricColorsListFragment extends Fragment implements OnResult, View.OnClickListener {
 
     RecyclerView recyclerView;
 
@@ -68,7 +69,10 @@ public class FabricColorsListFragment extends Fragment implements OnResult ,View
             if (listImages.size() != 0) {
                 int i = 3;
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    i = 6;
+                    if (commonMethods.isTablet(getActivity()))
+                        i = 10;
+                    else
+                        i = 6;
                 }
                 recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), i));
                 recyclerView.setHasFixedSize(true);
@@ -183,8 +187,8 @@ public class FabricColorsListFragment extends Fragment implements OnResult ,View
     public void onClick(View view) {
         try {
             if (view == mBtn_add_now) {
-               getActivity().onBackPressed();
-           }
+                getActivity().onBackPressed();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

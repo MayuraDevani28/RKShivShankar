@@ -255,8 +255,11 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
                 finish();
                 overridePendingTransition(0, 0);
             } else if (view == mLl_confirm_order) {
-                if (adapter.isQtyRemaining()) {
-                    AlertDialogManager.showDialog(this, "Please seect Qty/Cut of all items", null);
+                int remain = adapter.isQtyRemaining();
+                if (remain == 1) {
+                    AlertDialogManager.showDialog(this, "Please select Qty/Cut of all items", null);
+                } else if (remain == 2) {
+                    AlertDialogManager.showDialog(this, "Please select type", null);
                 } else {
                     Intent intent = new Intent(this, OrderFormActivityBuyer.class);
                     startActivity(intent);
