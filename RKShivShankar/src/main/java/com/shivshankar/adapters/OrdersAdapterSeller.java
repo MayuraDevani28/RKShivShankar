@@ -142,7 +142,8 @@ public class OrdersAdapterSeller extends RecyclerView.Adapter<OrdersAdapterSelle
         @Override
         public void onClick(View view) {
             try {
-                OrderDetailFragment fragment = new OrderDetailFragment(listItems.get(getAdapterPosition()));
+                OrderDetailFragment fragment = OrderDetailFragment.newInstance(listItems.get(getAdapterPosition()));
+
                 FragmentManager fragmentManager = activity.getSupportFragmentManager();
                 fragmentManager.beginTransaction().add(R.id.fl_whole, fragment).addToBackStack(null).commit();
             } catch (Exception e) {

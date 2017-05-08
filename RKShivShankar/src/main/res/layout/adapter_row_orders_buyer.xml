@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:animateLayoutChanges="true"
-    android:background="@drawable/xml_gray_white_square_box"
+    android:background="@drawable/xml_gray_white_square_box_order_detail"
     android:orientation="vertical">
 
     <LinearLayout

@@ -152,12 +152,12 @@ public class BaseActivitySeller extends AppCompatActivity implements View.OnClic
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void setNotiCount() {
-        updateCount(AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
+    public void setNotiCount() {
+        updateCount(mTv_noti_count, AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
 
     }
 
-    public void updateCount(final int count) {
+    public void updateCount(TextView mTv_noti_count, final int count) {
         try {
             if (mTv_noti_count == null) return;
             runOnUiThread(new Runnable() {

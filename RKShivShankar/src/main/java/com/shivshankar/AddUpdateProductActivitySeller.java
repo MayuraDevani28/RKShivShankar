@@ -4,11 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Base64;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -100,8 +101,6 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
             }
 
             sv.setOnTouchListener((v, event) -> false);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,9 +110,10 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
         try {
             byte[] byteArray = Base64.decode(getPrefs().getString("image_product", ""), Base64.DEFAULT);
             bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bmp);
-            circularBitmapDrawable.setCircular(true);
-            mIv_imageView.setImageDrawable(circularBitmapDrawable);
+//            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), bmp);
+//            circularBitmapDrawable.setCircular(true);
+//            mIv_imageView.setImageDrawable(circularBitmapDrawable);
+            mIv_imageView.setImageBitmap(bmp);
             mIv_imageView.setDrawingCacheEnabled(true);
 
             if (!(productId == null || productId.isEmpty())) {
@@ -137,8 +137,8 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
 
                 Glide.with(this).load(strImageURL)//.asBitmap()
-                        .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white)
-                        .transform(new CircleTransform(this))
+                        .placeholder(R.drawable.xml_gray_square_box).error(R.drawable.xml_white_transparent_square_box)
+//                        .transform(new CircleTransform(this))
                         .into(mIv_imageView);
 //                (new BitmapImageViewTarget(mIv_imageView) {
 //                            @Override
@@ -271,6 +271,28 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
         }
     }
 
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if (bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
     @Override
     public void onClick(View view) {
         try {
@@ -335,7 +357,16 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                 } else {
                     if (file == null && mIv_imageView.getDrawable() != null) {
                         try {
-                            Uri tempUri = commonMethods.getImageUri(getApplicationContext(), ((RoundedBitmapDrawable) mIv_imageView.getDrawable()).getBitmap());
+                            Uri tempUri = null;
+                            Drawable drawable = mIv_imageView.getDrawable();
+                            Bitmap mIcon1 = drawableToBitmap(drawable);
+//                            if (drawable instanceof BitmapDrawable)
+//                                tempUri = commonMethods.getImageUri(getApplicationContext(), ((BitmapDrawable) drawable).getBitmap());
+                            tempUri = commonMethods.getImageUri(getApplicationContext(), mIcon1);
+//                            else
+
+//                            else if (drawable instanceof RoundedBitmapDrawable)
+//                                tempUri = commonMethods.getImageUri(getApplicationContext(), ((RoundedBitmapDrawable) drawable).getBitmap());
                             file = new File(commonMethods.getRealPathFromURI(this, tempUri));
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -432,7 +463,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                     product.setFabricName(job.optString("FabricName"));
                     product.setDupattaFabricId(job.optString("DupattaFabricId"));
                     product.setDupattaFabricName(job.optString("DupattaFabricName"));
-                    product.setBottomFabricName(job.optString("BottomFabricId"));
+                    product.setBottomFabricId(job.optString("BottomFabricId"));
                     product.setBottomFabricName(job.optString("BottomFabricName"));
                     product.setTopFabricId(job.optString("TopFabricId"));
                     product.setTopFabricName(job.optString("TopFabricName"));
@@ -605,6 +636,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                     if (strresId == 1) {
                         try {
                             Runnable listener = () -> {
+                                ImagePickerActivity.mFileTemp = null;
                                 Intent intent = new Intent(getApplicationContext(), ProductsActivitySeller.class);
                                 startActivity(intent);
                                 finish();

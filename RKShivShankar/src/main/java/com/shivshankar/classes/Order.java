@@ -1,8 +1,11 @@
 package com.shivshankar.classes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class Order {
+public class Order implements Parcelable {
     String OrderId, OrderNo, OrderDate, Total, Status, CustName;
     ArrayList<SC3Object> listImages;
 
@@ -74,4 +77,13 @@ public class Order {
         Total = total;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+    }
 }
