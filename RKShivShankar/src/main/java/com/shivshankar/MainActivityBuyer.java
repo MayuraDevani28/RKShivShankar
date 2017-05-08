@@ -32,6 +32,7 @@ import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -48,6 +49,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
     ArrayList<Brand> listArray = new ArrayList<Brand>();
     HomeCategoryAdapterBuyer adapter;
     boolean isBackpressedOnce = false;
+    private MaterialBetterSpinner sp_Category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +128,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
     public void bindViews(View rootView) {
         try {
             mSearchView = (FloatingSearchView) rootView.findViewById(R.id.floating_search_view);
+            sp_Category = (MaterialBetterSpinner) rootView.findViewById(R.id.sp_category);
             EditText editText = (EditText) mSearchView.findViewById(R.id.search_bar_text);
             editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_medium));
             mLl_view = (LinearLayout) rootView.findViewById(R.id.ll_view);

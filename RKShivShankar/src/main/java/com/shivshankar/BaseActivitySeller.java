@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -153,18 +154,18 @@ public class BaseActivitySeller extends AppCompatActivity implements View.OnClic
     }
 
     private void setNotiCount() {
-        updateCount(AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
+        updateCount(mTv_noti_count,AppPreferences.getPrefs().getInt(commonVariables.KEY_NOTI_COUNT, 0));
 
     }
 
-    public void updateCount(final int count) {
+    public void updateCount(TextView mTv_cart_count,final int count) {
         try {
-            if (mTv_noti_count == null) return;
+            if (mTv_cart_count == null) return;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        mTv_noti_count.setText(count + "");
+                        mTv_cart_count.setText(count + "");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

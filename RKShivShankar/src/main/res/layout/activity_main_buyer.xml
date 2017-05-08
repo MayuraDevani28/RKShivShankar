@@ -3,13 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:background="?attr/colorPrimary"
     android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/ll_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
     <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/floating_search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="0.3"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -27,6 +35,34 @@
         app:floatingSearch_suggestionRightIconColor="@color/colorAccent"
         app:floatingSearch_suggestionsListAnimDuration="250"
         app:floatingSearch_viewTextColor="@color/black" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/search_query_section"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/square_button_size"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:layout_weight="0.7"
+            android:clickable="true"
+            card_view:cardUseCompatPadding="true">
+
+            <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                android:id="@+id/sp_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Category"
+                android:textSize="@dimen/text_size_small"
+                app:met_baseColor="@color/white"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelTextColor="@color/black"
+                app:met_primaryColor="@color/white"
+                app:met_textColor="@color/black"
+                app:met_textColorHint="@color/gray"
+                app:met_underlineColor="@color/white" />
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_view"
