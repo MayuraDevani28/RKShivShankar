@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,8 +45,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
     LottieAnimationView animationView2, animationView;
 
     String strCategoryIds = "", srtPriceRange = "", strFabricIds = "", strSortBy = "", strCatidSuitFabric = "";
-    String strSearch = "", brandId = "", strFabricType = "", total = "";
-    Resources res;
+    String strSearch = "", brandId = "0", strFabricType = "", total = "";
     int pageNo = 1;
     boolean loading, isFirstScrollDone = false;
     ArrayList<ProductItem> listArray = new ArrayList<>();
@@ -62,22 +60,25 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
 //        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
 
         try {
-            res = getResources();
             bindViews(rootView);
 
             strFabricType = getIntent().getStringExtra(commonVariables.KEY_FABRIC_TYPE);
+            if (strFabricType == null)
+                strFabricType = "";
             strCatidSuitFabric = getIntent().getStringExtra(commonVariables.KEY_CATEGORY);
-            Brand category = (Brand) getIntent().getSerializableExtra(commonVariables.KEY_BRAND);
-            if (category != null) {
-                brandId = category.getBrandId();
-                mTv_title.setText(WordUtils.capitalizeFully(category.getBrandName()));
-            }
-
             strSearch = getIntent().getStringExtra(commonVariables.KEY_SEARCH_STR);
             if (strSearch == null)
                 strSearch = "";
 
-            APIs.GetProduct_Fabric_Buyer(this, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
+            Brand category = (Brand) getIntent().getSerializableExtra(commonVariables.KEY_BRAND);
+            if (category != null) {
+                brandId = category.getBrandId();
+                mTv_title.setText(WordUtils.capitalizeFully(category.getBrandName()));
+            } else {
+                mTv_title.setText("Search " + WordUtils.capitalizeFully(strSearch));
+            }
+
+            APIs.GetProduct_Fabric_Buyer(this, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strSearch);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,7 +143,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
                             if (loading) {
                                 if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 10)) {
                                     loading = false;
-                                    APIs.GetProductList_Suit_Buyer(null, FabricProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
+                                    APIs.GetProductList_Suit_Buyer(null, FabricProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric,strSearch);
                                 }
                             }
                             if (mLl_title.getVisibility() == View.VISIBLE)
@@ -248,7 +249,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
                     strSortBy = "";
 
                 pageNo = 1;
-                APIs.GetProduct_Fabric_Buyer(null, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType);
+                APIs.GetProduct_Fabric_Buyer(null, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strSearch);
             }
         } catch (Exception e) {
             e.printStackTrace();

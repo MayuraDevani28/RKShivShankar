@@ -641,7 +641,7 @@ public class APIs {
         APIs.callAPI(activity, onresult, query);
     }
 
-    public static void GetProductList_Suit_Buyer(AppCompatActivity activity, OnResult onresult, String brandId, int pageNo, String strcategoryIds, String strpriceRange, String strfabricIds, String strSortBy, String strFabricType, String strCatidSuitFabric) {
+    public static void GetProductList_Suit_Buyer(AppCompatActivity activity, OnResult onresult, String brandId, int pageNo, String strcategoryIds, String strpriceRange, String strfabricIds, String strSortBy, String strFabricType, String strCatidSuitFabric,String srch) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/GetProductList_Suit_Buyer")
@@ -653,6 +653,7 @@ public class APIs {
                 .appendQueryParameter("sortBy", strSortBy)
                 .appendQueryParameter("FabricType", strFabricType)
                 .appendQueryParameter("SuitFabricId", strCatidSuitFabric)
+                .appendQueryParameter("srch",srch)
                 .appendQueryParameter("buyerLoginId", AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "0")).build();
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);
@@ -1017,7 +1018,7 @@ public class APIs {
         APIs.callAPI(null, onresult, query);
     }
 
-    public static void GetProduct_Fabric_Buyer(AppCompatActivity activity, OnResult onresult, String brandId, int pageNo, String strCategoryIds, String srtPriceRange, String strFabricIds, String strSortBy, String strFabricType) {
+    public static void GetProduct_Fabric_Buyer(AppCompatActivity activity, OnResult onresult, String brandId, int pageNo, String strCategoryIds, String srtPriceRange, String strFabricIds, String strSortBy, String strFabricType,String srch) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("MobileAPI/GetProduct_Fabric_Buyer")
@@ -1028,6 +1029,7 @@ public class APIs {
                 .appendQueryParameter("priceRange", srtPriceRange)
                 .appendQueryParameter("fabricIds", strFabricIds)
                 .appendQueryParameter("sortBy", strSortBy)
+                .appendQueryParameter("srch",srch)
                 .build();
         String query = uri.toString();
         APIs.callAPI(activity, onresult, query);

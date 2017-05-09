@@ -145,7 +145,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         protected void onPostExecute(final Bitmap result) {
             super.onPostExecute(result);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(MyFirebaseMessagingService.this);
-            Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_noti_fcm);
+          //  Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.ic_noti_fcm);
             Intent intent;
             if (AppPreferences.getPrefs().getBoolean(commonVariables.KEY_IS_SELLER, false)) {
                 stackBuilder.addParentStack(MainActivitySeller.class);
@@ -161,7 +161,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(MyFirebaseMessagingService.this);
             builder.setSmallIcon(R.drawable.ic_noti_fcm);
-            builder.setLargeIcon(logo);
+          //  builder.setLargeIcon(logo);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(msg));
             builder.setContentTitle(title);
             builder.setColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
@@ -173,7 +173,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             if (result != null) {
                 NotificationCompat.BigPictureStyle bigPicutureStyle = new NotificationCompat.BigPictureStyle(builder);
-                bigPicutureStyle.bigLargeIcon(logo);
+              //  bigPicutureStyle.bigLargeIcon(logo);
                 bigPicutureStyle.bigPicture(result);
                 bigPicutureStyle.setBigContentTitle(title);
                 bigPicutureStyle.setSummaryText(msg);

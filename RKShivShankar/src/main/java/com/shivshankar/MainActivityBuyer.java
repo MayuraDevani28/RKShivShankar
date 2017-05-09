@@ -15,8 +15,11 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
@@ -44,12 +47,14 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
     LinearLayout mLl_view;
     private FloatingSearchView mSearchView;
     RecyclerView mRv_items;
-    private boolean mIsDarkSearchTheme = false;
-    private String mLastQuery = "";
+    private Spinner sp_Category;
 
+    private boolean mIsDarkSearchTheme = false;
+    private String mLastQuery = "", strCategoryID = "";
     ArrayList<Brand> listArray = new ArrayList<Brand>();
     HomeCategoryAdapterBuyer adapter;
     boolean isBackpressedOnce = false;
+    String[] SP_CATEGORY_VALUE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +80,10 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
             finish();
             overridePendingTransition(0, 0);
         } else {
-            isBackpressedOnce = true;
-            Toast.makeText(MainActivityBuyer.this, "Press again to close " + commonVariables.appname, Toast.LENGTH_SHORT).show();
+            if (!onActivityBackPress()) {
+                isBackpressedOnce = true;
+                Toast.makeText(MainActivityBuyer.this, "Press again to close " + commonVariables.appname, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -128,12 +135,13 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
     public void bindViews(View rootView) {
         try {
             mSearchView = (FloatingSearchView) rootView.findViewById(R.id.floating_search_view);
+            sp_Category = (Spinner) rootView.findViewById(R.id.sp_category);
             EditText editText = (EditText) mSearchView.findViewById(R.id.search_bar_text);
             editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_medium));
             mLl_view = (LinearLayout) rootView.findViewById(R.id.ll_view);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.rv_items);
-            int col =  getResources().getInteger(R.integer.col_home);
-            GridLayoutManager manager = new GridLayoutManager(this,col);
+            int col = getResources().getInteger(R.integer.col_home);
+            GridLayoutManager manager = new GridLayoutManager(this, col);
             mRv_items.setLayoutManager(manager);
 
         } catch (Exception e) {
@@ -152,13 +160,18 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("GetBuyerHome")) {
                     JSONArray jarray = jobjWhole.optJSONArray("resData");
+                    String[] SP_CATEGORY = new String[jarray.length()];
+                    SP_CATEGORY_VALUE = new String[jarray.length()];
                     if (jarray != null) {
                         listArray.clear();
                         for (int i = 0; i < jarray.length(); i++) {
                             JSONObject jo = jarray.optJSONObject(i);
                             listArray.add(new Brand(jo.optString("CategoryId"), jo.optString("CategoryName"), jo.optString("CategoryImage")));
+                            SP_CATEGORY[i] = jo.optString("CategoryName");
+                            SP_CATEGORY_VALUE[i] = jo.optString("CategoryId");
                         }
                         setListAdapter(listArray);
+                        setCategory(SP_CATEGORY, SP_CATEGORY_VALUE);
                     }
                     SharedPreferences.Editor editor = AppPreferences.getPrefs().edit();
                     editor.putInt(commonVariables.CART_COUNT, jobjWhole.optInt("CartCount"));
@@ -172,6 +185,25 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setCategory(String[] sp_category, String[] sp_category_value) {
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, sp_category);
+        sp_Category.setAdapter(arrayAdapter);
+        sp_Category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                strCategoryID = sp_category_value[i];
+                if (!mLastQuery.isEmpty())
+                    commonMethods.performSearch(MainActivityBuyer.this, mLastQuery, strCategoryID);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     public void setListAdapter(ArrayList<Brand> listArray) {
@@ -221,14 +253,14 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
                 @Override
                 public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
                     Suggestion colorSuggestion = (Suggestion) searchSuggestion;
-                    commonMethods.performSearch(MainActivityBuyer.this, colorSuggestion.getBody());
+                    commonMethods.performSearch(MainActivityBuyer.this, colorSuggestion.getBody(), strCategoryID);
                     mLastQuery = searchSuggestion.getBody();
                 }
 
                 @Override
                 public void onSearchAction(String query) {
                     mLastQuery = query;
-                    commonMethods.performSearch(MainActivityBuyer.this, query);
+                    commonMethods.performSearch(MainActivityBuyer.this, query, strCategoryID);
                 }
             });
 
@@ -276,4 +308,14 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
         }
     }
 
+    public boolean onActivityBackPress() {
+        //if mSearchView.setSearchFocused(false) causes the focused search
+        //to close, then we don't want to close the activity. if mSearchView.setSearchFocused(false)
+        //returns false, we know that the search was already closed so the call didn't change the focus
+        //state and it makes sense to call supper onBackPressed() and close the activity
+        if (!mSearchView.setSearchFocused(false)) {
+            return false;
+        }
+        return true;
+    }
 }
