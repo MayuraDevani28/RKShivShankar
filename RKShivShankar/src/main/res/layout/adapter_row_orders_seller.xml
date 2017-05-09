@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:animateLayoutChanges="true"
-    android:background="@drawable/xml_gray_white_square_box"
+    android:background="@drawable/xml_gray_white_square_box_order_detail"
     android:orientation="vertical">
 
     <LinearLayout
@@ -135,8 +135,7 @@
                 android:id="@+id/tv_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:padding="5dp"
+                android:paddingLeft="5dp"
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_small" />

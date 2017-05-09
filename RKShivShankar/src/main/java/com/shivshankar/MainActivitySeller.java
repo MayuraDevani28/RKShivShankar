@@ -284,6 +284,8 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("GetSellerBrandList")) {
                     JSONArray jarray = jobjWhole.optJSONArray("resData");
+                    AppPreferences.getPrefs().edit().putInt(commonVariables.KEY_NOTI_COUNT, jobjWhole.optInt("notificationcount")).apply();
+                    setNotiCount();
                     if (jarray != null) {
                         JSONObject jObjItem = jarray.optJSONObject(0);
                         item = new Brand(jObjItem.optString("BrandId"), jObjItem.optString("BrandName"), jObjItem.optString("BrandLogo"));

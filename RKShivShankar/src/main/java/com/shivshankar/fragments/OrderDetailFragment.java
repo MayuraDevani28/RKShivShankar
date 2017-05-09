@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -26,7 +27,6 @@ import com.shivshankar.adapters.OrderProductListAdapter;
 import com.shivshankar.classes.CartItem;
 import com.shivshankar.classes.Order;
 import com.shivshankar.classes.SC3Object;
-import com.shivshankar.utills.AppPreferences;
 import com.shivshankar.utills.OnResult;
 import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
@@ -46,13 +46,45 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
     private RecyclerView mLv_order_items;
     private TextView mTv_order_no, mTv_order_date, mTv_total, mName, mTv_address, mTv_mobile_no, mTv_customer_name, mTv_sub_total, mTv_discount_amount, mTv_discount_code_title, mTv_shipping_amount, mTv_product_total, mTv_order_status, mTv_payment_method;
     private LinearLayout mBtn_home, mLl_detail, mLl_shipping_address, mLl_discount, mLl_shipping, mLl_order, mLl_expand;
-
-
     ArrayList<CartItem> listArray = new ArrayList<CartItem>();
-    String strLoginId = "";
+
+    public static OrderDetailFragment newInstance(Order orderD) {
+
+        Bundle args = new Bundle();
+
+        OrderDetailFragment fragment = new OrderDetailFragment(orderD);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public OrderDetailFragment(Order orderD) {
         order = orderD;
+    }
+
+    public OrderDetailFragment() {
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        try {
+            outState.putParcelable("order", order);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        try {
+            if (savedInstanceState != null) {
+                order = savedInstanceState.getParcelable("order");
+                setWork();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("DefaultLocale")
@@ -61,38 +93,41 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
 
         View rootView = inflater.inflate(R.layout.fragment_order_detail, container, false);
         try {
-            strLoginId = AppPreferences.getPrefs().getString(commonVariables.KEY_LOGIN_ID, "");
 
             bindViews(rootView);
-            APIs.GetOrderDetails((AppCompatActivity) getActivity(), this, order.getOrderId());
-            mTv_order_date.setText(order.getOrderDate());
-            mTv_order_no.setText(order.getOrderNo());
-            mTv_order_status.setText(WordUtils.capitalizeFully(order.getStatus()));
-
-            int color = R.color.black;
-            String status = order.getStatus();
-            if (!status.isEmpty()) {
-                if (status.equalsIgnoreCase("In Process"))
-                    color = R.color.status_in_process;
-                else if (status.equalsIgnoreCase("PAYMENT RECEIVED"))
-                    color = R.color.status_payment_received;
-                else if (status.equalsIgnoreCase("pending"))
-                    color = R.color.status_pending;
-                else if (status.equalsIgnoreCase("complete"))
-                    color = R.color.status_complete;
-                else if (status.equalsIgnoreCase("INCOMPLETE"))
-                    color = R.color.status_incomplete;
-                else if (status.equalsIgnoreCase("DELIVERED"))
-                    color = R.color.status_delivered;
-                else if (status.equalsIgnoreCase("canceled"))
-                    color = R.color.status_canceled;
-            }
-            mTv_order_status.setTextColor(ContextCompat.getColor(getActivity(), color));
+            setWork();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return rootView;
+    }
+
+    private void setWork() {
+        APIs.GetOrderDetails((AppCompatActivity) getActivity(), this, order.getOrderId());
+        mTv_order_date.setText(order.getOrderDate());
+        mTv_order_no.setText(order.getOrderNo());
+        mTv_order_status.setText(WordUtils.capitalizeFully(order.getStatus()));
+
+        int color = R.color.black;
+        String status = order.getStatus();
+        if (!status.isEmpty()) {
+            if (status.equalsIgnoreCase("In Process"))
+                color = R.color.status_in_process;
+            else if (status.equalsIgnoreCase("PAYMENT RECEIVED"))
+                color = R.color.status_payment_received;
+            else if (status.equalsIgnoreCase("pending"))
+                color = R.color.status_pending;
+            else if (status.equalsIgnoreCase("complete"))
+                color = R.color.status_complete;
+            else if (status.equalsIgnoreCase("INCOMPLETE"))
+                color = R.color.status_incomplete;
+            else if (status.equalsIgnoreCase("DELIVERED"))
+                color = R.color.status_delivered;
+            else if (status.equalsIgnoreCase("canceled"))
+                color = R.color.status_canceled;
+        }
+        mTv_order_status.setTextColor(ContextCompat.getColor(getActivity(), color));
     }
 
     private void bindViews(View rootView) {

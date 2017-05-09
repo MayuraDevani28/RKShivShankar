@@ -1,9 +1,11 @@
 package com.shivshankar.classes;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class Order implements Serializable {
+public class Order implements Parcelable {
     String OrderId, OrderNo, OrderDate, Total, Status, CustName;
     ArrayList<SC3Object> listImages;
 
@@ -75,4 +77,13 @@ public class Order implements Serializable {
         Total = total;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+    }
 }

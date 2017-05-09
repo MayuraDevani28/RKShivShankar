@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,7 +30,7 @@ public class OrderSuccessActivityBuyer extends BaseActivityCartBuyer implements 
     RecyclerView mRv_items;
 
     private LinearLayout mLl_confirm_order, mLl_shipping, mLl_shipping_address;
-    private TextView mTv_subtotal, mTv_shipping, mTv_grand_total, mName, mTv_address, mTv_mobile_no, mTv_order_date, mTv_order_no;
+    private TextView mTv_subtotal, mTv_shipping, mTv_grand_total, mName, mTv_address, mTv_mobile_no, mTv_order_date, mTv_order_no,mTv_payment_method;
     CartAdapterBuyer adapter;
     ArrayList<CartItem> listArray = new ArrayList<>();
 
@@ -60,6 +59,7 @@ public class OrderSuccessActivityBuyer extends BaseActivityCartBuyer implements 
     private void bindViews(View rootView) {
 
         try {
+            mTv_payment_method = (TextView) rootView.findViewById(R.id.tv_payment_method);
             mLl_whole = (LinearLayout) rootView.findViewById(R.id.ll_view);
             mRv_items = (RecyclerView) rootView.findViewById(R.id.rv_items);
             mRv_items.setHasFixedSize(true);
@@ -155,6 +155,7 @@ public class OrderSuccessActivityBuyer extends BaseActivityCartBuyer implements 
 
                     mTv_order_date.setText(jo.optString("OrderDate"));
                     mTv_order_no.setText(jo.optString("OrderNo"));
+                    mTv_payment_method.setText(jo.optString("PaymentOption"));
 
                     mTv_grand_total.setText(commonVariables.strCurrency_name + " " + jo.optString("TotalAmount"));
                     if (Integer.parseInt(jo.optString("ShippingCharge")) != 0) {

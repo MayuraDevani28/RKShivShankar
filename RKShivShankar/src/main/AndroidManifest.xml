@@ -90,7 +90,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MyOrdersActivitySeller"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ProductsActivitySeller"
@@ -112,7 +112,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MyOrdersActivityBuyer"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CMSListingActivityBuyer"
