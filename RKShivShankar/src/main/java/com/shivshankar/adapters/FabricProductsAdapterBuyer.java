@@ -49,6 +49,8 @@ public class FabricProductsAdapterBuyer extends RecyclerView.Adapter<FabricProdu
     Dialog dialog;
     private EditText mTv_Brand, mTv_Category, mTv_Type, mTv_Price,  mTv_Product_Code;
     LinearLayout mLl_fabric;
+    private String strLargeImageName;
+    private ImageView imageView;
 
     public FabricProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list, String stType, String id) {
         this.activity = activity;
@@ -131,7 +133,7 @@ public class FabricProductsAdapterBuyer extends RecyclerView.Adapter<FabricProdu
                 }
             });
             RelativeLayout close = (RelativeLayout) view.findViewById(R.id.rl_close);
-            ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
+            imageView = (ImageView) view.findViewById(R.id.image_gallery);
             mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
             mTv_Product_Code = (EditText) view.findViewById(R.id.tv_product_code);
             mTv_Category = (EditText) view.findViewById(R.id.tv_category);
@@ -142,7 +144,7 @@ public class FabricProductsAdapterBuyer extends RecyclerView.Adapter<FabricProdu
             mLl_fabric = (LinearLayout) view.findViewById(R.id.ll_fabric);
             mLl_fabric.setVisibility(View.GONE);
 
-            String[] Images = {strImageURL};
+            //String[] Images = {strImageURL};
 //            Glide.with(activity).load(strImageURL).diskCacheStrategy(DiskCacheStrategy.ALL)
 //                    .error(R.drawable.no_img_big).into(imageView);
 
@@ -179,16 +181,8 @@ public class FabricProductsAdapterBuyer extends RecyclerView.Adapter<FabricProdu
                     dialog.dismiss();
                 }
             });
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(activity, ViewPagerActivity.class);
-                    i.putExtra(commonVariables.INTENT_EXTRA_LIST_IMAGE_ARRAY, Images);
-                    i.putExtra(commonVariables.INTENT_EXTRA_POSITION, 0);
-                    i.putExtra(commonVariables.KEY_IS_LANDSCAPE, false);
-                    activity.startActivity(i);
-                }
-            });
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -238,6 +232,20 @@ public class FabricProductsAdapterBuyer extends RecyclerView.Adapter<FabricProdu
                     mTv_Category.setText(job.optString("CategoryName"));
                     mTv_Type.setText(job.optString("FabricType"));
                     mTv_Price.setText(commonVariables.strCurrency_name + " " + job.optString("OfferPrice") + "/mtr");
+                    strLargeImageName = job.optString("LargeImageName");
+
+                    String[] Images = {strLargeImageName};
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(activity, ViewPagerActivity.class);
+                            i.putExtra(commonVariables.INTENT_EXTRA_LIST_IMAGE_ARRAY, Images);
+                            i.putExtra(commonVariables.INTENT_EXTRA_POSITION, 0);
+                            i.putExtra(commonVariables.KEY_IS_LANDSCAPE, false);
+                            activity.startActivity(i);
+                        }
+                    });
+
 //                    mTv_Min_Qty.setText("" + job.optInt("MinOrderQty"));
                 }
             } catch (Exception e) {

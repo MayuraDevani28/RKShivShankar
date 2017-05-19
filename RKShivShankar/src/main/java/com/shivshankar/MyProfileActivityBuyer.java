@@ -268,8 +268,11 @@ public class MyProfileActivityBuyer extends BaseActivityBuyer implements OnClick
                             editor.putString(commonVariables.KEY_BUYER_PROFILE, jObWhole.optString("resData"));
                             editor.apply();
                             Runnable listener = () -> {
-                                onBackPressed();
+                                startActivity(new Intent(this, MyProfileActivityBuyer.class));
+                                finish();
                                 overridePendingTransition(0, 0);
+                                //onBackPressed();
+                               // overridePendingTransition(0, 0);
                             };
                             AlertDialogManager.showSuccessDialog(this, jObWhole.optString("res"), listener);
                         } catch (Exception e) {

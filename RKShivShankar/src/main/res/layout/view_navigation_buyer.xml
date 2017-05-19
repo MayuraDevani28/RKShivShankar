@@ -269,51 +269,51 @@
 
         <ImageView
             android:id="@+id/iv_fb"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:padding="5dp"
             android:src="@drawable/ic_soc_fb" />
 
         <ImageView
             android:id="@+id/iv_g_plus"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:src="@drawable/ic_soc_google_plus" />
 
         <ImageView
             android:id="@+id/iv_twitter"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:src="@drawable/ic_soc_twitter" />
 
         <ImageView
             android:id="@+id/iv_pinterest"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:src="@drawable/ic_soc_pinterest" />
 
         <ImageView
             android:id="@+id/iv_youtube"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:src="@drawable/ic_soc_youtube" />
 
         <ImageView
             android:id="@+id/iv_linkedin"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:src="@drawable/ic_soc_linkedin" />
 
         <ImageView
             android:id="@+id/iv_insta"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:src="@drawable/ic_soc_instagram" />
 
     </LinearLayout>

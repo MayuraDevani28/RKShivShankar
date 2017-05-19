@@ -11,6 +11,7 @@
         android:id="@+id/ll_search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -20,8 +21,9 @@
             android:id="@+id/floating_search_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            app:floatingSearch_actionMenuOverflowColor="@color/colorAccent"
+            android:layout_weight="1"
+            app:floatingSearch_backgroundColor="@color/colorPrimary"
+            app:floatingSearch_actionMenuOverflowColor="@color/white"
             app:floatingSearch_clearBtnColor="@color/colorAccent"
             app:floatingSearch_close_search_on_keyboard_dismiss="false"
             app:floatingSearch_dimBackground="false"
@@ -36,10 +38,12 @@
             app:floatingSearch_suggestionsListAnimDuration="250"
             app:floatingSearch_viewTextColor="@color/black" />
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/search_query_section"
+
+
+      <!--  <android.support.v7.widget.CardView
+            android:id="@+id/card_category"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:clickable="true"
             card_view:cardUseCompatPadding="true">
@@ -47,10 +51,14 @@
             <Spinner
                 android:id="@+id/sp_category"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:layout_gravity="center"
                 style="?android:attr/spinnerDropDownItemStyle"
+                android:dropDownVerticalOffset="?attr/actionBarSize"
                 android:hint="Category"/>
-        </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>-->
+
     </LinearLayout>
 
     <LinearLayout

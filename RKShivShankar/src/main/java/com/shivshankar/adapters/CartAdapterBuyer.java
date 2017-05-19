@@ -76,7 +76,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
         res = activity.getResources();
     }
 
-    public List<CartItem> getItems() {
+    public ArrayList<CartItem> getItems() {
         return list;
     }
 

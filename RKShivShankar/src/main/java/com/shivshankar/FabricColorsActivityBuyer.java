@@ -265,7 +265,7 @@ public class FabricColorsActivityBuyer extends BaseActivityBuyer implements OnCl
                 jo.put("ColorHexCodes", arrStr);
                 jarr.put(jo);
                 if (arrStr.length() == 0) {
-                    AlertDialogManager.showDialog(this, "Select alteast one color to add in cart", null);
+                    AlertDialogManager.showDialog(this, "Select at least one color to add in cart", null);
                 } else if (arrStr.length() > 4) {
                     AlertDialogManager.showDialog(this, "You can select only 4 colors at a time", null);
                 } else {

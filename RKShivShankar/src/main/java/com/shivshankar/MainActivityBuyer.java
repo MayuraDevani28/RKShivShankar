@@ -135,7 +135,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
     public void bindViews(View rootView) {
         try {
             mSearchView = (FloatingSearchView) rootView.findViewById(R.id.floating_search_view);
-            sp_Category = (Spinner) rootView.findViewById(R.id.sp_category);
+            sp_Category = (Spinner) mSearchView.findViewById(R.id.sp_category);
             EditText editText = (EditText) mSearchView.findViewById(R.id.search_bar_text);
             editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.text_size_medium));
             mLl_view = (LinearLayout) rootView.findViewById(R.id.ll_view);
@@ -280,7 +280,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
 
             mSearchView.setOnBindSuggestionCallback((suggestionView, leftIcon, textView, item, itemPosition) -> {
                 Suggestion colorSuggestion = (Suggestion) item;
-
+                suggestionView.setBackgroundColor(getResources().getColor(R.color.white));
                 String textColor = mIsDarkSearchTheme ? "#ffffff" : "#000000";
                 String textLight = mIsDarkSearchTheme ? "#bfbfbf" : "#787878";
 

@@ -182,7 +182,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                 } else if (mobile.isEmpty()) {
                     mTi_register_mobile.setError("Mobile is required.");
                     mEdt_register_mobile.requestFocus();
-                } else if (mobile.length() < 6 || mobile.length() > 13) {
+                } else if (mobile.length() < 8 || mobile.length() > 14) {
                     mTi_register_mobile.setError("Enter valid mobile number.");
                     mEdt_register_mobile.requestFocus();
                 } else if (city.isEmpty()) {

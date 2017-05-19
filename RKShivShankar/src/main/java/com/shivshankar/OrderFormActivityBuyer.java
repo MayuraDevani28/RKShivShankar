@@ -8,6 +8,8 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,6 +29,8 @@ import android.widget.TextView;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.shivshankar.ServerCall.APIs;
 import com.shivshankar.adapters.CountryAdapter;
+import com.shivshankar.adapters.PaymentOptionExpandableListAdapter;
+import com.shivshankar.classes.Payment;
 import com.shivshankar.classes.SC3Object;
 import com.shivshankar.utills.AlertDialogManager;
 import com.shivshankar.utills.AppPreferences;
@@ -43,7 +47,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by Mayura on 4/1/2017.
+ * Created by  Mayura on 4/1/2017.
  */
 
 public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements View.OnClickListener, OnResult, CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener {
@@ -66,6 +70,9 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
 
     String strDeviceUUID = commonVariables.uuid, bstrCountryCode = "", sstrCountryCode = "", strPaymentCode = "";
     ArrayList<SC3Object> listCountry = new ArrayList<SC3Object>();
+    private RecyclerView lv_payment;
+    private ArrayList<Payment> paymentList;
+    private PaymentOptionExpandableListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +85,8 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
             bindViews(rootView);
 
             APIs.GetPaymentGateway(this, this);
+
+            APIs.GetPaymentOptions(this, this);
             if (listCountry.size() == 0)
                 APIs.GetCountryList(null, this);
             try {
@@ -220,6 +229,7 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
             mEdt_address_city_shipping = (EditText) rootView.findViewById(R.id.edt_address_city_shipping);
             mEdt_address_state_shipping = (EditText) rootView.findViewById(R.id.edt_address_state_shipping);
             mSp_country_shipping = (EditText) rootView.findViewById(R.id.sp_country_shipping);
+            lv_payment = (RecyclerView)rootView.findViewById(R.id.lv_payment);
             mSp_country_shipping.setOnFocusChangeListener(this);
             mSp_country_shipping.setCursorVisible(false);
             mSp_country_shipping.setOnClickListener(this);
@@ -479,7 +489,19 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
                         setWebViewData(mWv_cheque, jo.optString("ChequeDetails"));
                         mCb_cheque.setTag(R.string.filter_key, str);
                     }
-                } else if (strApiName.equalsIgnoreCase("GetOrderSummary_Suit")) {
+                }else if(strApiName.equalsIgnoreCase("GetPaymentOptions")){
+                    JSONArray jarray = jobjWhole.optJSONArray("resData");
+                    paymentList = new ArrayList<Payment>();
+                    for (int i = 0;i<jarray.length();i++){
+                        JSONObject c = jarray.optJSONObject(i);
+                        Payment item = new Payment(c.optString("PaymentOptionKey"),c.optString("PaymentOptionName"),c.optString("PaymentOptionDetails"));
+                        paymentList.add(item);
+                    }
+                    setPaymentOptionData(paymentList);
+
+
+
+                }else if (strApiName.equalsIgnoreCase("GetOrderSummary_Suit")) {
                     mLl_order_summary.setVisibility(View.VISIBLE);
                     JSONObject jo = jobjWhole.optJSONObject("resData");
                     mTv_grand_total.setText(commonVariables.strCurrency_name + " " + jo.optString("TotalAmount"));
@@ -513,6 +535,17 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setPaymentOptionData(ArrayList<Payment> paymentList) {
+        lv_payment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        //lv_payment.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        adapter = new PaymentOptionExpandableListAdapter(paymentList);
+        lv_payment.setAdapter(adapter);
+        lv_payment.getItemAnimator().setChangeDuration(0);
+        lv_payment.setHasFixedSize(true);
+
+
     }
 
     private void setWebViewData(WebView mWv_iframe, String strContent) {

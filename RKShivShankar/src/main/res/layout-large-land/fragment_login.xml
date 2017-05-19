@@ -26,8 +26,8 @@
                     android:id="@+id/ti_username"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginRight="10dp"
+                    android:layout_weight="1"
                     android:textColorHint="@color/gray">
 
                     <EditText
@@ -85,21 +85,21 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
                 android:layout_marginTop="18dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="I am"
                     android:layout_marginRight="80dp"
+                    android:gravity="center_vertical"
+                    android:text="I am"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     android:textSize="@dimen/text_size_medium"
-                    android:gravity="center_vertical"
                     android:visibility="visible" />
 
 
@@ -157,9 +157,9 @@
                         android:id="@+id/btn_login"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:background="@color/colorPrimary"
                         android:gravity="center"
-                        android:layout_gravity="center_vertical"
                         android:paddingLeft="80dp"
                         android:paddingRight="80dp"
                         android:text="Login"

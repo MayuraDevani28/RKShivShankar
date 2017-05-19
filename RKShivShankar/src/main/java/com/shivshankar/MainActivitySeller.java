@@ -136,7 +136,7 @@ public class MainActivitySeller extends BaseActivitySeller implements View.OnCli
     @Override
     public void onBackPressed() {
         if (isBackpressedOnce)
-            super.onBackPressed();
+            moveTaskToBack(true);
         else {
             isBackpressedOnce = true;
             Toast.makeText(MainActivitySeller.this, "Press again to close " + commonVariables.appname, Toast.LENGTH_SHORT).show();

@@ -152,7 +152,7 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
         if (cut2.endsWith(".0"))
             cut2 = cut2.substring(0, cut2.length() - 2);
 
-        mTv_front.setText("Qty: " + qty + ", " + "Cut: " + cut2);
+        mTv_front.setText("Qty: " + qty + " | " + "Cut: " + cut2);
     }
 
     @Override
@@ -213,10 +213,10 @@ public class OrderProductListAdapter extends RecyclerView.Adapter<OrderProductLi
         @Override
         public void onClick(View view) {
             CartItem item = listArray.get(getAdapterPosition());
-            if (item.getSuitFbricId() == 1) {
+           /* if (item.getSuitFbricId() == 1) {
                 showPopup(item.getImageName(), item.getProductId());
             } else
-                showPopupFabric(item.getImageName(), item.getProductId(), "#FFFFFF");
+                showPopupFabric(item.getImageName(), item.getProductId(), "#FFFFFF");*/
 
         }
     }

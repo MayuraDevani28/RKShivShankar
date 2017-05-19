@@ -666,6 +666,7 @@ public class APIs {
         String strModelName = Build.MODEL;
         String strOSVersion = Build.VERSION.RELEASE;
         String strDeviceType = "Android" + strDeviceUUID;
+        String strFCM_ID = FirebaseInstanceId.getInstance().getToken();
 
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
@@ -681,7 +682,7 @@ public class APIs {
                 .appendQueryParameter("strDeviceUUID", strDeviceUUID)
                 .appendQueryParameter("strModelName", strModelName)
                 .appendQueryParameter("strOSVersion", strOSVersion)
-                .appendQueryParameter("GCMRegistraionId", FirebaseInstanceId.getInstance().getId())
+                .appendQueryParameter("GCMRegistraionId", strFCM_ID)
                 .build();
 
         String query = uri.toString();
@@ -1004,6 +1005,7 @@ public class APIs {
         String strOSVersion = Build.VERSION.RELEASE;
         String strDeviceUUID = commonVariables.uuid;
         String strDeviceType = "Android" + strDeviceUUID;
+        String strFCM_ID = FirebaseInstanceId.getInstance().getId();
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD)
                 .path("mobileapi/UpdatefcmDetails_Buyer")
@@ -1120,6 +1122,14 @@ public class APIs {
     public static void GetPaymentGateway(AppCompatActivity activity, OnResult onresult) {
         Uri uri = new Uri.Builder().scheme("http")
                 .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetPaymentGateway")
+                .build();
+
+        String query = uri.toString();
+        APIs.callAPI(activity, onresult, query);
+    }
+    public static void GetPaymentOptions(AppCompatActivity activity, OnResult onresult) {
+        Uri uri = new Uri.Builder().scheme("http")
+                .authority(commonVariables.STRING_SERVER_URL_FOR_GET_METHOD).path("MobileAPI/GetPaymentOptions")
                 .build();
 
         String query = uri.toString();

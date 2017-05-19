@@ -48,7 +48,7 @@ public class ViewPagerFragment extends Fragment implements View.OnClickListener 
             }
         }
         if (imagePath != null) {
-            imageView = (TouchImageView) rootView.findViewById(R.id.imageView);
+            imageView = (TouchImageView) rootView.findViewById(R.id.image_gallery);
             fab_download = (FloatingActionButton) rootView.findViewById(R.id.fab_download);
             fab_download.setOnClickListener(this);
             ImageView mPbar_product = (ImageView) rootView.findViewById(R.id.pbar_product);
