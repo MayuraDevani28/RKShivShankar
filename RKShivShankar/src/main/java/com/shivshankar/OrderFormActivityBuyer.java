@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -48,7 +47,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by Mayura on 4/1/2017.
+ * Created by  Mayura on 4/1/2017.
  */
 
 public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements View.OnClickListener, OnResult, CompoundButton.OnCheckedChangeListener, View.OnFocusChangeListener {
