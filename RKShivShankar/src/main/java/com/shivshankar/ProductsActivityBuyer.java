@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,8 +50,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
 
     SuitProductsAdapterBuyer adapter;
     ArrayList<ProductItem> listArray = new ArrayList<ProductItem>();
-    String strSearch = "", brandId = "", strFabricType = "", total = "", strCatidSuitFabric = "";
-    Resources res;
+    String strSearch = "", brandId = "0", strFabricType = "", total = "", strCatidSuitFabric = "";
     int pageNo = 1;
     boolean loading, isFirstScrollDone = false;
 
@@ -62,25 +60,27 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(this));
         View rootView = getLayoutInflater().inflate(R.layout.activity_products_seller, frameLayout);
-//        //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
-
         try {
-            res = getResources();
             bindViews(rootView);
 
             strFabricType = getIntent().getStringExtra(commonVariables.KEY_FABRIC_TYPE);
+            if (strFabricType == null)
+                strFabricType = "";
             strCatidSuitFabric = getIntent().getStringExtra(commonVariables.KEY_CATEGORY);
-            Brand category = (Brand) getIntent().getSerializableExtra(commonVariables.KEY_BRAND);
-            if (category != null) {
-                brandId = category.getBrandId();
-                mTv_title.setText(WordUtils.capitalizeFully(category.getBrandName()));
-            }
-
             strSearch = getIntent().getStringExtra(commonVariables.KEY_SEARCH_STR);
             if (strSearch == null)
                 strSearch = "";
 
-            APIs.GetProductList_Suit_Buyer(this, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
+            Brand category = (Brand) getIntent().getSerializableExtra(commonVariables.KEY_BRAND);
+            if (category != null) {
+                brandId = category.getBrandId();
+                mTv_title.setText(WordUtils.capitalizeFully(category.getBrandName()));
+            } else {
+                mTv_title.setText("Search:" + WordUtils.capitalizeFully(strSearch));
+            }
+
+
+            APIs.GetProductList_Suit_Buyer(this, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric, strSearch);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -145,7 +145,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                             if (loading) {
                                 if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 10)) {
                                     loading = false;
-                                    APIs.GetProductList_Suit_Buyer(null, ProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
+                                    APIs.GetProductList_Suit_Buyer(null, ProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric, strSearch);
                                 }
                             }
 
@@ -270,7 +270,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                 listArray.clear();
                 adapter.notifyDataSetChanged();
                 pageNo = 1;
-                APIs.GetProductList_Suit_Buyer(null, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric);
+                APIs.GetProductList_Suit_Buyer(null, this, brandId, pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric, strSearch);
             } else if (requestCode == commonVariables.REQUEST_LOGIN && resultCode == RESULT_OK) {
                 boolean isLoggedIn = data.getExtras().getBoolean(commonVariables.KEY_IS_LOG_IN);
                 if (isLoggedIn)

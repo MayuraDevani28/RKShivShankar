@@ -892,7 +892,22 @@
                     </LinearLayout>
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/xml_black_border_square_box"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/lv_payment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"/>
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

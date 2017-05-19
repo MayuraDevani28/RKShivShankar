@@ -190,7 +190,7 @@ public class OrderDetailFragment extends Fragment implements OnClickListener, On
 //                    mLv_order_items.setVisibility(View.VISIBLE);
                     mIv_expand.setRotation(270);
                     mLv_order_items.animate()
-                            .translationY(0).alpha(1)
+                            .translationY(0).alpha(10)
                             .setListener(new AnimatorListenerAdapter() {
                                 @Override
                                 public void onAnimationStart(Animator animation) {

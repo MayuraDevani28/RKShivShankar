@@ -11,57 +11,54 @@
         android:id="@+id/ll_search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-    <com.arlib.floatingsearchview.FloatingSearchView
-        android:id="@+id/floating_search_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.3"
+        android:background="@color/colorPrimary"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        app:floatingSearch_actionMenuOverflowColor="@color/colorAccent"
-        app:floatingSearch_clearBtnColor="@color/colorAccent"
-        app:floatingSearch_close_search_on_keyboard_dismiss="false"
-        app:floatingSearch_dimBackground="false"
-        app:floatingSearch_dismissOnOutsideTouch="true"
-        app:floatingSearch_leftActionColor="@color/colorAccent"
-        app:floatingSearch_leftActionMode="showSearch"
-        app:floatingSearch_menuItemIconColor="@color/colorAccent"
-        app:floatingSearch_searchHint="Search for Products"
-        app:floatingSearch_searchSuggestionTextSize="@dimen/text_size_medium"
-        app:floatingSearch_showSearchKey="true"
-        app:floatingSearch_suggestionRightIconColor="@color/colorAccent"
-        app:floatingSearch_suggestionsListAnimDuration="250"
-        app:floatingSearch_viewTextColor="@color/black" />
+        android:orientation="horizontal">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/search_query_section"
+        <com.arlib.floatingsearchview.FloatingSearchView
+            android:id="@+id/floating_search_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/square_button_size"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:floatingSearch_backgroundColor="@color/colorPrimary"
+            app:floatingSearch_actionMenuOverflowColor="@color/white"
+            app:floatingSearch_clearBtnColor="@color/colorAccent"
+            app:floatingSearch_close_search_on_keyboard_dismiss="false"
+            app:floatingSearch_dimBackground="false"
+            app:floatingSearch_dismissOnOutsideTouch="true"
+            app:floatingSearch_leftActionColor="@color/colorAccent"
+            app:floatingSearch_leftActionMode="showSearch"
+            app:floatingSearch_menuItemIconColor="@color/colorAccent"
+            app:floatingSearch_searchHint="Search for Products"
+            app:floatingSearch_searchSuggestionTextSize="@dimen/text_size_medium"
+            app:floatingSearch_showSearchKey="true"
+            app:floatingSearch_suggestionRightIconColor="@color/colorAccent"
+            app:floatingSearch_suggestionsListAnimDuration="250"
+            app:floatingSearch_viewTextColor="@color/black" />
+
+
+
+      <!--  <android.support.v7.widget.CardView
+            android:id="@+id/card_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:clickable="true"
             card_view:cardUseCompatPadding="true">
 
-            <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+            <Spinner
                 android:id="@+id/sp_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Category"
-                android:textSize="@dimen/text_size_small"
-                app:met_baseColor="@color/white"
-                app:met_floatingLabel="highlight"
-                app:met_floatingLabelTextColor="@color/black"
-                app:met_primaryColor="@color/white"
-                app:met_textColor="@color/black"
-                app:met_textColorHint="@color/gray"
-                app:met_underlineColor="@color/white" />
-        </android.support.v7.widget.CardView>
+                android:ellipsize="end"
+                android:layout_gravity="center"
+                style="?android:attr/spinnerDropDownItemStyle"
+                android:dropDownVerticalOffset="?attr/actionBarSize"
+                android:hint="Category"/>
+        </android.support.v7.widget.CardView>-->
+
     </LinearLayout>
 
     <LinearLayout

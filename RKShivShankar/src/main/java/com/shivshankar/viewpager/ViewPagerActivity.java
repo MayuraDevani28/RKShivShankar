@@ -78,7 +78,7 @@ public class ViewPagerActivity extends AppCompatActivity implements OnClickListe
                 @Override
                 public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
                     progressBar.setProgress((int) (progressBar.getMax() * fractionAnchor));
-                    onBackPressed();
+                    //onBackPressed();
                 }
             });
             // setDragEdge(SwipeBackLayout.DragEdge.TOP);
@@ -155,6 +155,9 @@ public class ViewPagerActivity extends AppCompatActivity implements OnClickListe
                     page.setCurrentItem(IMAGES.length - 1, true);
                 else
                     page.setCurrentItem(getItem(-1), true);
+            }else if(v == mIv_close){
+                onBackPressed();
+
             } else if (v == mIv_nextImage) {
                 if (page.getCurrentItem() == IMAGES.length - 1)
                     page.setCurrentItem(0, true);

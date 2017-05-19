@@ -241,7 +241,7 @@ public class MyOrdersActivitySeller extends BaseActivitySeller implements OnClic
                 finish();
                 overridePendingTransition(0, 0);
             } else if (view == mBtn_add_now) {
-                Intent intent = new Intent(getApplicationContext(), MainActivityBuyer.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivitySeller.class);
                 intent.putExtra(commonVariables.KEY_IS_BRAND, false);
                 startActivity(intent);
                 overridePendingTransition(0, 0);

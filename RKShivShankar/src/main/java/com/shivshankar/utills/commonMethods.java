@@ -25,6 +25,8 @@ import android.view.animation.Transformation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.shivshankar.FabricProductsActivityBuyer;
+import com.shivshankar.ProductsActivityBuyer;
 import com.shivshankar.R;
 import com.shivshankar.SplashActivity;
 import com.shivshankar.classes.SC3Object;
@@ -139,7 +141,7 @@ public class commonMethods {
         }
     }
 
-    public static void performSearch(AppCompatActivity activity, String strSearch) {
+    public static void performSearch(AppCompatActivity activity, String strSearch, String catId) {
 
         try {
             if (!strSearch.equals("")) {
@@ -150,6 +152,21 @@ public class commonMethods {
                     array.add(new Suggestion(strSearch));
                     saveSearchArray(array);
                 }
+
+                int cId = Integer.parseInt(catId);
+                Intent intent;
+                if (cId == 1) {//suit
+                    intent = new Intent(activity, ProductsActivityBuyer.class);
+                    intent.putExtra(commonVariables.KEY_SEARCH_STR, strSearch);
+                    intent.putExtra(commonVariables.KEY_CATEGORY, catId);
+                } else {//fabric
+//                        intent = new Intent(activity, FabricColorsActivityBuyer.class);
+                    intent = new Intent(activity, FabricProductsActivityBuyer.class);
+                    intent.putExtra(commonVariables.KEY_SEARCH_STR, strSearch);
+                    intent.putExtra(commonVariables.KEY_CATEGORY, catId);
+                }
+                activity.startActivity(intent);
+                activity.overridePendingTransition(0, 0);
             }
         } catch (Exception e) {
             e.printStackTrace();

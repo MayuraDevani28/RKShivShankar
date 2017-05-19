@@ -46,6 +46,7 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
     private EditText mTv_Brand, mTv_Top_Fabrics, mTv_Bottom_Fabrics, mTv_Dupatta, mTv_All_Fabrics, mTv_Category, mTv_Type, mTv_Price, mTv_Min_Qty,mTv_Product_Code;
     private TextInputLayout mEdt_Dupatta, mEdt_All_Fabrics;
     private LinearLayout mLL_Fabrics;
+    private ImageView imageView;
 
 
     public SuitProductsAdapterBuyer(AppCompatActivity activity, ArrayList<ProductItem> list) {
@@ -176,6 +177,7 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
                 if (strApiName.equalsIgnoreCase("GetProductDetail_Suit_Seller")) {
                     JSONObject job = jobjWhole.optJSONObject("resData");
                     // item = new Brand(job.optString("BrandId"), job.optString("BrandName"), job.optString("BrandLogo"));
+                    String[] Images = {job.optString("LargeImageName")};
                     mTv_Product_Code.setText(job.optString("ProductCode"));
                     mTv_Brand.setText(job.optString("BrandName"));
                     mTv_Category.setText(job.optString("CategoryName"));
@@ -197,6 +199,16 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
                         mTv_Bottom_Fabrics.setText(job.optString("BottomFabricName"));
                         mTv_Dupatta.setText(job.optString("DupattaFabricName"));
                     }
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(activity, ViewPagerActivity.class);
+                            i.putExtra(commonVariables.INTENT_EXTRA_LIST_IMAGE_ARRAY, Images);
+                            i.putExtra(commonVariables.INTENT_EXTRA_POSITION, posit);
+                            i.putExtra(commonVariables.KEY_IS_LANDSCAPE, false);
+                            activity.startActivity(i);
+                        }
+                    });
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -229,7 +241,7 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
             }
         });
         RelativeLayout close = (RelativeLayout) view.findViewById(R.id.rl_close);
-        ImageView imageView = (ImageView) view.findViewById(R.id.image_gallery);
+        imageView = (ImageView) view.findViewById(R.id.image_gallery);
         mTv_Brand = (EditText) view.findViewById(R.id.tv_brand_name);
         mTv_Product_Code = (EditText) view.findViewById(R.id.tv_product_code);
         mTv_Top_Fabrics = (EditText) view.findViewById(R.id.tv_top_fabrics);
@@ -256,16 +268,7 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
 
             }
         });
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(activity, ViewPagerActivity.class);
-                i.putExtra(commonVariables.INTENT_EXTRA_LIST_IMAGE_ARRAY, Images);
-                i.putExtra(commonVariables.INTENT_EXTRA_POSITION, posit);
-                i.putExtra(commonVariables.KEY_IS_LANDSCAPE, false);
-                activity.startActivity(i);
-            }
-        });
+
 
     }
 }

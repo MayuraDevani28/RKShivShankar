@@ -28,5 +28,9 @@
     <dimen name="login_padding">30dp</dimen>
 
 
+    <dimen name="spinner_margin">8dp</dimen>
+
+
     <integer name="col_home">1</integer>
+
 </resources>

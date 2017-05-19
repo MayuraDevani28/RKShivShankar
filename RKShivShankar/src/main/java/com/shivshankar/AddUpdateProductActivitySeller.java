@@ -87,18 +87,7 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
             setDropdowns();
             APIs.GetDropdowns(null, this);
 
-            Gson gson = new Gson();
-            String json = getIntent().getStringExtra(commonVariables.KEY_PRODUCT);
-            if (json == null || json.isEmpty()) {
-                setCapturedProductImage();
-            } else {
-                product = gson.fromJson(json, ProductItem.class);
-                if (product != null) {
-                    setProductData(product);
-                    productId = product.getProductId();
-                    APIs.GetProductDetail_Suit_Seller(this, this, product.getProductId());
-                }
-            }
+
 
             sv.setOnTouchListener((v, event) -> false);
         } catch (Exception e) {
@@ -454,6 +443,18 @@ public class AddUpdateProductActivitySeller extends BaseActivitySeller implement
                         VAL_TYPE[i] = id;
                     }
                     setDropdowns();
+                    Gson gson = new Gson();
+                    String json = getIntent().getStringExtra(commonVariables.KEY_PRODUCT);
+                    if (json == null || json.isEmpty()) {
+                        setCapturedProductImage();
+                    } else {
+                        product = gson.fromJson(json, ProductItem.class);
+                        if (product != null) {
+                            setProductData(product);
+                            productId = product.getProductId();
+                            APIs.GetProductDetail_Suit_Seller(this, this, product.getProductId());
+                        }
+                    }
                 } else if (strApiName.equalsIgnoreCase("GetProductDetail_Suit_Seller")) {
                     item = new Brand(job.optString("BrandId"), job.optString("BrandName"), job.optString("BrandLogo"));
                     setBrandData();

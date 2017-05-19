@@ -251,7 +251,7 @@ public class ChangePasswordActivityBuyer extends BaseActivityBuyer implements On
                 } else if (Validation.isEmptyEdittext(mEdt_confirm_password)) {
                     mTi_confirm_password.setError("Confirm Password is required.");
                 } else if (!strNew_password.equals(strConfirm_password)) {
-                    mTi_confirm_password.setError("Passwords Does not match.");
+                    mTi_confirm_password.setError("Passwords Don't match.");
                 } else {
                     if (commonMethods.knowInternetOn(ChangePasswordActivityBuyer.this)) {
                         APIs.BuyerChangePassword(this, this, strPassword, strNew_password);
@@ -295,7 +295,7 @@ public class ChangePasswordActivityBuyer extends BaseActivityBuyer implements On
                 String strApiName = jObjWhole.optString("api");
                 int resId = jObjWhole.optInt("resInt");
                 String result = jObjWhole.optString("res");
-                if (strApiName.equalsIgnoreCase("SellerChangePassword") && resId == 1) {
+                if (strApiName.equalsIgnoreCase("BuyerChangePassword") && resId == 1) {
 
                     AlertDialogManager.showDialog(this, result, () -> {
                         onBackPressed();
