@@ -228,6 +228,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                         getActivity().startActivity(intent);
                         getActivity().overridePendingTransition(0, 0);
 
+
                     } else {
                         if (resultId == 1) {
                             Runnable listenerPos = () -> {
