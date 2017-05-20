@@ -164,7 +164,7 @@
                     android:layout_gravity="end"
                     android:gravity="start"
                     android:padding="10dp"
-                    android:text="Forget Password?"
+                    android:text="Forgot Password?"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_medium" />
 

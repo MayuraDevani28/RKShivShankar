@@ -59,7 +59,7 @@
             android:gravity="center"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:text="Uhh You Fabrics found for your match"
+            android:text="Uhh! No items found"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_medium" />
 

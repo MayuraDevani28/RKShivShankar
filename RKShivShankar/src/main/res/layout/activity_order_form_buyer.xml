@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white_light_transparent"
     android:orientation="vertical"
     android:visibility="visible">
@@ -225,124 +225,6 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:text="Payment Options"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_medium" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/xml_black_border_square_box"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/ll_bank_transfer"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp">
-
-                    <CheckBox
-                        android:id="@+id/cb_bank_transfer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:gravity="left|center_vertical"
-                        android:lines="1"
-                        android:text="BankTransfer"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <WebView
-                        android:id="@+id/wv_bank_transfer"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:background="@color/white"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_neft"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp">
-
-                    <CheckBox
-                        android:id="@+id/cb_neft"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:gravity="left|center_vertical"
-                        android:lines="1"
-                        android:text="NEFT"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <WebView
-                        android:id="@+id/wv_neft"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:background="@color/white"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_cheque"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp">
-
-                    <CheckBox
-                        android:id="@+id/cb_cheque"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="marquee"
-                        android:gravity="left|center_vertical"
-                        android:lines="1"
-                        android:text="Cheque"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <WebView
-                        android:id="@+id/wv_cheque"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:background="@color/white"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_small" />
-
-                </LinearLayout>
-            </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/ll_address"
                 android:layout_width="match_parent"
@@ -438,7 +320,7 @@
                                     android:imeOptions="actionNext"
                                     android:inputType="phone"
                                     android:lines="1"
-                                    android:maxLength="10"
+                                    android:maxLength="14"
                                     android:maxLines="1"
                                     android:textSize="@dimen/text_size_small" />
                             </android.support.design.widget.TextInputLayout>
@@ -694,7 +576,7 @@
                                 android:hint="Mobile"
                                 android:imeOptions="actionNext"
                                 android:inputType="phone"
-                                android:maxLength="10"
+                                android:maxLength="14"
                                 android:maxLines="1"
                                 android:textSize="@dimen/text_size_small" />
                         </android.support.design.widget.TextInputLayout>
@@ -844,23 +726,26 @@
 
                 </LinearLayout>
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    app:cardElevation="2dp">
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:text="Payment Options"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_medium" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/lv_payment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"/>
 
-                    </android.support.v7.widget.CardView>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_payment"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/xml_black_border_square_box"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="5dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

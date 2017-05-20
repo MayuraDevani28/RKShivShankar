@@ -259,7 +259,7 @@ public class CartActivityBuyer extends BaseActivityCartBuyer implements View.OnC
                 if (remain == 1) {
                     AlertDialogManager.showDialog(this, "Please select Qty/Cut of all items", null);
                 } else if (remain == 2) {
-                    AlertDialogManager.showDialog(this, "Please select type", null);
+                    AlertDialogManager.showDialog(this, "Please select type of fabric item", null);
                 } else {
                     Intent intent = new Intent(this, OrderFormActivityBuyer.class);
                     startActivity(intent);

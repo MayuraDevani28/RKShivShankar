@@ -1,6 +1,7 @@
 package com.shivshankar;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -48,6 +49,23 @@ public class LoginRegisterActivity extends AppCompatActivity implements View.OnC
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            if (requestCode == commonVariables.REQUEST_LOGIN && resultCode == RESULT_OK) {
+                boolean isLoggedIn = data.getExtras().getBoolean(commonVariables.KEY_IS_LOG_IN);
+                Intent output = new Intent();
+                output.putExtra(commonVariables.KEY_IS_LOG_IN, isLoggedIn);
+                setResult(RESULT_OK, output);
+                finish();
+                overridePendingTransition(0, 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void bindViews() {

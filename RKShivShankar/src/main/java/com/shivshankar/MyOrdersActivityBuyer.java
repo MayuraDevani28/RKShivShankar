@@ -226,7 +226,7 @@ public class MyOrdersActivityBuyer extends BaseActivityBuyer implements OnClickL
             if (listArray.size() == 0) {
                 mRv_items.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
-                String strMessage = "Uhh! We you have no orders. Want to order now ?";
+                String strMessage = "Uhh! No orders found. Want to order now ?";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));
                 startAnim();
             } else {

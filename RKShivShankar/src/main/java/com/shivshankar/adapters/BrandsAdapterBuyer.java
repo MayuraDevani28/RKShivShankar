@@ -79,8 +79,7 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
                         intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
                         intent.putExtra(commonVariables.KEY_BRAND, item);
                         intent.putExtra(commonVariables.KEY_CATEGORY, catId);
-                    } else {//fabric
-//                        intent = new Intent(activity, FabricColorsActivityBuyer.class);
+                    } else {
                         intent = new Intent(activity, FabricProductsActivityBuyer.class);
                         intent.putExtra(commonVariables.KEY_FABRIC_TYPE, stType);
                         intent.putExtra(commonVariables.KEY_BRAND, item);
@@ -103,9 +102,7 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-
         try {
-
             final Brand item = list.get(position);
             holder.mTv_name.setText(WordUtils.capitalizeFully(item.getBrandName()));
             String strImageURL = item.getBrandLogo();
@@ -118,46 +115,10 @@ public class BrandsAdapterBuyer extends RecyclerView.Adapter<BrandsAdapterBuyer.
                 Glide.with(activity).load(strImageURL)//.asBitmap()
                         .placeholder(R.drawable.xml_round_gray).error(R.drawable.xml_round_white)
                         .centerCrop().transform(new CircleTransform(activity)).into(holder.mIv_imageView);
-//            (new BitmapImageViewTarget(holder.mIv_imageView) {
-//                    @Override
-//                    protected void setResource(Bitmap resource) {
-//                        try {
-////                            Palette.PaletteAsyncListener paletteListener = palette -> {
-////                                try {
-////                                    int col = palette.getVibrantColor(d);
-////                                    if (col == d) {
-////                                        holder.mLl_brand.setBackgroundColor(gray);
-////                                    } else
-////                                        holder.mLl_brand.setBackgroundColor(ColorUtils.setAlphaComponent(col, 40));
-////                                } catch (Exception e) {
-////                                    e.printStackTrace();
-////                                }
-////                            };
-////
-////                            if (resource != null && !resource.isRecycled()) {
-////                                Palette.from(resource).generate(paletteListener);
-////                            }
-//
-//                            GradientDrawable bgShape = (GradientDrawable) holder.mLl_brand.getBackground();
-//                            Random rnd = new Random();
-//                            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-//                            bgShape.setColor(ColorUtils.setAlphaComponent(color, 99));
-//
-//                            RoundedBitmapDrawable circularBitmapDrawable =
-//                                    RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
-//                            circularBitmapDrawable.setCircular(true);
-//                            holder.mIv_imageView.setImageDrawable(circularBitmapDrawable);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
     @Override
     public int getItemCount() {
         return list.size();

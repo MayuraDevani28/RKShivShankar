@@ -48,22 +48,21 @@ import java.util.List;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "MyFirebaseMsgService";
-    public static int NOTIFICATION_ID = 1;
+    public int NOTIFICATION_ID = 1;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d("TAGRK", "From: " + remoteMessage.getFrom());
         String message = "", title = "", strImageURL = "";
         if (remoteMessage.getData() != null && remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            Log.d("TAGRK", "Message data payload: " + remoteMessage.getData());
 
             message = "" + remoteMessage.getData().get(Config.MESSAGE_KEY);
             title = "" + remoteMessage.getData().get(Config.TITLE_KEY);
             strImageURL = "" + remoteMessage.getData().get(Config.IMAGE_KEY);
         } else if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Log.d("TAGRK", "Message Notification Body: " + remoteMessage.getNotification().getBody());
             message = "" + remoteMessage.getNotification().getBody();
             title = "" + remoteMessage.getNotification().getTitle();
             strImageURL = "" + remoteMessage.getNotification().getIcon();
@@ -110,7 +109,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
         } else
             sendNotification(title, message);
-        Log.i(TAG, "Received: " + remoteMessage.toString());
+        Log.i("TAGRK", "Received: " + remoteMessage.toString());
     }
 
     public class ServerAPICallImageBitmap extends AsyncTask<String, String, Bitmap> {
@@ -193,7 +192,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(String strTitle, String strMsg) {
-        Log.d("TAG", "Preparing to send notification...: " + strTitle + "  Msg: " + strMsg);
+        Log.d("TAGRK", "Preparing to send notification...: " + strTitle + "  Msg: " + strMsg);
         NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent intent;
@@ -227,7 +226,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (!strMsg.contains("Your OTP is"))
             mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID++, mBuilder.build());
-        Log.d("TAG", "Notification sent successfully.");
+        Log.d("TAGRK", "Notification sent successfully.");
     }
 
 }

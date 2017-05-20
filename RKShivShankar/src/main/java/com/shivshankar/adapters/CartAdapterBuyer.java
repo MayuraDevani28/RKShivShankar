@@ -49,7 +49,6 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
@@ -414,7 +413,7 @@ public class CartAdapterBuyer extends RecyclerView.Adapter<CartAdapterBuyer.MyVi
                     } else
                         showPopupFabric(list.get(getAdapterPosition()).getImageName(), product.getProductId(), "#FFFFFF");
                 } else if (view == mIv_delete) {
-                    AlertDialogManager.showDialogYesNo(activity, "Do you want to delete this product?", "Yes", () -> APIs.RemoveCartProduct(activity, CartAdapterBuyer.this, product.getProductId()));
+                    AlertDialogManager.showDialogYesNo(activity, "Do you want to delete this item?", "Yes", () -> APIs.RemoveCartProduct(activity, CartAdapterBuyer.this, product.getProductId()));
                 } else if (view == mBtn_update) {
                     String qty = mTv_qty.getText().toString().trim();
                     if (parseInt(qty) == 0) {

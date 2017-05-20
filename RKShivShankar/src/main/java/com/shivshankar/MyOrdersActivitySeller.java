@@ -214,7 +214,7 @@ public class MyOrdersActivitySeller extends BaseActivitySeller implements OnClic
             if (listArray.size() == 0) {
                 mRv_items.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
-                String strMessage = "Uhh! We you have no orders yet";
+                String strMessage = "Uhh! You have no orders yet";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));
                 startAnim();
             } else {

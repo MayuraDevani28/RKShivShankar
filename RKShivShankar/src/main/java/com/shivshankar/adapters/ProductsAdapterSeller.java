@@ -105,17 +105,17 @@ public class ProductsAdapterSeller extends RecyclerView.Adapter<ProductsAdapterS
 
                 if (list.get(posit).isActive()) {
                     isActive = false;
-                    strMessage = "Do you want to hide this product?";
+                    strMessage = "Do you want to hide this item?";
                     listner = () -> APIs.ProductActiveInactive(activity, ProductsAdapterSeller.this, product.getProductId(), isActive);
                 } else {
                     isActive = true;
-                    strMessage = "Do you want to show this product?";
+                    strMessage = "Do you want to show this item?";
                     listner = () -> APIs.ProductActiveInactive(activity, ProductsAdapterSeller.this, product.getProductId(), isActive);
                 }
                 AlertDialogManager.showDialogYesNo(activity, strMessage, "Yes", listner);
             } else if (view == mFb_delete) {
                 Runnable listner = () -> APIs.RemoveProduct_Suit(activity, ProductsAdapterSeller.this, product.getProductId());
-                AlertDialogManager.showDialogYesNo(activity, "Do you want to delete this product?", "Yes", listner);
+                AlertDialogManager.showDialogYesNo(activity, "Do you want to delete this item?", "Yes", listner);
             } else if (view == mIv_product_image) {
                 showPopup(list.get(getAdapterPosition()),list.get(getAdapterPosition()).getImageName(), product.getProductId());
             }

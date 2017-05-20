@@ -8,12 +8,22 @@ import java.io.Serializable;
 
 public class Payment implements Serializable {
 
-    String PaymentOptionKey,PaymentOptionName, PaymentOptionDetails;
+    String PaymentOptionKey, PaymentOptionName, PaymentOptionDetails;
+    boolean isChecked;
 
-    public Payment(String paymentOptionKey, String paymentOptionName, String paymentOptionDetails) {
+    public Payment(String paymentOptionKey, String paymentOptionName, String paymentOptionDetails, boolean ischecked) {
         PaymentOptionKey = paymentOptionKey;
         PaymentOptionName = paymentOptionName;
         PaymentOptionDetails = paymentOptionDetails;
+        isChecked = ischecked;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
     public String getPaymentOptionKey() {

@@ -182,7 +182,7 @@
             android:gravity="center"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:text="Uhh You have not added any brand yet. Want to add now ?"
+            android:text="Uhh! No brands found. Want to add now ?"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_medium" />
 

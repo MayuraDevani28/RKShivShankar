@@ -309,6 +309,7 @@
                             android:hint="Price*"
                             android:imeOptions="actionNext"
                             android:inputType="number"
+                            android:maxLength="7"
                             android:textSize="@dimen/text_size_small" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -332,6 +333,7 @@
                             android:hint="Min Parcel Size*"
                             android:imeOptions="actionGo"
                             android:inputType="number"
+                            android:maxLength="4"
                             android:textSize="@dimen/text_size_small" />
 
                     </android.support.design.widget.TextInputLayout>

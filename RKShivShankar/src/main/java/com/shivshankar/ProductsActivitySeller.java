@@ -255,7 +255,7 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                     mLl_header_whole.setVisibility(View.VISIBLE);
                 }
                 mLl_no_data_found.setVisibility(View.VISIBLE);
-                String strMessage = "Uhh! We you have not added any product yet. Want to add now ?";
+                String strMessage = "Uhh! No products found. Want to add now ?";
                 if (!strSearch.isEmpty())
                     strMessage = "<font color=\"#000\">" + "No results found for \"" + strSearch + "\"" + "</font>" + "<br />Please check product code";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));

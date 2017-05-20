@@ -225,7 +225,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener, 
                         Intent intent = new Intent(getActivity(), OTPRegisterActivity.class);
                         intent.putExtra(commonVariables.KEY_USER_TYPE, stType);
                         intent.putExtra(commonVariables.KEY_FOR_LOGIN, ((LoginRegisterActivity) getActivity()).isForLogin);
-                        getActivity().startActivity(intent);
+                        getActivity().startActivityForResult(intent, commonVariables.REQUEST_LOGIN);
                         getActivity().overridePendingTransition(0, 0);
 
                     } else {

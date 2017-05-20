@@ -31,7 +31,7 @@
             app:floatingSearch_leftActionColor="@color/colorAccent"
             app:floatingSearch_leftActionMode="showSearch"
             app:floatingSearch_menuItemIconColor="@color/colorAccent"
-            app:floatingSearch_searchHint="Search for Products"
+            app:floatingSearch_searchHint="Search .."
             app:floatingSearch_searchSuggestionTextSize="@dimen/text_size_medium"
             app:floatingSearch_showSearchKey="true"
             app:floatingSearch_suggestionRightIconColor="@color/colorAccent"

@@ -156,7 +156,7 @@ public class SplashActivity extends AppCompatActivity implements OnResult {
                 String strApiName = jobj.optString("api");
                 if (strApiName.equalsIgnoreCase("CheckAppVersion")) {
                     AppPreferences.getPrefs().edit().putInt(commonVariables.KEY_NOTI_COUNT, jobj.optInt("sellerNotificationCount")).apply();
-                    switch (jobj.optInt("resInt")) {
+                    switch (jobj.optInt("isCompatible")) {
                         case 0:
                             showNotCompatibleDialog(false);
                             break;

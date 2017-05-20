@@ -16,8 +16,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -63,14 +61,13 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
     private CheckBox mCB_Different_Address;
     private EditText mEdt_full_name_billing, mEdt_mobile_billing, mEdt_address1_billing, mEdt_address2_billing, mEdt_address_city_billing, mEdt_address_state_billing, mSp_country_billing, mEdt_pin_code_billing, mEdt_note;
     private TextInputLayout mTi_full_name_billing, mTi_mobile_billing, mTi_address1_billing, mTi_address2_billing, mTi_address_city_billing, mTi_address_state_billing, mTi_country_billing, mTi_pin_code_billing;
+    private RecyclerView mRv_payment;
 
-    private CheckBox mCb_bank_transfer, mCb_neft, mCb_cheque;
-    private LinearLayout mLl_bank_transfer, mLl_neft, mLl_cheque;
-    private WebView mWv_bank_transfer, mWv_neft, mWv_cheque;
-
-    String strDeviceUUID = commonVariables.uuid, bstrCountryCode = "", sstrCountryCode = "", strPaymentCode = "";
+    String strDeviceUUID = commonVariables.uuid;
+    String bstrCountryCode = "";
+    String sstrCountryCode = "";
+    public String strPaymentCode = "";
     ArrayList<SC3Object> listCountry = new ArrayList<SC3Object>();
-    private RecyclerView lv_payment;
     private ArrayList<Payment> paymentList;
     private PaymentOptionExpandableListAdapter adapter;
 
@@ -83,8 +80,6 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
             View rootView = getLayoutInflater().inflate(R.layout.activity_order_form_buyer, frameLayout);
             //rootView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_right));
             bindViews(rootView);
-
-            APIs.GetPaymentGateway(this, this);
 
             APIs.GetPaymentOptions(this, this);
             if (listCountry.size() == 0)
@@ -229,7 +224,7 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
             mEdt_address_city_shipping = (EditText) rootView.findViewById(R.id.edt_address_city_shipping);
             mEdt_address_state_shipping = (EditText) rootView.findViewById(R.id.edt_address_state_shipping);
             mSp_country_shipping = (EditText) rootView.findViewById(R.id.sp_country_shipping);
-            lv_payment = (RecyclerView)rootView.findViewById(R.id.lv_payment);
+            mRv_payment = (RecyclerView) rootView.findViewById(R.id.rv_payment);
             mSp_country_shipping.setOnFocusChangeListener(this);
             mSp_country_shipping.setCursorVisible(false);
             mSp_country_shipping.setOnClickListener(this);
@@ -282,23 +277,6 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
             mLl_confirm_order = (LinearLayout) rootView.findViewById(R.id.ll_confirm_order);
             mLl_confirm_order.setOnClickListener(this);
             mLl_shipping = (LinearLayout) rootView.findViewById(R.id.ll_shipping);
-
-
-            mLl_bank_transfer = (LinearLayout) findViewById(R.id.ll_bank_transfer);
-            mCb_bank_transfer = (CheckBox) findViewById(R.id.cb_bank_transfer);
-            mCb_bank_transfer.setOnCheckedChangeListener(this);
-            mWv_bank_transfer = (WebView) findViewById(R.id.wv_bank_transfer);
-
-            mLl_neft = (LinearLayout) findViewById(R.id.ll_neft);
-            mCb_neft = (CheckBox) findViewById(R.id.cb_neft);
-            mCb_neft.setOnCheckedChangeListener(this);
-            mWv_neft = (WebView) findViewById(R.id.wv_neft);
-
-            mLl_cheque = (LinearLayout) findViewById(R.id.ll_cheque);
-            mCb_cheque = (CheckBox) findViewById(R.id.cb_cheque);
-            mCb_cheque.setOnCheckedChangeListener(this);
-            mWv_cheque = (WebView) findViewById(R.id.wv_cheque);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -419,7 +397,7 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
                         bstrPinCode = sstrPinCode;
                     }
 
-                    if (!mCb_cheque.isChecked() && !mCb_neft.isChecked() && !mCb_bank_transfer.isChecked()) {
+                    if (strPaymentCode.isEmpty()) {
                         call = false;
                         AlertDialogManager.showDialog(this, "Please select payment options", null);
                     }
@@ -431,7 +409,7 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
 
                         APIs.AddUpdateOrder_Suit(this, this, "", strDeviceType, strDeviceUUID, strModelName, strOSVersion,
                                 bstrFname, bstrAddress1, bstrAddress2, bstrPinCode, bstrCity, bstrState, bstrCity, bstrCountryCode, bstrMobile,
-                                sstrFname, sstrAddress1, sstrAddress2, sstrPinCode, sstrCity, sstrState, sstrCity, sstrCountryCode, sstrMobile, mEdt_note.getText().toString().trim(),strPaymentCode);
+                                sstrFname, sstrAddress1, sstrAddress2, sstrPinCode, sstrCity, sstrState, sstrCity, sstrCountryCode, sstrMobile, mEdt_note.getText().toString().trim(), strPaymentCode);
                     }
                 }
             } else
@@ -463,45 +441,18 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
                     if (!sstrCountryCode.isEmpty()) {
                         mSp_country_shipping.setText(listCountry.get(commonMethods.getIndexOf(listCountry, sstrCountryCode)).getName());
                     }
-                } else if (strApiName.equalsIgnoreCase("GetPaymentGateway")) {
-                    JSONObject jo = jobjWhole.optJSONObject("mdloption");
-                    String str = jo.optString("BankToTrasfer");
-                    if (str.isEmpty())
-                        mLl_bank_transfer.setVisibility(View.GONE);
-                    else {
-                        mLl_bank_transfer.setVisibility(View.VISIBLE);
-                        setWebViewData(mWv_bank_transfer, jo.optString("BankTrasferDetails"));
-                        mCb_bank_transfer.setTag(R.string.filter_key, str);
-                    }
-                    str = jo.optString("NEFT");
-                    if (str.isEmpty())
-                        mLl_neft.setVisibility(View.GONE);
-                    else {
-                        mLl_neft.setVisibility(View.VISIBLE);
-                        setWebViewData(mWv_neft, jo.optString("NEFTDetails"));
-                        mCb_neft.setTag(R.string.filter_key, str);
-                    }
-                    str = jo.optString("Cheque");
-                    if (str.isEmpty())
-                        mLl_cheque.setVisibility(View.GONE);
-                    else {
-                        mLl_cheque.setVisibility(View.VISIBLE);
-                        setWebViewData(mWv_cheque, jo.optString("ChequeDetails"));
-                        mCb_cheque.setTag(R.string.filter_key, str);
-                    }
-                }else if(strApiName.equalsIgnoreCase("GetPaymentOptions")){
+                } else if (strApiName.equalsIgnoreCase("GetPaymentOptions")) {
                     JSONArray jarray = jobjWhole.optJSONArray("resData");
                     paymentList = new ArrayList<Payment>();
-                    for (int i = 0;i<jarray.length();i++){
+                    for (int i = 0; i < jarray.length(); i++) {
                         JSONObject c = jarray.optJSONObject(i);
-                        Payment item = new Payment(c.optString("PaymentOptionKey"),c.optString("PaymentOptionName"),c.optString("PaymentOptionDetails"));
+                        Payment item = new Payment(c.optString("PaymentOptionKey"), c.optString("PaymentOptionName"), c.optString("PaymentOptionDetails"), false);
                         paymentList.add(item);
                     }
                     setPaymentOptionData(paymentList);
 
 
-
-                }else if (strApiName.equalsIgnoreCase("GetOrderSummary_Suit")) {
+                } else if (strApiName.equalsIgnoreCase("GetOrderSummary_Suit")) {
                     mLl_order_summary.setVisibility(View.VISIBLE);
                     JSONObject jo = jobjWhole.optJSONObject("resData");
                     mTv_grand_total.setText(commonVariables.strCurrency_name + " " + jo.optString("TotalAmount"));
@@ -538,73 +489,23 @@ public class OrderFormActivityBuyer extends BaseActivityCartBuyer implements Vie
     }
 
     private void setPaymentOptionData(ArrayList<Payment> paymentList) {
-        lv_payment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        //lv_payment.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
-        adapter = new PaymentOptionExpandableListAdapter(paymentList);
-        lv_payment.setAdapter(adapter);
-        lv_payment.getItemAnimator().setChangeDuration(0);
-        lv_payment.setHasFixedSize(true);
-
-
+        LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        llm.setAutoMeasureEnabled(true);
+        mRv_payment.setLayoutManager(llm);
+        //mRv_payment.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        adapter = new PaymentOptionExpandableListAdapter(this, paymentList);
+        mRv_payment.setAdapter(adapter);
+//        mRv_payment.getItemAnimator().setChangeDuration(0);
+//        mRv_payment.setHasFixedSize(true);
     }
-
-    private void setWebViewData(WebView mWv_iframe, String strContent) {
-
-        WebSettings webViewSettings = mWv_iframe.getSettings();
-        webViewSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webViewSettings.setJavaScriptEnabled(true);
-        webViewSettings.setBuiltInZoomControls(true);
-        webViewSettings.setPluginState(WebSettings.PluginState.ON);
-        webViewSettings.setBuiltInZoomControls(false);
-
-        String pish = "<html><head><style type=\"text/css\">@font-face {font-family: MyFont;src: url(\"file:///android_asset/ProximaNova-Reg.otf\")}body {font-family: MyFont;font-size:13px;text-align: justify;}</style></head><body>";
-        String pas = "</body></html>";
-        strContent = pish + strContent.replace("\r\n", "<br/>") + pas;
-        strContent = pish + strContent + pas;
-        mWv_iframe.loadData(strContent, "text/html", "UTF-8");
-
-    }
-
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (buttonView == mCb_bank_transfer) {
-            mCb_neft.setChecked(false);
-            mCb_cheque.setChecked(false);
-            mWv_neft.setVisibility(View.GONE);
-            mWv_cheque.setVisibility(View.GONE);
-            mWv_bank_transfer.setVisibility(View.VISIBLE);
-            if (isChecked)
-                strPaymentCode = ((CheckBox) buttonView).getTag(R.string.filter_key).toString();
-            else
-                mWv_bank_transfer.setVisibility(View.GONE);
-        } else if (buttonView == mCb_neft) {
-            mCb_bank_transfer.setChecked(false);
-            mCb_cheque.setChecked(false);
-            mWv_neft.setVisibility(View.VISIBLE);
-            mWv_cheque.setVisibility(View.GONE);
-            mWv_bank_transfer.setVisibility(View.GONE);
-            if (isChecked)
-                strPaymentCode = ((CheckBox) buttonView).getTag(R.string.filter_key).toString();
-            else
-                mWv_neft.setVisibility(View.GONE);
-        } else if (buttonView == mCb_cheque) {
-            mCb_bank_transfer.setChecked(false);
-            mCb_neft.setChecked(false);
-            mWv_neft.setVisibility(View.GONE);
-            mWv_cheque.setVisibility(View.VISIBLE);
-            mWv_bank_transfer.setVisibility(View.GONE);
-            if (isChecked)
-                strPaymentCode = ((CheckBox) buttonView).getTag(R.string.filter_key).toString();
-            else
-                mWv_cheque.setVisibility(View.GONE);
+        call = false;
+        if (isChecked) {
+            mLl_billing.setVisibility(View.VISIBLE);
         } else {
-            call = false;
-            if (isChecked) {
-                mLl_billing.setVisibility(View.VISIBLE);
-            } else {
-                mLl_billing.setVisibility(View.GONE);
-            }
+            mLl_billing.setVisibility(View.GONE);
         }
     }
 }

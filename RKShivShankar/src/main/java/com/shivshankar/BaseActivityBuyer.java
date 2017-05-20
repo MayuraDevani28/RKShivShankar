@@ -203,6 +203,7 @@ public class BaseActivityBuyer extends AppCompatActivity implements View.OnClick
                 finish();
                 overridePendingTransition(0, 0);
             }
+//            System.gc();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -143,7 +143,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
                             if (loading) {
                                 if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount - 10)) {
                                     loading = false;
-                                    APIs.GetProductList_Suit_Buyer(null, FabricProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strCatidSuitFabric,strSearch);
+                                    APIs.GetProduct_Fabric_Buyer(null, FabricProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strSearch);
                                 }
                             }
                             if (mLl_title.getVisibility() == View.VISIBLE)
@@ -161,52 +161,56 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
     }
 
     private void startAnim() {
-        animationView.setProgress(0f);
-        animationView.playAnimation();
-        animationView.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
+        try {
+            animationView.setProgress(0f);
+            animationView.playAnimation();
+            animationView.addAnimatorListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
 
-            }
+                }
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationView2.setProgress(0f);
-                animationView2.playAnimation();
-            }
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    animationView2.setProgress(0f);
+                    animationView2.playAnimation();
+                }
 
-            @Override
-            public void onAnimationCancel(Animator animator) {
+                @Override
+                public void onAnimationCancel(Animator animator) {
 
-            }
+                }
 
-            @Override
-            public void onAnimationRepeat(Animator animator) {
+                @Override
+                public void onAnimationRepeat(Animator animator) {
 
-            }
-        });
-        animationView2.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
+                }
+            });
+            animationView2.addAnimatorListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
 
-            }
+                }
 
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                animationView.setProgress(0f);
-                animationView.playAnimation();
-            }
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    animationView.setProgress(0f);
+                    animationView.playAnimation();
+                }
 
-            @Override
-            public void onAnimationCancel(Animator animator) {
+                @Override
+                public void onAnimationCancel(Animator animator) {
 
-            }
+                }
 
-            @Override
-            public void onAnimationRepeat(Animator animator) {
+                @Override
+                public void onAnimationRepeat(Animator animator) {
 
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -262,7 +266,7 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
             if (listArray.size() == 0) {
                 mFl_whole.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
-                String strMessage = "Uhh! no products found. Search for products now?";
+                String strMessage = "Uhh! No products found. Search for products now?";
                 if (!strSearch.isEmpty())
                     strMessage = "<font color=\"#000\">" + "No products found for \"" + strSearch + "\"" + "</font>";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));

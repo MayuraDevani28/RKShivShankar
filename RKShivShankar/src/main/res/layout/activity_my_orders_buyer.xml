@@ -134,7 +134,7 @@
                         android:gravity="center"
                         android:paddingLeft="18dp"
                         android:paddingRight="18dp"
-                        android:text="Uhh You have not orders yet.?"
+                        android:text="Uhh! You have no orders yet."
                         android:textColor="@color/black"
                         android:textSize="@dimen/text_size_medium" />
 

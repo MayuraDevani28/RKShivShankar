@@ -287,7 +287,7 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             if (listArray.size() == 0) {
                 mFl_whole.setVisibility(View.GONE);
                 mLl_no_data_found.setVisibility(View.VISIBLE);
-                String strMessage = "Uhh! no products found. Search for products now?";
+                String strMessage = "Uhh! No items found. Search for products now?";
                 if (!strSearch.isEmpty())
                     strMessage = "<font color=\"#000\">" + "No products found for \"" + strSearch + "\"" + "</font>";
                 mTv_no_data_found.setText((Html.fromHtml(strMessage)));

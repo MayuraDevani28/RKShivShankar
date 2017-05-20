@@ -209,7 +209,7 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
                 String result = jobjWhole.optString("res");
                 String strApiName = jobjWhole.optString("api");
                 if (strApiName.equalsIgnoreCase("ResendRegistrationOTP")) {
-                    AlertDialogManager.showDialog(this, result,null);
+                    AlertDialogManager.showDialog(this, result, null);
                 } else if (strApiName.equalsIgnoreCase("VerifyOTP")) {
                     int resultId = jobjWhole.optInt("resInt");
                     if (resultId == 1) {
@@ -249,7 +249,7 @@ public class OTPRegisterActivity extends AppCompatActivity implements View.OnCli
                         overridePendingTransition(0, 0);
 
                     } else {
-                        AlertDialogManager.showDialog(this, result,null);
+                        AlertDialogManager.showDialog(this, result, null);
                     }
                 }
             }
