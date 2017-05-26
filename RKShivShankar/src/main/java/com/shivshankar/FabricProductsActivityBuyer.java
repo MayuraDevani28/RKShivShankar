@@ -34,6 +34,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.shivshankar.utills.commonMethods.collapse;
+import static com.shivshankar.utills.commonMethods.expand;
+
 public class FabricProductsActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult {
 
     TextView mTv_no_data_found, mTv_title, mTv_count_items;
@@ -121,9 +124,16 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
             animationView2 = (LottieAnimationView) rootView.findViewById(R.id.animation_view2);
 
             mRv_items.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                boolean scroll_down;
+
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
+                    if (scroll_down) {
+                        collapse(mLl_title);
+                    } else if (mLl_title.getVisibility() == View.GONE) {
+                        expand(mLl_title);
+                    }
                 }
 
                 @Override
@@ -146,10 +156,16 @@ public class FabricProductsActivityBuyer extends BaseActivityBuyer implements On
                                     APIs.GetProduct_Fabric_Buyer(null, FabricProductsActivityBuyer.this, brandId, ++pageNo, strCategoryIds, srtPriceRange, strFabricIds, strSortBy, strFabricType, strSearch);
                                 }
                             }
-                            if (mLl_title.getVisibility() == View.VISIBLE)
-                                commonMethods.collapse(mLl_title);
-                        } else if (mLl_title.getVisibility() == View.GONE)
-                            commonMethods.expand(mLl_title);
+//                            if (mLl_title.getVisibility() == View.VISIBLE)
+//                                commonMethods.collapse(mLl_title);
+                        }
+//                        else if (mLl_title.getVisibility() == View.GONE)
+//                            commonMethods.expand(mLl_title);
+                        if (dy > 42) {
+                            scroll_down = true;
+                        } else if (dy < -5) {
+                            scroll_down = false;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

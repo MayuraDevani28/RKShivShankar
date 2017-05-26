@@ -156,7 +156,7 @@
                         android:drawableLeft="@drawable/ic_password_app_col"
                         android:drawablePadding="10dp"
                         android:hint="Password"
-                        android:imeOptions="actionNext"
+                        android:imeOptions="actionGo"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:textColor="@color/black"

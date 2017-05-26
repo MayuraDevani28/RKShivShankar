@@ -268,7 +268,7 @@ public class MainActivityBuyer extends BaseActivityBuyer implements OnResult {
                 @Override
                 public void onFocus() {
                     DataHelper.sColorSuggestions = commonMethods.getSavedSearchArray();
-                    mSearchView.swapSuggestions(DataHelper.getHistory(MainActivityBuyer.this, 3));
+                    mSearchView.swapSuggestions(DataHelper.getHistory(3));
                 }
 
                 @Override

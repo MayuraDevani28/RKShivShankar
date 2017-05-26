@@ -29,7 +29,7 @@ public class DataHelper {
 
     public static List<Suggestion> sColorSuggestions = commonMethods.getSavedSearchArray();
 
-    public static List<Suggestion> getHistory(Context context, int count) {
+    public static List<Suggestion> getHistory(int count) {
 
         List<Suggestion> suggestionList = new ArrayList<>();
         Suggestion colorSuggestion;

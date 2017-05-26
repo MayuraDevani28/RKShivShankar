@@ -12,6 +12,7 @@ android {
         jackOptions {
             enabled true
         }
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
     compileOptions {
@@ -52,5 +53,6 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:10.2.1'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.8.0'
     compile 'com.github.liuguangqiang.prettyprogressbar:library:+'
+
 }
 apply plugin: 'com.google.gms.google-services'

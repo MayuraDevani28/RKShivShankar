@@ -21,13 +21,15 @@ import com.shivshankar.adapters.BrandsAdapterSeller;
 import com.shivshankar.classes.Brand;
 import com.shivshankar.utills.ExceptionHandler;
 import com.shivshankar.utills.OnResult;
-import com.shivshankar.utills.commonMethods;
 import com.shivshankar.utills.commonVariables;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static com.shivshankar.utills.commonMethods.collapse;
+import static com.shivshankar.utills.commonMethods.expand;
 
 public class BrandsActivitySeller extends BaseActivitySeller implements OnClickListener, OnResult {
 
@@ -81,9 +83,15 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
             mLayoutManager = new LinearLayoutManager(this);
             mRv_items.setLayoutManager(mLayoutManager);
             mRv_items.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                boolean scroll_down;
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
+                    if (scroll_down) {
+                        collapse(mLl_title);
+                    } else if (mLl_title.getVisibility() == View.GONE) {
+                        expand(mLl_title);
+                    }
                 }
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -97,11 +105,16 @@ public class BrandsActivitySeller extends BaseActivitySeller implements OnClickL
                             }
                         }
                         isFirstScrollDone = true;
-                        if (dy > 0) {
-                            if (mLl_title.getVisibility() == View.VISIBLE)
-                                commonMethods.collapse(mLl_title);
-                        } else if (mLl_title.getVisibility() == View.GONE)
-                            commonMethods.expand(mLl_title);
+//                        if (dy > 0) {
+//                            if (mLl_title.getVisibility() == View.VISIBLE)
+//                                collapse(mLl_title);
+//                        } else if (mLl_title.getVisibility() == View.GONE)
+//                            expand(mLl_title);
+                        if (dy > 42) {
+                            scroll_down = true;
+                        } else if (dy < -5) {
+                            scroll_down = false;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

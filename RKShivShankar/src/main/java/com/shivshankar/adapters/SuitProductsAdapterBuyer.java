@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +112,6 @@ public class SuitProductsAdapterBuyer extends RecyclerView.Adapter<SuitProductsA
             holder.mTv_product_name.setSelected(true);
             holder.mTv_product_name.setText(WordUtils.capitalizeFully(item.getProductCode()));
             String strImageURL = item.getImageName();
-            Log.v("TAGRK", "ImageURL: " + strImageURL);
             if ((strImageURL != null) && (!strImageURL.equals(""))) {
                 Glide.with(activity)
                         .load(strImageURL)

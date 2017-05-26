@@ -35,6 +35,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.shivshankar.utills.commonMethods.collapse;
+import static com.shivshankar.utills.commonMethods.expand;
+
 public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickListener, OnResult {
 
     TextView mTv_no_data_found, mTv_title, mTv_count_items;
@@ -113,19 +116,19 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
             }
             GridLayoutManager mLayoutManager = new GridLayoutManager(this, i);
             mRv_items.setLayoutManager(mLayoutManager);
+//            final float scale = getResources().getDisplayMetrics().density;
+//            int height = (int) (42 * scale + 0.5f);
 
             mRv_items.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                //                 boolean scroll_down;
+                                 boolean scroll_down;
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-//                    if (scroll_down) {
-////                        mLl_title.setVisibility(View.GONE);
-//                        collapse(mLl_title);
-//                    } else {
-////                        mLl_title.setVisibility(View.VISIBLE);
-//                        expand(mLl_title);
-//                    }
+                    if (scroll_down) {
+                        collapse(mLl_title);
+                    } else if (mLl_title.getVisibility() == View.GONE){
+                        expand(mLl_title);
+                    }
                 }
 
                 @Override
@@ -149,16 +152,17 @@ public class ProductsActivityBuyer extends BaseActivityBuyer implements OnClickL
                                 }
                             }
 
-                            if (mLl_title.getVisibility() == View.VISIBLE)
-                                commonMethods.collapse(mLl_title);
-                        } else if (mLl_title.getVisibility() == View.GONE)
-                            commonMethods.expand(mLl_title);
+//                            if (mLl_title.getVisibility() == View.VISIBLE)
+//                                collapse(mLl_title);
+                        }
+//                        else if (mLl_title.getVisibility() == View.GONE)
+//                            expand(mLl_title);
 
-//                        if (dy > 42) {
-//                            scroll_down = true;
-//                        } else if (dy < -5) {
-//                            scroll_down = false;
-//                        }
+                        if (dy > 42) {
+                            scroll_down = true;
+                        } else if (dy < -5) {
+                            scroll_down = false;
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import static com.shivshankar.R.id.btn_add_now;
 import static com.shivshankar.R.id.ll_header;
 import static com.shivshankar.R.id.ll_no_data_found;
+import static com.shivshankar.utills.commonMethods.collapse;
+import static com.shivshankar.utills.commonMethods.expand;
 
 public class ProductsActivitySeller extends BaseActivitySeller implements OnClickListener, OnResult, View.OnFocusChangeListener {
 
@@ -115,11 +117,17 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
             mRv_items.setLayoutManager(mLayoutManager);
 
             mRv_items.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                boolean scroll_down;
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     mLl_header_whole.setVisibility(View.GONE);
+                    if (scroll_down) {
+                        collapse(mLl_title);
+                    } else if (mLl_title.getVisibility() == View.GONE) {
+                        expand(mLl_title);
+                    }
                 }
 
                 @Override
@@ -142,10 +150,16 @@ public class ProductsActivitySeller extends BaseActivitySeller implements OnClic
                                     APIs.GetProductList_Suit_Seller(ProductsActivitySeller.this, ProductsActivitySeller.this, strCategory, ++pageNo, strSearch);
                                 }
                             }
-                            if (mLl_title.getVisibility() == View.VISIBLE)
-                                commonMethods.collapse(mLl_title);
-                        } else if (mLl_title.getVisibility() == View.GONE)
-                            commonMethods.expand(mLl_title);
+//                            if (mLl_title.getVisibility() == View.VISIBLE)
+//                                commonMethods.collapse(mLl_title);
+                        }
+//                        else if (mLl_title.getVisibility() == View.GONE)
+//                            commonMethods.expand(mLl_title);
+                        if (dy > 42) {
+                            scroll_down = true;
+                        } else if (dy < -5) {
+                            scroll_down = false;
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();

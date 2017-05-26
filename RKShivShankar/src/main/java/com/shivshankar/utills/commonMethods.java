@@ -17,11 +17,11 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
-import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
@@ -34,7 +34,6 @@ import com.shivshankar.classes.Suggestion;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 
 @SuppressLint("SimpleDateFormat")
 public class commonMethods {
@@ -118,12 +117,12 @@ public class commonMethods {
         ArrayList<Suggestion> mResults = new ArrayList<>();
         try {
             int size = AppPreferences.getPrefs().getInt("array_size", 0);
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i <= size; i++)
                 mResults.add(new Suggestion(AppPreferences.getPrefs().getString("array_" + i, null)));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Collections.reverse(mResults);
+        //  Collections.reverse(mResults);
         return mResults;
     }
 
@@ -149,7 +148,7 @@ public class commonMethods {
                 Log.v("TAGRK", "SEARCHING FOR: " + strSearch);
                 ArrayList<Suggestion> array = getSavedSearchArray();
                 if (!SavedStill(array, strSearch)) {
-                    array.add(new Suggestion(strSearch));
+                    array.add(0, new Suggestion(strSearch));
                     saveSearchArray(array);
                 }
 
@@ -305,40 +304,48 @@ public class commonMethods {
         return cursor.getString(idx);
     }
 
+    static TranslateAnimation anim;
 
     public static void expand(final View v) {
         try {
-            v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            final int targetHeight = v.getMeasuredHeight();
-
-            // Older versions of android (pre API 21) cancel animations for views with a height of 0.
-            v.getLayoutParams().height = 1;
+            if (anim != null)
+                anim.cancel();
+            anim = new TranslateAnimation(0.0f, 0.0f, -v.getHeight(), 0.0f);
             v.setVisibility(View.VISIBLE);
-            Animation a = new Animation() {
-                @Override
-                protected void applyTransformation(float interpolatedTime, Transformation t) {
-                    try {
-                        int height = interpolatedTime == 1
-                                ? ViewGroup.LayoutParams.WRAP_CONTENT
-                                : (int) (targetHeight * interpolatedTime == 0 ? 1 : interpolatedTime);
-                        if (v.getLayoutParams().height != 0 && v.getLayoutParams().width != 0) {
-                            v.getLayoutParams().height = height;
-                            v.requestLayout();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public boolean willChangeBounds() {
-                    return true;
-                }
-            };
-
-            // 1dp/ms
-            a.setDuration(((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density)) * 6);
-            v.startAnimation(a);
+            anim.setDuration(300);
+            anim.setInterpolator(new AccelerateInterpolator(0.5f));
+            v.startAnimation(anim);
+//            v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            final int targetHeight = v.getMeasuredHeight();
+//
+//            // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+//            v.getLayoutParams().height = 1;
+//            v.setVisibility(View.VISIBLE);
+//            Animation a = new Animation() {
+//                @Override
+//                protected void applyTransformation(float interpolatedTime, Transformation t) {
+//                    try {
+//                        int height = interpolatedTime == 1
+//                                ? ViewGroup.LayoutParams.WRAP_CONTENT
+//                                : (int) (targetHeight * interpolatedTime == 0 ? 1 : interpolatedTime);
+////                        if (v.getLayoutParams().height != 0 && v.getLayoutParams().width != 0) {
+//                            v.getLayoutParams().height = height;
+//                            v.requestLayout();
+////                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public boolean willChangeBounds() {
+//                    return true;
+//                }
+//            };
+//
+//            // 1dp/ms
+//            a.setDuration(((int) (targetHeight / v.getContext().getResources().getDisplayMetrics().density)) * 6);
+//            v.startAnimation(a);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -346,35 +353,58 @@ public class commonMethods {
 
     public static void collapse(final View v) {
         try {
-            final int initialHeight = v.getMeasuredHeight();
-
-            Animation a = new Animation() {
+            if (anim != null)
+                anim.cancel();
+            anim = new TranslateAnimation(0.0f, 0.0f, 0.0f, -v.getHeight());
+            Animation.AnimationListener collapselistener = new Animation.AnimationListener() {
                 @Override
-                protected void applyTransformation(float interpolatedTime, Transformation t) {
-                    try {
-                        if (interpolatedTime == 1) {
-                            v.setVisibility(View.GONE);
-                        } else {
-                            int height = initialHeight - (int) (initialHeight * interpolatedTime);
-                            if (v.getLayoutParams().height != 0 && v.getLayoutParams().width != 0) {
-                                v.getLayoutParams().height = height;
-                                v.requestLayout();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                public void onAnimationStart(Animation animation) {
                 }
 
                 @Override
-                public boolean willChangeBounds() {
-                    return true;
+                public void onAnimationRepeat(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    v.setVisibility(View.GONE);
                 }
             };
 
-            // 1dp/ms
-            a.setDuration(((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density)) * 6);
-            v.startAnimation(a);
+            anim.setAnimationListener(collapselistener);
+            anim.setDuration(300);
+            anim.setInterpolator(new AccelerateInterpolator(0.5f));
+            v.startAnimation(anim);
+
+//            final int initialHeight = v.getMeasuredHeight();
+//
+//            Animation a = new Animation() {
+//                @Override
+//                protected void applyTransformation(float interpolatedTime, Transformation t) {
+//                    try {
+//                        if (interpolatedTime == 1) {
+//                            v.setVisibility(View.GONE);
+//                        } else {
+//                            int height = initialHeight - (int) (initialHeight * interpolatedTime);
+//                            if (v.getLayoutParams().height != 0 && v.getLayoutParams().width != 0) {
+//                                v.getLayoutParams().height = height;
+//                                v.requestLayout();
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public boolean willChangeBounds() {
+//                    return true;
+//                }
+//            };
+//
+//            // 1dp/ms
+//            a.setDuration(((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density)) * 6);
+//            v.startAnimation(a);
         } catch (Exception e) {
             e.printStackTrace();
         }
